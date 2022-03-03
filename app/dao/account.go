@@ -37,3 +37,8 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 
 	return entity, nil
 }
+
+// CreateAccount: アカウント作成をデータベースに反映
+func (r *account) CreateAccount() string {
+	return "create"
+}

@@ -17,7 +17,7 @@ type (
 		// Clear all data in DB
 		InitAll() error
 	}
-	//
+
 	// Implementation for DAO
 	dao struct {
 		db *sqlx.DB

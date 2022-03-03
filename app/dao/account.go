@@ -37,7 +37,3 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 
 	return entity, nil
 }
-
-func (r *account) CreateUser() string {
-	return "nyokota"
-}

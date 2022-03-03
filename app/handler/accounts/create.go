@@ -30,11 +30,9 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	}
-	//w.Write([]byte("OK"))
 
-	accountRepository := h.app.Dao.Account() // domain/repository の取得
-	w.Write([]byte(accountRepository.CreateUser()))
-	//panic("Must Implement Account Registration")
+	_ = h.app.Dao.Account() // domain/repository の取得
+	panic("Must Implement Account Registration")
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(account); err != nil {

@@ -31,8 +31,8 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accountRepository := h.app.Dao.Account() // domain/repository の取得
-	w.Write([]byte(accountRepository.CreateAccount()))
+	accountRepository := h.app.Dao.Account()           // domain/repository の取得
+	w.Write([]byte(accountRepository.CreateAccount())) // ここでデータベースにも反映させたい
 	//panic("Must Implement Account Registration")
 
 	w.Header().Set("Content-Type", "application/json")

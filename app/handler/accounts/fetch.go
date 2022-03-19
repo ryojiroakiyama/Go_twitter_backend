@@ -15,8 +15,7 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 
 	username := chi.URLParam(r, "username")
 
-	accountRepository := h.app.Dao.Account()
-	account, err := accountRepository.FindByUsername(ctx, username)
+	account, err := h.app.Dao.Account().FindByUsername(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}

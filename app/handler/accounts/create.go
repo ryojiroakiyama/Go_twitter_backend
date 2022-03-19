@@ -31,8 +31,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accountRepository := h.app.Dao.Account()
-	if err := accountRepository.CreateAccount(ctx, account); err != nil {
+	if err := h.app.Dao.Account().CreateAccount(ctx, account); err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}

@@ -32,7 +32,10 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	accountRepository := h.app.Dao.Account()
-	accountRepository.CreateAccount(ctx, account)
+	if err := accountRepository.CreateAccount(ctx, account); err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(account); err != nil {

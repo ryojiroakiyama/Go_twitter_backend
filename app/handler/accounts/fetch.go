@@ -2,7 +2,6 @@ package accounts
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/handler/httperror"
@@ -22,7 +21,7 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 	}
 	if account == nil {
-		httperror.BadRequest(w, fmt.Errorf("Account not found")) // 404(not found) is better?
+		httperror.Error(w, http.StatusNotFound)
 		return
 	}
 

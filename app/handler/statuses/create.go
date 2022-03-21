@@ -15,7 +15,6 @@ type AddRequest struct {
 	Status string
 }
 
-//コンテキストからアカウントを取得して, その投稿を作成する
 // Handle request for `POST /v1/statuses`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -34,6 +33,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	status := new(object.Status)
 	status.Content = req.Status
+	status.Account_ID = account.ID
 
 	if err := h.app.Dao.Status().CreateStatus(ctx, status); err != nil {
 		httperror.InternalServerError(w, err)

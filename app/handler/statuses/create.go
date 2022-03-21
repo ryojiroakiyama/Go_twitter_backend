@@ -13,6 +13,7 @@ import (
 // Request body for `POST /v1/statuses`
 type AddRequest struct {
 	Status string
+	//media_ids??
 }
 
 // Handle request for `POST /v1/statuses`

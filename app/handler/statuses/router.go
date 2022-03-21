@@ -20,7 +20,7 @@ func NewRouter(app *app.App) http.Handler {
 
 	r.Use(auth.Middleware(app))
 	h := &handler{app: app}
-	r.Post("/", h.Fetch)
+	r.Post("/", h.Create)
 
 	return r
 }

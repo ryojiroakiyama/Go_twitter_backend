@@ -13,8 +13,10 @@ import (
 func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	// handler 入力
 	username := chi.URLParam(r, "username")
 
+	// usercase 中(domainまで潜る)
 	account, err := h.app.Dao.Account().FindByUsername(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
@@ -24,6 +26,7 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// handler 出力
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(account); err != nil {
 		httperror.InternalServerError(w, err)

@@ -5,18 +5,20 @@ import (
 	"net/http"
 
 	"yatter-backend-go/app/handler/httperror"
-
-	"github.com/go-chi/chi"
+	"yatter-backend-go/app/handler/request"
 )
 
 // Handle request for `GET /v1/accounts/{username}`
 func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	// handler 入力
-	username := chi.URLParam(r, "username")
+	username, err := request.UserNameOf(r)
+	if err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
 
-	// usercase 中(domainまで潜る)
+	// usecase section in general??
 	account, err := h.app.Dao.Account().FindByUsername(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
@@ -26,7 +28,6 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// handler 出力
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(account); err != nil {
 		httperror.InternalServerError(w, err)

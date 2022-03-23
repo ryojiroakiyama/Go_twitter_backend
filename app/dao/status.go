@@ -2,6 +2,8 @@ package dao
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
@@ -21,20 +23,20 @@ func NewStatus(db *sqlx.DB) repository.Status {
 	return &status{db: db}
 }
 
-//// FindByUsername : ユーザ名から
-//func (r *status) FindByUsername(ctx context.Context, username string) (*object.Status, error) {
-//	entity := new(object.Status)
-//	err := r.db.QueryRowxContext(ctx, "select * from status where username = ?", username).StructScan(entity)
-//	if err != nil {
-//		if errors.Is(err, sql.ErrNoRows) {
-//			return nil, nil
-//		}
+// FindByAccountID : アカウントIDから投稿をとってくる
+func (r *status) FindByAccountID(ctx context.Context, accountID object.AccountID) (*object.Status, error) {
+	entity := new(object.Status)
+	err := r.db.QueryRowxContext(ctx, "select * from status where account_id = ?", accountID).StructScan(entity)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
 
-//		return nil, fmt.Errorf("%w", err)
-//	}
+		return nil, fmt.Errorf("%w", err)
+	}
 
-//	return entity, nil
-//}
+	return entity, nil
+}
 
 // CreateStatus: アカウント作成
 func (r *status) CreateStatus(ctx context.Context, entity *object.Status) error {

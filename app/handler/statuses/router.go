@@ -18,9 +18,12 @@ type handler struct {
 func NewRouter(app *app.App) http.Handler {
 	r := chi.NewRouter()
 
-	r.Use(auth.Middleware(app))
 	h := &handler{app: app}
-	r.Post("/", h.Create)
+	r.Group(func(r chi.Router) {
+		r.Use(auth.Middleware(app))
+		r.Post("/", h.Create)
+	})
+	r.Get("/{id}", h.Fetch)
 
 	return r
 }

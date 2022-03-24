@@ -26,7 +26,7 @@ func NewStatus(db *sqlx.DB) repository.Status {
 // FindByID : アカウントIDから投稿をとってくる
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	entity := new(object.Status)
-	statement := `
+	schema := `
 	select 
 		s.id, 
 		s.content, 
@@ -37,7 +37,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	from status as s inner join account as a 
 	on s.account_id = a.id 
 	where s.id = ?`
-	err := r.db.QueryRowxContext(ctx, statement, id).StructScan(entity)
+	err := r.db.QueryRowxContext(ctx, schema, id).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -53,6 +53,16 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 func (r *status) CreateStatus(ctx context.Context, entity *object.Status) error {
 	schema := `insert into status (account_id, content) values (?, ?)`
 	_, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
+	if err != nil {
+		return fmt.Errorf("%w", err)
+	}
+	return nil
+}
+
+// DeleteStatus: アカウント削除
+func (r *status) DeleteStatus(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
+	schema := `delete from status where id=? and account_id=?`
+	_, err := r.db.ExecContext(ctx, schema, status_id, account_id)
 	if err != nil {
 		return fmt.Errorf("%w", err)
 	}

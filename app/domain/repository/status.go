@@ -12,4 +12,7 @@ type Status interface {
 
 	// Create Status
 	CreateStatus(ctx context.Context, entity *object.Status) error
+
+	// Delete Status
+	DeleteStatus(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error
 }

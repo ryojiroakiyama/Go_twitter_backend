@@ -17,6 +17,7 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	}
+
 	status, err := h.app.Dao.Status().FindByID(ctx, id)
 	if err != nil {
 		httperror.InternalServerError(w, err)

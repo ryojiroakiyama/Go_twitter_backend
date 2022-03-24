@@ -26,7 +26,18 @@ func NewStatus(db *sqlx.DB) repository.Status {
 // FindByID : アカウントIDから投稿をとってくる
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	entity := new(object.Status)
-	err := r.db.QueryRowxContext(ctx, "select * from status where id = ?", id).StructScan(entity)
+	statement := `
+	select 
+		s.id, 
+		s.content, 
+		s.create_at, 
+		a.id as "account.id", 
+		a.username as "account.username",
+		a.create_at as "account.create_at"
+	from status as s inner join account as a 
+	on s.account_id = a.id 
+	where s.id = ?`
+	err := r.db.QueryRowxContext(ctx, statement, id).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -41,7 +52,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 // CreateStatus: アカウント作成
 func (r *status) CreateStatus(ctx context.Context, entity *object.Status) error {
 	schema := `insert into status (account_id, content) values (?, ?)`
-	_, err := r.db.ExecContext(ctx, schema, entity.Accont_ID, entity.Content)
+	_, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
 	if err != nil {
 		return fmt.Errorf("%w", err)
 	}

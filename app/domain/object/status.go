@@ -8,9 +8,6 @@ type (
 		// The internal ID of the status
 		ID StatusID `json:"id" db:"id"`
 
-		// tmp: to accept account_id field
-		Accont_ID AccountID `json:"-" db:"account_id"`
-
 		// The Account of the status
 		Account Account `json:"account,omitempty" db:"account"`
 

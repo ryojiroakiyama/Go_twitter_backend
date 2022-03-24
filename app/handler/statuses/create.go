@@ -34,7 +34,6 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	status := new(object.Status)
 	status.Content = req.Status
-	status.Accont_ID = account.ID // tmp
 	status.Account = *account
 
 	if err := h.app.Dao.Status().CreateStatus(ctx, status); err != nil {

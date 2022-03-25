@@ -17,6 +17,9 @@ type (
 		// Get status repository
 		Status() repository.Status
 
+		// Get timeline repository
+		TimeLine() repository.TimeLine
+
 		// Clear all data in DB
 		InitAll() error
 	}
@@ -43,6 +46,10 @@ func (d *dao) Account() repository.Account {
 
 func (d *dao) Status() repository.Status {
 	return NewStatus(d.db)
+}
+
+func (d *dao) TimeLine() repository.TimeLine {
+	return NewTimeLine(d.db)
 }
 
 func (d *dao) InitAll() error {

@@ -16,7 +16,7 @@ func (h *handler) FetchPublic(w http.ResponseWriter, r *http.Request) {
 	_ = r.FormValue("since_id")
 	_ = r.FormValue("limit")
 
-	statuses, err := h.app.Dao.TimeLine().GetAll(ctx)
+	statuses, err := h.app.Dao.Status().All(ctx)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

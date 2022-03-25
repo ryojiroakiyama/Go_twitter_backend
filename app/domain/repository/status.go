@@ -15,4 +15,7 @@ type Status interface {
 
 	// Delete Status
 	Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error
+
+	// Fetch all statuses
+	All(ctx context.Context) ([]object.Status, error)
 }

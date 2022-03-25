@@ -12,5 +12,5 @@ type Account interface {
 	// TODO: Add Other APIs
 
 	// Create Account
-	CreateAccount(ctx context.Context, entity *object.Account) error
+	Create(ctx context.Context, entity *object.Account) error
 }

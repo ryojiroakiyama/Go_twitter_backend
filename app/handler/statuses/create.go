@@ -36,7 +36,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	status.Content = req.Status
 	status.Account = *account
 
-	if err := h.app.Dao.Status().CreateStatus(ctx, status); err != nil {
+	if err := h.app.Dao.Status().Create(ctx, status); err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}

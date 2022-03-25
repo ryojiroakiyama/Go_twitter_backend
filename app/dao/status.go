@@ -49,8 +49,8 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	return entity, nil
 }
 
-// CreateStatus: アカウント作成
-func (r *status) CreateStatus(ctx context.Context, entity *object.Status) error {
+// Create: アカウント作成
+func (r *status) Create(ctx context.Context, entity *object.Status) error {
 	schema := `insert into status (account_id, content) values (?, ?)`
 	_, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
 	if err != nil {
@@ -59,8 +59,8 @@ func (r *status) CreateStatus(ctx context.Context, entity *object.Status) error 
 	return nil
 }
 
-// DeleteStatus: アカウント削除
-func (r *status) DeleteStatus(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
+// Delete: アカウント削除
+func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
 	schema := `delete from status where id=? and account_id=?`
 	_, err := r.db.ExecContext(ctx, schema, status_id, account_id)
 	if err != nil {

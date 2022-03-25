@@ -11,6 +11,9 @@ import (
 func (h *handler) FetchPublic(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	_ = r.FormValue("only_media")
+	_ = r.FormValue("max_id")
+	_ = r.FormValue("since_id")
 	_ = r.FormValue("limit")
 
 	statuses, err := h.app.Dao.TimeLine().GetAll(ctx)

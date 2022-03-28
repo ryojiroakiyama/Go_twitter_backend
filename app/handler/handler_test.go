@@ -2,7 +2,9 @@ package handler
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -81,7 +83,26 @@ func setup(t *testing.T) *C {
 
 // mapは重複してたら上書きしてしまうので, insert前に確認忘れずに
 type account struct {
-	acount map[string]*object.Account
+	account map[string]*object.Account
+}
+
+func (r *account) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
+	account, exist := r.account[username]
+	if exist {
+		return account, nil
+	}
+	return nil, fmt.Errorf("FindByUsername: not exist")
+}
+
+// Create: アカウント作成
+func (r *account) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
+	_, exist := r.account[entity.Username]
+	if exist {
+		return 0, fmt.Errorf("Create: aready exist")
+	}
+	id := len(r.account) + 1
+	r.account[entity.Username] = entity
+	return int64(id), nil
 }
 
 type status struct {

@@ -9,7 +9,7 @@ type (
 		ID StatusID `json:"id" db:"id"`
 
 		// The Account of the status
-		Account Account `json:"account,omitempty" db:"account"`
+		Account *Account `json:"account,omitempty" db:"account"`
 
 		// Contents of the status
 		Content string `json:"content,omitempty" db:"content"`

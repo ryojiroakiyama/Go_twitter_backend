@@ -11,6 +11,7 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/app"
+	"yatter-backend-go/app/domain/object"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -76,6 +77,15 @@ func setup(t *testing.T) *C {
 		App:    app,
 		Server: server,
 	}
+}
+
+// mapは重複してたら上書きしてしまうので, insert前に確認忘れずに
+type account struct {
+	acount map[string]*object.Account
+}
+
+type status struct {
+	status map[object.StatusID]*object.Status
 }
 
 type C struct {

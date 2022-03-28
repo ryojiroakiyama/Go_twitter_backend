@@ -8,7 +8,7 @@ import (
 )
 
 // Handle request for `GET /v1/timelines/public`
-func (h *handler) FetchPublic(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Public(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	_ = r.FormValue("only_media")

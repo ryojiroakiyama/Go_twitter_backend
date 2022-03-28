@@ -5,5 +5,5 @@ import (
 )
 
 // Handle request for `GET /v1/timelines/home`
-func (h *handler) FetchHome(_ http.ResponseWriter, _ *http.Request) {
+func (h *handler) Home(_ http.ResponseWriter, _ *http.Request) {
 }

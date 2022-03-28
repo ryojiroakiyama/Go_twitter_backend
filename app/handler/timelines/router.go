@@ -21,9 +21,9 @@ func NewRouter(app *app.App) http.Handler {
 	h := &handler{app: app}
 	r.Group(func(r chi.Router) {
 		r.Use(auth.Middleware(app))
-		r.Get("/home", h.FetchHome)
+		r.Get("/home", h.Home)
 	})
-	r.Get("/public", h.FetchPublic)
+	r.Get("/public", h.Public)
 
 	return r
 }

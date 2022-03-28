@@ -77,7 +77,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 func (r *status) All(ctx context.Context) ([]object.Status, error) {
 	var entity []object.Status
 	schema := `
-	select 
+	select
 		s.id, 
 		s.content, 
 		s.create_at, 

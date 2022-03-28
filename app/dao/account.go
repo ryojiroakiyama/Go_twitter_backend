@@ -39,11 +39,15 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 }
 
 // Create: アカウント作成
-func (r *account) Create(ctx context.Context, entity *object.Account) (*object.Account, error) {
+func (r *account) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
 	schema := `insert into account (username, password_hash) values (?, ?)`
-	_, err := r.db.ExecContext(ctx, schema, entity.Username, entity.PasswordHash)
+	result, err := r.db.ExecContext(ctx, schema, entity.Username, entity.PasswordHash)
 	if err != nil {
-		return nil, fmt.Errorf("%w", err)
+		return 0, fmt.Errorf("%w", err)
 	}
-	return r.FindByUsername(ctx, entity.Username)
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("%w", err)
+	}
+	return id, nil
 }

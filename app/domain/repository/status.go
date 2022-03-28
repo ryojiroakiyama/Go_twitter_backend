@@ -11,7 +11,7 @@ type Status interface {
 	FindByID(ctx context.Context, accountID object.AccountID) (*object.Status, error)
 
 	// Create Status
-	Create(ctx context.Context, entity *object.Status) error
+	Create(ctx context.Context, entity *object.Status) (*object.Status, error)
 
 	// Delete Status
 	Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error

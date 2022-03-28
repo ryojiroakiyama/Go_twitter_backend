@@ -50,13 +50,17 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 }
 
 // Create: ステータス作成
-func (r *status) Create(ctx context.Context, entity *object.Status) error {
+func (r *status) Create(ctx context.Context, entity *object.Status) (*object.Status, error) {
 	schema := `insert into status (account_id, content) values (?, ?)`
-	_, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
+	result, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
 	if err != nil {
-		return fmt.Errorf("%w", err)
+		return nil, fmt.Errorf("%w", err)
 	}
-	return nil
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, fmt.Errorf("%w", err)
+	}
+	return r.FindByID(ctx, id)
 }
 
 // Delete: ステータス削除

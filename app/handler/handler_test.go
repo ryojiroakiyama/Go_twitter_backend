@@ -20,52 +20,105 @@ import (
 )
 
 func TestAccountRegistration(t *testing.T) {
-	expect := &mockDao{}
-	expect.account.findbyusername.obj = &object.Account{
-		Username: "john",
+	tests := []struct {
+		name    string
+		dao     dao.Dao
+		method  string
+		apiPath string
+		body    io.Reader
+		resObj  interface{}
+		status  int
+	}{
+		{
+			name: "account fetch",
+			dao: func() dao.Dao {
+				d := &mockDao{}
+				d.account.findbyusername.obj = &object.Account{
+					Username: "john",
+				}
+				return d
+			}(),
+			method:  "GET",
+			apiPath: "/v1/accounts/john",
+			resObj: &object.Account{
+				Username: "john",
+			},
+			status: http.StatusOK,
+		},
 	}
-	c := setup(t, expect)
-	defer c.Close()
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			c := setup(t, tt.dao)
+			defer c.Close()
 
-	func() {
-		resp, err := c.PostJSON("/v1/accounts", `{"username":"john"}`)
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
-			return
-		}
+			resp, err := c.Do(tt.method, tt.apiPath, tt.body)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !assert.Equal(t, resp.StatusCode, tt.status) {
+				return
+			}
+			body, err := io.ReadAll(resp.Body)
+			if err != nil {
+				t.Fatal(err)
+			}
+			buf := new(bytes.Buffer)
+			if err := json.NewEncoder(buf).Encode(tt.resObj); err != nil {
+				t.Fatal(err)
+			}
+			expect, err := io.ReadAll(buf)
+			if bytes.Compare(body, expect) != 0 {
+				t.Fatal("unexpected", "\n", string(body), string(expect))
+			}
+		})
+	}
+	//expect := &mockDao{}
+	//expect.account.findbyusername.obj = &object.Account{
+	//	Username: "john",
+	//}
+	//c := setup(t, expect)
+	//defer c.Close()
 
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			t.Fatal(err)
-		}
+	//func() {
+	//	resp, err := c.PostJSON("/v1/accounts", `{"username":"john"}`)
+	//	if err != nil {
+	//		t.Fatal(err)
+	//	}
+	//	if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
+	//		return
+	//	}
 
-		var j map[string]interface{}
-		if assert.NoError(t, json.Unmarshal(body, &j)) {
-			assert.Equal(t, "john", j["username"])
-		}
-	}()
+	//	body, err := io.ReadAll(resp.Body)
+	//	if err != nil {
+	//		t.Fatal(err)
+	//	}
 
-	func() {
-		resp, err := c.Get("/v1/accounts/john")
-		if err != nil {
-			t.Fatal(err)
-		}
-		if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
-			return
-		}
+	//	var j map[string]interface{}
+	//	if assert.NoError(t, json.Unmarshal(body, &j)) {
+	//		assert.Equal(t, "john", j["username"])
+	//	}
+	//}()
 
-		body, err := io.ReadAll(resp.Body)
-		if err != nil {
-			t.Fatal(err)
-		}
+	//func() {
+	//	resp, err := c.Get("/v1/accounts/john")
+	//	if err != nil {
+	//		t.Fatal(err)
+	//	}
+	//	if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
+	//		return
+	//	}
 
-		var j map[string]interface{}
-		if assert.NoError(t, json.Unmarshal(body, &j)) {
-			assert.Equal(t, "john", j["username"])
-		}
-	}()
+	//	body, err := io.ReadAll(resp.Body)
+	//	if err != nil {
+	//		t.Fatal(err)
+	//	}
+
+	//	var j map[string]interface{}
+	//	if assert.NoError(t, json.Unmarshal(body, &j)) {
+	//		assert.Equal(t, "john", j["username"])
+	//	}
+	//}()
 }
 
 func setup(t *testing.T, d dao.Dao) *C {
@@ -178,6 +231,14 @@ func (c *C) Close() {
 
 func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
 	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
+}
+
+func (c *C) Do(method, apiPath string, body io.Reader) (*http.Response, error) {
+	req, err := http.NewRequest(method, c.asURL(apiPath), body)
+	if err != nil {
+		return nil, err
+	}
+	return c.Server.Client().Do(req)
 }
 
 func (c *C) Get(apiPath string) (*http.Response, error) {

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -21,13 +22,13 @@ import (
 
 func TestAccountRegistration(t *testing.T) {
 	tests := []struct {
-		name    string
-		dao     dao.Dao
-		method  string
-		apiPath string
-		body    io.Reader
-		resObj  interface{}
-		status  int
+		name           string
+		dao            dao.Dao
+		method         string
+		apiPath        string
+		body           io.Reader
+		bodyExpected   interface{}
+		statusExpected int
 	}{
 		{
 			name: "account fetch",
@@ -40,10 +41,23 @@ func TestAccountRegistration(t *testing.T) {
 			}(),
 			method:  "GET",
 			apiPath: "/v1/accounts/john",
-			resObj: &object.Account{
+			bodyExpected: &object.Account{
 				Username: "john",
 			},
-			status: http.StatusOK,
+			statusExpected: http.StatusOK,
+		},
+		{
+			name: "account fetch error",
+			dao: func() dao.Dao {
+				d := &mockDao{}
+				d.account.findbyusername.err = fmt.Errorf("no account")
+				d.account.findbyusername.obj = &object.Account{}
+				return d
+			}(),
+			method:         "GET",
+			apiPath:        "/v1/accounts/john",
+			bodyExpected:   &object.Account{},
+			statusExpected: http.StatusInternalServerError,
 		},
 	}
 	for _, tt := range tests {
@@ -56,7 +70,7 @@ func TestAccountRegistration(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !assert.Equal(t, resp.StatusCode, tt.status) {
+			if !assert.Equal(t, resp.StatusCode, tt.statusExpected) {
 				return
 			}
 			body, err := io.ReadAll(resp.Body)
@@ -64,12 +78,12 @@ func TestAccountRegistration(t *testing.T) {
 				t.Fatal(err)
 			}
 			buf := new(bytes.Buffer)
-			if err := json.NewEncoder(buf).Encode(tt.resObj); err != nil {
+			if err := json.NewEncoder(buf).Encode(tt.bodyExpected); err != nil {
 				t.Fatal(err)
 			}
 			expect, err := io.ReadAll(buf)
 			if bytes.Compare(body, expect) != 0 {
-				t.Fatal("unexpected", "\n", string(body), string(expect))
+				t.Fatalf("expected: %v, returned: %v", string(expect), string(body))
 			}
 		})
 	}

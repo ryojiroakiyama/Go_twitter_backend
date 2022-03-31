@@ -21,9 +21,9 @@ func TestAccountRegistration(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
 	}
-	s1 := &object.Status{
+	status1 := &object.Status{
 		ID:      1,
-		Content: "s1",
+		Content: "status1",
 	}
 	tests := []struct {
 		name           string
@@ -34,15 +34,18 @@ func TestAccountRegistration(t *testing.T) {
 		bodyExpected   interface{}
 		statusExpected int
 	}{
-		//{
-		//	name:           "account create",
-		//	db:             &dbMock{},
-		//	method:         "POST",
-		//	apiPath:        "/v1/accounts/john",
-		//	body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-		//	bodyExpected:   john,
-		//	statusExpected: http.StatusOK,
-		//},
+		{
+			name: "account create",
+			db: &dbMock{
+				account: make(accountTableMock),
+				status:  make(statusTableMock),
+			},
+			method:         "POST",
+			apiPath:        "/v1/accounts",
+			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
+			bodyExpected:   john,
+			statusExpected: http.StatusOK,
+		},
 		{
 			name: "account fetch",
 			db: func() *dbMock {
@@ -62,12 +65,12 @@ func TestAccountRegistration(t *testing.T) {
 				a := make(accountTableMock)
 				s := make(statusTableMock)
 				a[john.Username] = john
-				s[1] = s1
+				s[1] = status1
 				return &dbMock{account: a, status: s}
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
-			bodyExpected:   s1,
+			bodyExpected:   status1,
 			statusExpected: http.StatusOK,
 		},
 	}
@@ -81,6 +84,7 @@ func TestAccountRegistration(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
+			defer resp.Body.Close()
 			if resp.StatusCode != tt.statusExpected {
 				t.Fatalf("expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
 			}
@@ -98,52 +102,12 @@ func TestAccountRegistration(t *testing.T) {
 			}
 		})
 	}
-	//}
-	//c := setup(t, expect)
-	//defer c.Close()
-
-	//func() {
-	//	resp, err := c.PostJSON("/v1/accounts", `{"username":"john"}`)
-	//	if err != nil {
-	//		t.Fatal(err)
-	//	}
-	//	if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
-	//		return
-	//	}
-
-	//	body, err := io.ReadAll(resp.Body)
-	//	if err != nil {
-	//		t.Fatal(err)
-	//	}
-
-	//	var j map[string]interface{}
-	//	if assert.NoError(t, json.Unmarshal(body, &j)) {
-	//		assert.Equal(t, "john", j["username"])
-	//	}
-	//}()
-
-	//func() {
-	//	resp, err := c.Get("/v1/accounts/john")
-	//	if err != nil {
-	//		t.Fatal(err)
-	//	}
-	//	if !assert.Equal(t, resp.StatusCode, http.StatusOK) {
-	//		return
-	//	}
-
-	//	body, err := io.ReadAll(resp.Body)
-	//	if err != nil {
-	//		t.Fatal(err)
-	//	}
-
-	//	var j map[string]interface{}
-	//	if assert.NoError(t, json.Unmarshal(body, &j)) {
-	//		assert.Equal(t, "john", j["username"])
-	//	}
-	//}()
 }
 
 func setup(t *testing.T, db *dbMock) *C {
+	if db == nil || db.account == nil || db.status == nil {
+		t.Fatal("setup: db is nil")
+	}
 	app := &app.App{Dao: &daoMock{db: db}}
 
 	server := httptest.NewServer(NewRouter(app))
@@ -215,9 +179,9 @@ func (r *statusMock) Create(ctx context.Context, entity *object.Status) (object.
 func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
 	s, exist := r.db.status[status_id]
 	if !exist {
-		return fmt.Errorf("Delete: No status mathed")
+		return fmt.Errorf("Delete: No status matched")
 	} else if s.Account.ID != account_id {
-		return fmt.Errorf("Delete: No status mathed")
+		return fmt.Errorf("Delete: No status matched")
 	}
 	delete(r.db.status, status_id)
 	return nil

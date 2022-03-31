@@ -13,7 +13,6 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/app"
-	"yatter-backend-go/app/dao"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
 
@@ -23,7 +22,8 @@ import (
 func TestAccountRegistration(t *testing.T) {
 	tests := []struct {
 		name           string
-		dao            dao.Dao
+		accountDB      map[string]*object.Account
+		statusDB       map[object.StatusID]*object.Status
 		method         string
 		apiPath        string
 		body           io.Reader
@@ -32,13 +32,11 @@ func TestAccountRegistration(t *testing.T) {
 	}{
 		{
 			name: "account fetch",
-			dao: func() dao.Dao {
-				d := &mockDao{}
-				d.account.findbyusername.obj = &object.Account{
+			accountDB: map[string]*object.Account{
+				"john": {
 					Username: "john",
-				}
-				return d
-			}(),
+				},
+			},
 			method:  "GET",
 			apiPath: "/v1/accounts/john",
 			bodyExpected: &object.Account{
@@ -46,24 +44,15 @@ func TestAccountRegistration(t *testing.T) {
 			},
 			statusExpected: http.StatusOK,
 		},
-		{
-			name: "account fetch error",
-			dao: func() dao.Dao {
-				d := &mockDao{}
-				d.account.findbyusername.err = fmt.Errorf("no account")
-				d.account.findbyusername.obj = &object.Account{}
-				return d
-			}(),
-			method:         "GET",
-			apiPath:        "/v1/accounts/john",
-			bodyExpected:   &object.Account{},
-			statusExpected: http.StatusInternalServerError,
-		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.dao)
+			var a accountMock
+			var s statusMock
+			a.dbMock = tt.accountDB
+			s.dbMock = tt.statusDB
+			c := setup(t, &a, &s)
 			defer c.Close()
 
 			resp, err := c.Do(tt.method, tt.apiPath, tt.body)
@@ -87,7 +76,7 @@ func TestAccountRegistration(t *testing.T) {
 			}
 		})
 	}
-	//expect := &mockDao{}
+	//expect := &daoMock{}
 	//expect.account.findbyusername.obj = &object.Account{
 	//	Username: "john",
 	//}
@@ -135,8 +124,8 @@ func TestAccountRegistration(t *testing.T) {
 	//}()
 }
 
-func setup(t *testing.T, d dao.Dao) *C {
-	app := &app.App{Dao: d}
+func setup(t *testing.T, a repository.Account, s repository.Status) *C {
+	app := &app.App{Dao: &daoMock{account: a, status: s}}
 
 	if err := app.Dao.InitAll(); err != nil {
 		t.Fatal(err)
@@ -150,87 +139,64 @@ func setup(t *testing.T, d dao.Dao) *C {
 	}
 }
 
-type retFindBy struct {
-	obj interface{}
-	err error
+// accountMock: accountに関するrepojitoryとdbをモック
+type accountMock struct {
+	dbMock map[string]*object.Account
 }
 
-type retCreate struct {
-	id  int64
-	err error
-}
-
-type retDelete struct {
-	err error
-}
-
-type retAll struct {
-	obj interface{}
-	err error
-}
-
-type mockAccount struct {
-	findbyusername retFindBy
-	create         retCreate
-}
-
-func (r *mockAccount) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
-	obj, ok := r.findbyusername.obj.(*object.Account)
-	if !ok {
-		panic("findbyuser")
+func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
+	accountMock, exist := r.dbMock[username]
+	if exist {
+		return accountMock, nil
 	}
-	return obj, r.findbyusername.err
+	return nil, fmt.Errorf("FindByUsername: Account not exist")
 }
 
-func (r *mockAccount) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
-	return r.create.id, r.create.err
-}
-
-type mockStatus struct {
-	findbyid retFindBy
-	create   retCreate
-	delete   retDelete
-	all      retAll
-}
-
-func (r *mockStatus) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
-	obj, ok := r.findbyid.obj.(*object.Status)
-	if !ok {
-		panic("findbyid")
+func (r *accountMock) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
+	_, exist := r.dbMock[entity.Username]
+	if exist {
+		return 0, fmt.Errorf("Create: Account aready exist")
 	}
-	return obj, r.findbyid.err
+	id := len(r.dbMock) + 1
+	r.dbMock[entity.Username] = entity
+	return int64(id), nil
 }
 
-func (r *mockStatus) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
-	return r.create.id, r.create.err
+// statusMock: statusに関するrepojitoryとdbをモック
+type statusMock struct {
+	dbMock map[object.StatusID]*object.Status
 }
 
-func (r *mockStatus) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
-	return r.delete.err
+func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
+	return nil, nil
 }
 
-func (r *mockStatus) All(ctx context.Context) ([]object.Status, error) {
-	obj, ok := r.all.obj.([]object.Status)
-	if !ok {
-		panic("all")
-	}
-	return obj, r.all.err
+func (r *statusMock) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
+	return 0, nil
 }
 
-type mockDao struct {
-	account mockAccount
-	status  mockStatus
+func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
+	return nil
 }
 
-func (d *mockDao) Account() repository.Account {
-	return &d.account
+func (r *statusMock) All(ctx context.Context) ([]object.Status, error) {
+	return nil, nil
 }
 
-func (d *mockDao) Status() repository.Status {
-	return &d.status
+type daoMock struct {
+	account repository.Account
+	status  repository.Status
 }
 
-func (d *mockDao) InitAll() error {
+func (d *daoMock) Account() repository.Account {
+	return d.account
+}
+
+func (d *daoMock) Status() repository.Status {
+	return d.status
+}
+
+func (d *daoMock) InitAll() error {
 	return nil
 }
 

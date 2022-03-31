@@ -17,6 +17,9 @@ type (
 		// Get status repository
 		Status() repository.Status
 
+		// Get relationship repository
+		Relationship() repository.Relationship
+
 		// Clear all data in DB
 		InitAll() error
 	}
@@ -45,6 +48,10 @@ func (d *dao) Status() repository.Status {
 	return NewStatus(d.db)
 }
 
+func (d *dao) Relationship() repository.Relationship {
+	return NewRelationship(d.db)
+}
+
 func (d *dao) InitAll() error {
 	if err := d.exec("SET FOREIGN_KEY_CHECKS=0"); err != nil {
 		return fmt.Errorf("Can't disable FOREIGN_KEY_CHECKS: %w", err)
@@ -57,7 +64,7 @@ func (d *dao) InitAll() error {
 		}
 	}()
 
-	for _, table := range []string{"account", "status"} {
+	for _, table := range []string{"relationship", "status", "account"} {
 		if err := d.exec("TRUNCATE TABLE " + table); err != nil {
 			return fmt.Errorf("Can't truncate table "+table+": %w", err)
 		}

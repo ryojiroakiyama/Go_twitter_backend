@@ -27,31 +27,31 @@ func NewStatus(db *sqlx.DB) repository.Status {
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	entity := new(object.Status)
 	schema := `
-	select 
-		s.id, 
-		s.content, 
-		s.create_at, 
-		a.id as "account.id", 
-		a.username as "account.username",
-		a.create_at as "account.create_at"
-	from status as s inner join account as a 
-	on s.account_id = a.id 
-	where s.id = ?`
+	SELECT
+		s.id,
+		s.content,
+		s.create_at,
+		a.id AS "account.id",
+		a.username AS "account.username",
+		a.create_at AS "account.create_at"
+	FROM status AS s INNER JOIN account AS a
+		ON s.account_id = a.id
+	WHERE s.id = ?`
 	err := r.db.QueryRowxContext(ctx, schema, id).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
-
 		return nil, fmt.Errorf("%w", err)
 	}
-
 	return entity, nil
 }
 
 // Create: ステータス作成
-func (r *status) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
-	schema := `insert into status (account_id, content) values (?, ?)`
+func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
+	schema := `
+	INSERT INTO status
+		(account_id, content) VALUES (?, ?)`
 	result, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
 	if err != nil {
 		return 0, fmt.Errorf("%w", err)
@@ -65,7 +65,10 @@ func (r *status) Create(ctx context.Context, entity *object.Status) (object.Acco
 
 // Delete: ステータス削除
 func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
-	schema := `delete from status where id=? and account_id=?`
+	schema := `
+	DELETE
+	FROM status
+	WHERE id=? AND account_id=?`
 	_, err := r.db.ExecContext(ctx, schema, status_id, account_id)
 	if err != nil {
 		return fmt.Errorf("%w", err)
@@ -77,23 +80,21 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 func (r *status) All(ctx context.Context) ([]object.Status, error) {
 	var entity []object.Status
 	schema := `
-	select
+	SELECT
 		s.id, 
 		s.content, 
 		s.create_at, 
-		a.id as "account.id", 
-		a.username as "account.username",
-		a.create_at as "account.create_at"
-	from status as s inner join account as a 
-	on s.account_id = a.id`
+		a.id AS "account.id", 
+		a.username AS "account.username",
+		a.create_at AS "account.create_at"
+	FROM status AS s INNER JOIN account AS a 
+		ON s.account_id = a.id`
 	err := r.db.SelectContext(ctx, &entity, schema)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
-
 		return nil, fmt.Errorf("%w", err)
 	}
-
 	return entity, nil
 }

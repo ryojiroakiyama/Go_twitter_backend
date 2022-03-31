@@ -21,6 +21,13 @@ func NewRelationship(db *sqlx.DB) repository.Relationship {
 	return &relationship{db: db}
 }
 
+// Fetch: Relationship オブジェクト返す
+func (r *relationship) Relationships(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
+	schema := `
+	SELECT`
+	return nil, nil
+}
+
 // Create: フォロー関係作成
 func (r *relationship) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	schema := `

@@ -15,11 +15,16 @@ import (
 	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
-
-	"github.com/stretchr/testify/assert"
 )
 
 func TestAccountRegistration(t *testing.T) {
+	john := &object.Account{
+		Username: "john",
+	}
+	s1 := &object.Status{
+		ID:      1,
+		Content: "s1",
+	}
 	tests := []struct {
 		name           string
 		db             *dbMock
@@ -29,20 +34,40 @@ func TestAccountRegistration(t *testing.T) {
 		bodyExpected   interface{}
 		statusExpected int
 	}{
+		//{
+		//	name:           "account create",
+		//	db:             &dbMock{},
+		//	method:         "POST",
+		//	apiPath:        "/v1/accounts/john",
+		//	body:           bytes.NewReader([]byte(`{"username":"john"}`)),
+		//	bodyExpected:   john,
+		//	statusExpected: http.StatusOK,
+		//},
 		{
 			name: "account fetch",
-			db: &dbMock{
-				account: accountTableMock{
-					"john": {
-						Username: "john",
-					},
-				},
-			},
-			method:  "GET",
-			apiPath: "/v1/accounts/john",
-			bodyExpected: &object.Account{
-				Username: "john",
-			},
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				s := make(statusTableMock)
+				a[john.Username] = john
+				return &dbMock{account: a, status: s}
+			}(),
+			method:         "GET",
+			apiPath:        "/v1/accounts/john",
+			bodyExpected:   john,
+			statusExpected: http.StatusOK,
+		},
+		{
+			name: "status fetch",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				s := make(statusTableMock)
+				a[john.Username] = john
+				s[1] = s1
+				return &dbMock{account: a, status: s}
+			}(),
+			method:         "GET",
+			apiPath:        "/v1/statuses/1",
+			bodyExpected:   s1,
 			statusExpected: http.StatusOK,
 		},
 	}
@@ -56,8 +81,8 @@ func TestAccountRegistration(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !assert.Equal(t, resp.StatusCode, tt.statusExpected) {
-				return
+			if resp.StatusCode != tt.statusExpected {
+				t.Fatalf("expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
 			}
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {
@@ -73,9 +98,6 @@ func TestAccountRegistration(t *testing.T) {
 			}
 		})
 	}
-	//expect := &daoMock{}
-	//expect.account.findbyusername.obj = &object.Account{
-	//	Username: "john",
 	//}
 	//c := setup(t, expect)
 	//defer c.Close()
@@ -150,11 +172,11 @@ func newAccountMock(db *dbMock) repository.Account {
 }
 
 func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
-	accountMock, exist := r.db.account[username]
-	if exist {
-		return accountMock, nil
+	a, exist := r.db.account[username]
+	if !exist {
+		return nil, fmt.Errorf("FindByUsername: Account not exist")
 	}
-	return nil, fmt.Errorf("FindByUsername: Account not exist")
+	return a, nil
 }
 
 func (r *accountMock) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
@@ -177,19 +199,36 @@ func newStatusMock(db *dbMock) repository.Status {
 }
 
 func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
-	return nil, nil
+	s, exist := r.db.status[id]
+	if !exist {
+		return nil, fmt.Errorf("FindByID: Status not exist")
+	}
+	return s, nil
 }
 
 func (r *statusMock) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
-	return 0, nil
+	entity.ID = int64(len(r.db.status) + 1)
+	r.db.status[entity.ID] = entity
+	return entity.ID, nil
 }
 
 func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
+	s, exist := r.db.status[status_id]
+	if !exist {
+		return fmt.Errorf("Delete: No status mathed")
+	} else if s.Account.ID != account_id {
+		return fmt.Errorf("Delete: No status mathed")
+	}
+	delete(r.db.status, status_id)
 	return nil
 }
 
 func (r *statusMock) All(ctx context.Context) ([]object.Status, error) {
-	return nil, nil
+	var statuses []object.Status
+	for _, value := range r.db.status {
+		statuses = append(statuses, *value)
+	}
+	return statuses, nil
 }
 
 type daoMock struct {
@@ -227,6 +266,7 @@ func (c *C) Do(method, apiPath string, body io.Reader) (*http.Response, error) {
 	if err != nil {
 		return nil, err
 	}
+	req.Header.Set("Content-Type", "application/json")
 	return c.Server.Client().Do(req)
 }
 

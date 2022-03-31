@@ -3,9 +3,8 @@ package object
 type (
 	StatusID = int64
 
-	// Status account
 	Status struct {
-		// The internal ID of the status
+		// The ID of the status
 		ID StatusID `json:"id" db:"id"`
 
 		// The Account of the status

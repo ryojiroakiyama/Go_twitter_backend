@@ -11,7 +11,6 @@ type (
 	AccountID    = int64
 	PasswordHash = string
 
-	// Account account
 	Account struct {
 		// The internal ID of the account
 		ID AccountID `json:"-"`

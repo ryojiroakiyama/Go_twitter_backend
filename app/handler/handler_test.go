@@ -22,8 +22,7 @@ import (
 func TestAccountRegistration(t *testing.T) {
 	tests := []struct {
 		name           string
-		accountTable   accountTableMock
-		statusTable    statusTableMock
+		db             *dbMock
 		method         string
 		apiPath        string
 		body           io.Reader
@@ -32,9 +31,11 @@ func TestAccountRegistration(t *testing.T) {
 	}{
 		{
 			name: "account fetch",
-			accountTable: accountTableMock{
-				"john": {
-					Username: "john",
+			db: &dbMock{
+				account: accountTableMock{
+					"john": {
+						Username: "john",
+					},
 				},
 			},
 			method:  "GET",
@@ -48,7 +49,7 @@ func TestAccountRegistration(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.accountTable, tt.statusTable)
+			c := setup(t, tt.db)
 			defer c.Close()
 
 			resp, err := c.Do(tt.method, tt.apiPath, tt.body)
@@ -120,12 +121,8 @@ func TestAccountRegistration(t *testing.T) {
 	//}()
 }
 
-func setup(t *testing.T, a accountTableMock, s statusTableMock) *C {
-	app := &app.App{Dao: &daoMock{account: &accountMock{table: a}, status: &statusMock{table: s}}}
-
-	if err := app.Dao.InitAll(); err != nil {
-		t.Fatal(err)
-	}
+func setup(t *testing.T, db *dbMock) *C {
+	app := &app.App{Dao: &daoMock{db: db}}
 
 	server := httptest.NewServer(NewRouter(app))
 
@@ -136,14 +133,24 @@ func setup(t *testing.T, a accountTableMock, s statusTableMock) *C {
 }
 
 type accountTableMock map[string]*object.Account
+type statusTableMock map[object.StatusID]*object.Status
+
+type dbMock struct {
+	account accountTableMock
+	status  statusTableMock
+}
 
 // accountMock: accountに関するrepojitoryとtableをモック
 type accountMock struct {
-	table accountTableMock
+	db *dbMock
+}
+
+func newAccountMock(db *dbMock) repository.Account {
+	return &accountMock{db: db}
 }
 
 func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
-	accountMock, exist := r.table[username]
+	accountMock, exist := r.db.account[username]
 	if exist {
 		return accountMock, nil
 	}
@@ -151,20 +158,22 @@ func (r *accountMock) FindByUsername(ctx context.Context, username string) (*obj
 }
 
 func (r *accountMock) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
-	_, exist := r.table[entity.Username]
+	_, exist := r.db.account[entity.Username]
 	if exist {
 		return 0, fmt.Errorf("Create: Account aready exist")
 	}
-	id := len(r.table) + 1
-	r.table[entity.Username] = entity
+	r.db.account[entity.Username] = entity
+	id := len(r.db.account) + 1
 	return int64(id), nil
 }
 
-type statusTableMock map[object.StatusID]*object.Status
-
 // statusMock: statusに関するrepojitoryとtableをモック
 type statusMock struct {
-	table statusTableMock
+	db *dbMock
+}
+
+func newStatusMock(db *dbMock) repository.Status {
+	return &statusMock{db: db}
 }
 
 func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
@@ -184,19 +193,19 @@ func (r *statusMock) All(ctx context.Context) ([]object.Status, error) {
 }
 
 type daoMock struct {
-	account repository.Account
-	status  repository.Status
+	db *dbMock
 }
 
 func (d *daoMock) Account() repository.Account {
-	return d.account
+	return newAccountMock(d.db)
 }
 
 func (d *daoMock) Status() repository.Status {
-	return d.status
+	return newStatusMock(d.db)
 }
 
 func (d *daoMock) InitAll() error {
+	d.db = nil
 	return nil
 }
 

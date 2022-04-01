@@ -38,6 +38,23 @@ func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID,
 	return true, nil
 }
 
+// Relationship: フォロー関係を返す
+func (r *relationship) Relationship(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
+	isFollowing, err := r.IsFollowing(ctx, userID, targetID)
+	if err != nil {
+		return nil, err
+	}
+	isFollowed, err := r.IsFollowing(ctx, targetID, userID)
+	if err != nil {
+		return nil, err
+	}
+	return &object.Relationship{
+		TargetID:  targetID,
+		Following: isFollowing,
+		FllowedBy: isFollowed,
+	}, nil
+}
+
 // Create: フォロー関係作成
 func (r *relationship) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	schema := `

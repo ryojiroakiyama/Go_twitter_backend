@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/auth"
 	"yatter-backend-go/app/handler/httperror"
 	"yatter-backend-go/app/handler/request"
@@ -42,14 +41,7 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	relationship := new(object.Relationship)
-	relationship.TargetID = target.ID
-	relationship.Following, err = h.app.Dao.Relationship().IsFollowing(ctx, user.ID, target.ID)
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-	relationship.FllowedBy, err = h.app.Dao.Relationship().IsFollowing(ctx, target.ID, user.ID)
+	relationship, err := h.app.Dao.Relationship().Relationship(ctx, user.ID, target.ID)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

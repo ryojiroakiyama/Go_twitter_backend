@@ -35,24 +35,33 @@ func TestAccountRegistration(t *testing.T) {
 		statusExpected int
 	}{
 		{
-			name: "account create",
-			db: &dbMock{
-				account: make(accountTableMock),
-				status:  make(statusTableMock),
-			},
+			name:           "account create normal",
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
 			bodyExpected:   john,
 			statusExpected: http.StatusOK,
 		},
+		//{
+		//	name: "account create duplicate",
+		//	db: func() *dbMock {
+		//		a := make(accountTableMock)
+		//		s := make(statusTableMock)
+		//		a[john.Username] = john
+		//		return &dbMock{account: a, status: s}
+		//	}(),
+		//	method:         "POST",
+		//	apiPath:        "/v1/accounts",
+		//	body:           bytes.NewReader([]byte(`{"username":"john"}`)),
+		//	bodyExpected:   john,
+		//	statusExpected: http.StatusOK,
+		//},
 		{
 			name: "account fetch",
 			db: func() *dbMock {
 				a := make(accountTableMock)
-				s := make(statusTableMock)
 				a[john.Username] = john
-				return &dbMock{account: a, status: s}
+				return &dbMock{account: a}
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/accounts/john",
@@ -62,11 +71,9 @@ func TestAccountRegistration(t *testing.T) {
 		{
 			name: "status fetch",
 			db: func() *dbMock {
-				a := make(accountTableMock)
 				s := make(statusTableMock)
-				a[john.Username] = john
 				s[1] = status1
-				return &dbMock{account: a, status: s}
+				return &dbMock{status: s}
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
@@ -105,9 +112,16 @@ func TestAccountRegistration(t *testing.T) {
 }
 
 func setup(t *testing.T, db *dbMock) *C {
-	if db == nil || db.account == nil || db.status == nil {
-		t.Fatal("setup: db is nil")
+	if db == nil {
+		db = new(dbMock)
 	}
+	if db.account == nil {
+		db.account = make(accountTableMock)
+	}
+	if db.status == nil {
+		db.status = make(statusTableMock)
+	}
+
 	app := &app.App{Dao: &daoMock{db: db}}
 
 	server := httptest.NewServer(NewRouter(app))
@@ -205,6 +219,10 @@ func (d *daoMock) Account() repository.Account {
 
 func (d *daoMock) Status() repository.Status {
 	return newStatusMock(d.db)
+}
+
+func (d *daoMock) Relationship() repository.Relationship {
+	return nil
 }
 
 func (d *daoMock) InitAll() error {

@@ -18,10 +18,10 @@ import (
 )
 
 func TestAccountRegistration(t *testing.T) {
-	john := &object.Account{
+	john := object.Account{
 		Username: "john",
 	}
-	status1 := &object.Status{
+	status1 := object.Status{
 		ID:      1,
 		Content: "status1",
 	}
@@ -42,20 +42,18 @@ func TestAccountRegistration(t *testing.T) {
 			bodyExpected:   john,
 			statusExpected: http.StatusOK,
 		},
-		//{
-		//	name: "account create duplicate",
-		//	db: func() *dbMock {
-		//		a := make(accountTableMock)
-		//		s := make(statusTableMock)
-		//		a[john.Username] = john
-		//		return &dbMock{account: a, status: s}
-		//	}(),
-		//	method:         "POST",
-		//	apiPath:        "/v1/accounts",
-		//	body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-		//	bodyExpected:   john,
-		//	statusExpected: http.StatusOK,
-		//},
+		{
+			name: "account create duplicate",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				a[john.Username] = john
+				return &dbMock{account: a}
+			}(),
+			method:         "POST",
+			apiPath:        "/v1/accounts",
+			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
+			statusExpected: http.StatusInternalServerError,
+		},
 		{
 			name: "account fetch",
 			db: func() *dbMock {
@@ -92,9 +90,13 @@ func TestAccountRegistration(t *testing.T) {
 				t.Fatal(err)
 			}
 			defer resp.Body.Close()
+
 			if resp.StatusCode != tt.statusExpected {
 				t.Fatalf("expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
+			} else if resp.StatusCode != http.StatusOK {
+				return
 			}
+
 			body, err := io.ReadAll(resp.Body)
 			if err != nil {
 				t.Fatal(err)
@@ -104,6 +106,9 @@ func TestAccountRegistration(t *testing.T) {
 				t.Fatal(err)
 			}
 			expect, err := io.ReadAll(buf)
+			if err != nil {
+				t.Fatal(err)
+			}
 			if bytes.Compare(body, expect) != 0 {
 				t.Fatalf("expected: %v, returned: %v", string(expect), string(body))
 			}
@@ -132,8 +137,8 @@ func setup(t *testing.T, db *dbMock) *C {
 	}
 }
 
-type accountTableMock map[string]*object.Account
-type statusTableMock map[object.StatusID]*object.Status
+type accountTableMock map[string]object.Account
+type statusTableMock map[object.StatusID]object.Status
 
 type dbMock struct {
 	account accountTableMock
@@ -154,7 +159,7 @@ func (r *accountMock) FindByUsername(ctx context.Context, username string) (*obj
 	if !exist {
 		return nil, fmt.Errorf("FindByUsername: Account not exist")
 	}
-	return a, nil
+	return &a, nil
 }
 
 func (r *accountMock) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
@@ -162,7 +167,7 @@ func (r *accountMock) Create(ctx context.Context, entity *object.Account) (objec
 	if exist {
 		return 0, fmt.Errorf("Create: Account aready exist")
 	}
-	r.db.account[entity.Username] = entity
+	r.db.account[entity.Username] = *entity
 	id := len(r.db.account) + 1
 	return int64(id), nil
 }
@@ -181,12 +186,12 @@ func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.
 	if !exist {
 		return nil, fmt.Errorf("FindByID: Status not exist")
 	}
-	return s, nil
+	return &s, nil
 }
 
 func (r *statusMock) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
 	entity.ID = int64(len(r.db.status) + 1)
-	r.db.status[entity.ID] = entity
+	r.db.status[entity.ID] = *entity
 	return entity.ID, nil
 }
 
@@ -204,7 +209,7 @@ func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, acco
 func (r *statusMock) All(ctx context.Context) ([]object.Status, error) {
 	var statuses []object.Status
 	for _, value := range r.db.status {
-		statuses = append(statuses, *value)
+		statuses = append(statuses, value)
 	}
 	return statuses, nil
 }

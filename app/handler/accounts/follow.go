@@ -43,6 +43,8 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// swaggerのIDとはなんなのか
+
 	//user, err = h.app.Dao.Account().FindByUsername(ctx, user.Username)
 	//if err != nil {
 	//	httperror.InternalServerError(w, err)

@@ -2,6 +2,7 @@ package dao
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
@@ -22,10 +23,21 @@ func NewRelationship(db *sqlx.DB) repository.Relationship {
 }
 
 // Fetch: Relationship オブジェクト返す
-func (r *relationship) Relationships(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
+func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
 	schema := `
-	SELECT`
-	return nil, nil
+	SELECT *
+	FROM relationship
+	WHERE user_id =? AND follow_id=?`
+	var id uint32
+	var uid uint32
+	var fid uint32
+	if err := r.db.QueryRowContext(ctx, schema, userID, targetID).Scan(&id, &uid, &fid); err != nil {
+		if err == sql.ErrNoRows {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }
 
 // Create: フォロー関係作成

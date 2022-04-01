@@ -8,7 +8,7 @@ import (
 
 type Relationship interface {
 	// Fetch Relationship
-	Relationships(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error)
+	IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error)
 
 	// Create Relationship to follow
 	Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error)

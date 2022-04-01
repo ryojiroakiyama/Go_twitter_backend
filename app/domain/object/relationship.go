@@ -11,9 +11,9 @@ type (
 		TargetID AccountID `json:"id,omitempty"`
 
 		// Whether the user is currently following the account
-		Following bool `json:"following,omitempty"`
+		Following bool `json:"following"`
 
 		// Whether the user is currently being followed by the account
-		FllowedBy bool `json:"followd_by,omitempty"`
+		FllowedBy bool `json:"followd_by"`
 	}
 )

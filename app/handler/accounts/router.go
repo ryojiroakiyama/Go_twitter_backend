@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"yatter-backend-go/app/app"
+	"yatter-backend-go/app/handler/auth"
 
 	"github.com/go-chi/chi"
 )
@@ -18,6 +19,10 @@ func NewRouter(app *app.App) http.Handler {
 	r := chi.NewRouter()
 
 	h := &handler{app: app}
+	r.Group(func(r chi.Router) {
+		r.Use(auth.Middleware(app))
+		r.Post("/{username}/follow", h.Follow)
+	})
 	r.Post("/", h.Create)
 	r.Get("/{username}", h.Fetch)
 

@@ -31,7 +31,7 @@ func TestAccountRegistration(t *testing.T) {
 		method         string
 		apiPath        string
 		body           io.Reader
-		bodyExpected   interface{}
+		bodyExpected   []byte
 		statusExpected int
 	}{
 		{
@@ -39,7 +39,7 @@ func TestAccountRegistration(t *testing.T) {
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   john,
+			bodyExpected:   jsonFormat(t, john),
 			statusExpected: http.StatusOK,
 		},
 		{
@@ -52,7 +52,8 @@ func TestAccountRegistration(t *testing.T) {
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			statusExpected: http.StatusInternalServerError,
+			bodyExpected:   []byte("username already exits\n"),
+			statusExpected: http.StatusConflict,
 		},
 		{
 			name: "account fetch",
@@ -63,7 +64,7 @@ func TestAccountRegistration(t *testing.T) {
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/accounts/john",
-			bodyExpected:   john,
+			bodyExpected:   jsonFormat(t, john),
 			statusExpected: http.StatusOK,
 		},
 		{
@@ -75,7 +76,7 @@ func TestAccountRegistration(t *testing.T) {
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
-			bodyExpected:   status1,
+			bodyExpected:   jsonFormat(t, status1),
 			statusExpected: http.StatusOK,
 		},
 	}
@@ -91,29 +92,36 @@ func TestAccountRegistration(t *testing.T) {
 			}
 			defer resp.Body.Close()
 
+			// check status code
 			if resp.StatusCode != tt.statusExpected {
-				t.Fatalf("expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
-			} else if resp.StatusCode != http.StatusOK {
-				return
+				t.Fatalf("code expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
 			}
 
-			body, err := io.ReadAll(resp.Body)
-			if err != nil {
-				t.Fatal(err)
-			}
-			buf := new(bytes.Buffer)
-			if err := json.NewEncoder(buf).Encode(tt.bodyExpected); err != nil {
-				t.Fatal(err)
-			}
-			expect, err := io.ReadAll(buf)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if bytes.Compare(body, expect) != 0 {
-				t.Fatalf("expected: %v, returned: %v", string(expect), string(body))
+			// check response body
+			if tt.bodyExpected != nil {
+				body, err := io.ReadAll(resp.Body)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if bytes.Compare(body, tt.bodyExpected) != 0 {
+					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.bodyExpected), string(body))
+				}
 			}
 		})
 	}
+}
+
+func jsonFormat(t *testing.T, body interface{}) []byte {
+	t.Helper()
+	buf := new(bytes.Buffer)
+	if err := json.NewEncoder(buf).Encode(body); err != nil {
+		t.Fatal(err)
+	}
+	out, err := io.ReadAll(buf)
+	if err != nil {
+		t.Fatal(err)
+	}
+	return out
 }
 
 func setup(t *testing.T, db *dbMock) *C {
@@ -157,7 +165,7 @@ func newAccountMock(db *dbMock) repository.Account {
 func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
 	a, exist := r.db.account[username]
 	if !exist {
-		return nil, fmt.Errorf("FindByUsername: Account not exist")
+		return nil, nil
 	}
 	return &a, nil
 }

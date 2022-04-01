@@ -37,7 +37,6 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-
 	return entity, nil
 }
 

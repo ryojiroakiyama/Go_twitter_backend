@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/domain/object"
@@ -31,6 +32,14 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if accountFound, err := h.app.Dao.Account().FindByUsername(ctx, account.Username); err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	} else if accountFound != nil {
+		http.Error(w, "username already exits", http.StatusConflict)
+		return
+	}
+
 	_, err := h.app.Dao.Account().Create(ctx, account)
 	if err != nil {
 		httperror.InternalServerError(w, err)
@@ -40,6 +49,9 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	account, err = h.app.Dao.Account().FindByUsername(ctx, account.Username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
+		return
+	} else if account == nil {
+		httperror.InternalServerError(w, fmt.Errorf("lost account"))
 		return
 	}
 

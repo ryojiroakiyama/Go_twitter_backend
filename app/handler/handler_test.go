@@ -15,15 +15,17 @@ import (
 	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
+	"yatter-backend-go/app/handler/httperror"
 )
 
 func TestAccountRegistration(t *testing.T) {
-	john := object.Account{
+	john := &object.Account{
 		Username: "john",
 	}
-	status1 := object.Status{
+	johnStatus := &object.Status{
 		ID:      1,
-		Content: "status1",
+		Content: "johnStatus",
+		Account: john,
 	}
 	tests := []struct {
 		name           string
@@ -31,6 +33,7 @@ func TestAccountRegistration(t *testing.T) {
 		method         string
 		apiPath        string
 		body           io.Reader
+		userAuth       string
 		bodyExpected   []byte
 		statusExpected int
 	}{
@@ -46,20 +49,20 @@ func TestAccountRegistration(t *testing.T) {
 			name: "account create duplicate",
 			db: func() *dbMock {
 				a := make(accountTableMock)
-				a[john.Username] = john
+				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   []byte("username already exits\n"),
+			bodyExpected:   []byte(httperror.TextUserConflict + "\n"),
 			statusExpected: http.StatusConflict,
 		},
 		{
 			name: "account fetch",
 			db: func() *dbMock {
 				a := make(accountTableMock)
-				a[john.Username] = john
+				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
 			method:         "GET",
@@ -71,22 +74,37 @@ func TestAccountRegistration(t *testing.T) {
 			name: "status fetch",
 			db: func() *dbMock {
 				s := make(statusTableMock)
-				s[1] = status1
+				s[1] = *johnStatus
 				return &dbMock{status: s}
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
-			bodyExpected:   jsonFormat(t, status1),
+			bodyExpected:   jsonFormat(t, johnStatus),
+			statusExpected: http.StatusOK,
+		},
+		{
+			name: "status create",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				a[john.Username] = *john
+				return &dbMock{account: a}
+			}(),
+			method:         "POST",
+			apiPath:        "/v1/statuses",
+			body:           bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
+			userAuth:       john.Username,
+			bodyExpected:   jsonFormat(t, johnStatus),
 			statusExpected: http.StatusOK,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			tt.db = fillDB(tt.db)
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Do(tt.method, tt.apiPath, tt.body)
+			resp, err := c.Do(tt.method, tt.apiPath, tt.body, tt.userAuth)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -124,7 +142,7 @@ func jsonFormat(t *testing.T, body interface{}) []byte {
 	return out
 }
 
-func setup(t *testing.T, db *dbMock) *C {
+func fillDB(db *dbMock) *dbMock {
 	if db == nil {
 		db = new(dbMock)
 	}
@@ -134,11 +152,12 @@ func setup(t *testing.T, db *dbMock) *C {
 	if db.status == nil {
 		db.status = make(statusTableMock)
 	}
+	return db
+}
 
+func setup(t *testing.T, db *dbMock) *C {
 	app := &app.App{Dao: &daoMock{db: db}}
-
 	server := httptest.NewServer(NewRouter(app))
-
 	return &C{
 		App:    app,
 		Server: server,
@@ -256,12 +275,17 @@ func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
 	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
 }
 
-func (c *C) Do(method, apiPath string, body io.Reader) (*http.Response, error) {
+func (c *C) Do(method, apiPath string, body io.Reader, userAuth string) (*http.Response, error) {
 	req, err := http.NewRequest(method, c.asURL(apiPath), body)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Content-Type", "application/json")
+	if body != nil {
+		req.Header.Set("Content-Type", "application/json")
+	}
+	if userAuth != "" {
+		req.Header.Set("Authentication", "username "+userAuth)
+	}
 	return c.Server.Client().Do(req)
 }
 

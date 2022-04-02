@@ -36,7 +36,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	} else if accountFound != nil {
-		http.Error(w, "username already exits", http.StatusConflict)
+		http.Error(w, httperror.TextUserConflict, http.StatusConflict)
 		return
 	}
 

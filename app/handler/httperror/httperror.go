@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+const (
+	TextUserConflict = "username already exits"
+)
+
 // Response with given status code
 func Error(w http.ResponseWriter, code int) {
 	http.Error(w, http.StatusText(code), code)

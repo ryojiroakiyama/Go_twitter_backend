@@ -1,12 +1,9 @@
 package httperror
 
 import (
+	"fmt"
 	"log"
 	"net/http"
-)
-
-const (
-	TextUserConflict = "username already exits"
 )
 
 // Response with given status code
@@ -24,4 +21,8 @@ func InternalServerError(w http.ResponseWriter, err error) {
 	log.Printf("[InternalServerError] %+v", err)
 
 	Error(w, http.StatusInternalServerError)
+}
+
+func LostObject(w http.ResponseWriter, object string) {
+	InternalServerError(w, fmt.Errorf("Unexpectedly lost"+object))
 }

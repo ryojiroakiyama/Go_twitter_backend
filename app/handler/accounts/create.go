@@ -2,11 +2,14 @@ package accounts
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/httperror"
+)
+
+const (
+	TextUserConflict = "username already exits"
 )
 
 // Request body for `POST /v1/accounts`
@@ -36,7 +39,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	} else if accountFound != nil {
-		http.Error(w, httperror.TextUserConflict, http.StatusConflict)
+		http.Error(w, TextUserConflict, http.StatusConflict)
 		return
 	}
 
@@ -51,7 +54,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	} else if account == nil {
-		httperror.InternalServerError(w, fmt.Errorf("lost account"))
+		httperror.LostObject(w, "account")
 		return
 	}
 

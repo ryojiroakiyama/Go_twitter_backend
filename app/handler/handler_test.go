@@ -15,7 +15,7 @@ import (
 	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
-	"yatter-backend-go/app/handler/httperror"
+	"yatter-backend-go/app/handler/accounts"
 )
 
 func TestAccountRegistration(t *testing.T) {
@@ -55,7 +55,7 @@ func TestAccountRegistration(t *testing.T) {
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   []byte(httperror.TextUserConflict + "\n"),
+			bodyExpected:   []byte(accounts.TextUserConflict + "\n"),
 			statusExpected: http.StatusConflict,
 		},
 		{

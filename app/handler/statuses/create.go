@@ -2,7 +2,6 @@ package statuses
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/domain/object"
@@ -22,7 +21,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	account := auth.AccountOf(r)
 	if account == nil {
-		httperror.InternalServerError(w, fmt.Errorf("lost account"))
+		httperror.LostObject(w, "account")
 		return
 	}
 

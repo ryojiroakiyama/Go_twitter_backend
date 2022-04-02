@@ -1,7 +1,6 @@
 package statuses
 
 import (
-	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/handler/auth"
@@ -15,7 +14,7 @@ func (h *handler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	account := auth.AccountOf(r)
 	if account == nil {
-		httperror.InternalServerError(w, fmt.Errorf("lost account"))
+		httperror.LostObject(w, "account")
 		return
 	}
 
@@ -30,10 +29,4 @@ func (h *handler) Delete(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	//if err := json.NewEncoder(w).Encode(status); err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//}
 }

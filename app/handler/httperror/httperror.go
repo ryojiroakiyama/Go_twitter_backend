@@ -23,6 +23,6 @@ func InternalServerError(w http.ResponseWriter, err error) {
 	Error(w, http.StatusInternalServerError)
 }
 
-func LostObject(w http.ResponseWriter, object string) {
-	InternalServerError(w, fmt.Errorf("Unexpectedly lost"+object))
+func LostAccount(w http.ResponseWriter) {
+	InternalServerError(w, fmt.Errorf("Unexpectedly lost account"))
 }

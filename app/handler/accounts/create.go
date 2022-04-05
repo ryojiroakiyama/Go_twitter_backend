@@ -54,7 +54,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	} else if account == nil {
-		httperror.LostObject(w, "account")
+		httperror.LostAccount(w)
 		return
 	}
 

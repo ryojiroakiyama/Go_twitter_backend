@@ -2,7 +2,6 @@ package accounts
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/handler/auth"
@@ -31,7 +30,7 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 
 	user := auth.AccountOf(r)
 	if user == nil {
-		httperror.InternalServerError(w, fmt.Errorf("lost user"))
+		httperror.LostAccount(w)
 		return
 	}
 

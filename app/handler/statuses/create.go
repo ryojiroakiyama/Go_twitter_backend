@@ -21,7 +21,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	account := auth.AccountOf(r)
 	if account == nil {
-		httperror.LostObject(w, "account")
+		httperror.LostAccount(w)
 		return
 	}
 

@@ -34,10 +34,11 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// create follow
 	if alreadyFollowing, err := h.app.Dao.Relationship().IsFollowing(ctx, user.ID, target.ID); err != nil {
 		httperror.InternalServerError(w, err)
 		return
-	} else if !alreadyFollowing {
+	} else if !alreadyFollowing && user.ID != target.ID {
 		_, err = h.app.Dao.Relationship().Create(ctx, user.ID, target.ID)
 		if err != nil {
 			httperror.InternalServerError(w, err)

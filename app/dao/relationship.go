@@ -25,11 +25,11 @@ func NewRelationship(db *sqlx.DB) repository.Relationship {
 // IsFollowing: followしているかどうかを返す
 func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
 	schema := `
-	SELECT *
+	SELECT id
 	FROM relationship
 	WHERE user_id =? AND follow_id=?`
-	var id, uid, fid uint32
-	if err := r.db.QueryRowContext(ctx, schema, userID, targetID).Scan(&id, &uid, &fid); err != nil {
+	var id uint32
+	if err := r.db.QueryRowContext(ctx, schema, userID, targetID).Scan(&id); err != nil {
 		if err == sql.ErrNoRows {
 			return false, nil
 		}

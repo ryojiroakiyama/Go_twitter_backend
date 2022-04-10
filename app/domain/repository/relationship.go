@@ -15,4 +15,7 @@ type Relationship interface {
 
 	// Create Relationship to follow
 	Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error)
+
+	// Fetch all following accounts
+	FollowingAccounts(ctx context.Context, username string) ([]object.Account, error)
 }

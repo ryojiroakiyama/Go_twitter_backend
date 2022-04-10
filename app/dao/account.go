@@ -26,11 +26,11 @@ func NewAccount(db *sqlx.DB) repository.Account {
 // FindByUsername : ユーザ名からユーザを取得
 func (r *account) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
 	entity := new(object.Account)
-	schema := `
+	query := `
 	SELECT * 
 	FROM account
 	WHERE username = ?`
-	err := r.db.QueryRowxContext(ctx, schema, username).StructScan(entity)
+	err := r.db.QueryRowxContext(ctx, query, username).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -42,10 +42,10 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 
 // Create: アカウント作成
 func (r *account) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
-	schema := `
+	query := `
 	INSERT INTO account
 		(username, password_hash) VALUES (?, ?)`
-	result, err := r.db.ExecContext(ctx, schema, entity.Username, entity.PasswordHash)
+	result, err := r.db.ExecContext(ctx, query, entity.Username, entity.PasswordHash)
 	if err != nil {
 		return 0, fmt.Errorf("%w", err)
 	}

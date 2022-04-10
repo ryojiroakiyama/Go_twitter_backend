@@ -26,7 +26,7 @@ func NewStatus(db *sqlx.DB) repository.Status {
 // FindByID : アカウントIDから投稿をとってくる
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	entity := new(object.Status)
-	schema := `
+	query := `
 	SELECT
 		s.id,
 		s.content,
@@ -37,7 +37,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	FROM status AS s INNER JOIN account AS a
 		ON s.account_id = a.id
 	WHERE s.id = ?`
-	err := r.db.QueryRowxContext(ctx, schema, id).StructScan(entity)
+	err := r.db.QueryRowxContext(ctx, query, id).StructScan(entity)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -49,10 +49,10 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 
 // Create: ステータス作成
 func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
-	schema := `
+	query := `
 	INSERT INTO status
 		(account_id, content) VALUES (?, ?)`
-	result, err := r.db.ExecContext(ctx, schema, entity.Account.ID, entity.Content)
+	result, err := r.db.ExecContext(ctx, query, entity.Account.ID, entity.Content)
 	if err != nil {
 		return 0, fmt.Errorf("%w", err)
 	}
@@ -65,11 +65,11 @@ func (r *status) Create(ctx context.Context, entity *object.Status) (object.Stat
 
 // Delete: ステータス削除
 func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
-	schema := `
+	query := `
 	DELETE
 	FROM status
 	WHERE id=? AND account_id=?`
-	_, err := r.db.ExecContext(ctx, schema, status_id, account_id)
+	_, err := r.db.ExecContext(ctx, query, status_id, account_id)
 	if err != nil {
 		return fmt.Errorf("%w", err)
 	}
@@ -79,7 +79,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 // GetAll : ステータス情報を全て取得
 func (r *status) All(ctx context.Context) ([]object.Status, error) {
 	var entity []object.Status
-	schema := `
+	query := `
 	SELECT
 		s.id, 
 		s.content, 
@@ -89,7 +89,7 @@ func (r *status) All(ctx context.Context) ([]object.Status, error) {
 		a.create_at AS "account.create_at"
 	FROM status AS s INNER JOIN account AS a 
 		ON s.account_id = a.id`
-	err := r.db.SelectContext(ctx, &entity, schema)
+	err := r.db.SelectContext(ctx, &entity, query)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

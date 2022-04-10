@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"yatter-backend-go/app/handler/auth"
 	"yatter-backend-go/app/handler/httperror"
 	"yatter-backend-go/app/handler/request"
 )
@@ -13,41 +12,25 @@ import (
 func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	targetname, err := request.UserNameOf(r)
+	_ = r.FormValue("limit")
+
+	username, err := request.UserNameOf(r)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}
-	target, err := h.app.Dao.Account().FindByUsername(ctx, targetname)
+
+	accounts, err := h.app.Dao.Relationship().FollowingAccounts(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
-		return
 	}
-	if target == nil {
+	if accounts == nil {
 		httperror.Error(w, http.StatusNotFound)
 		return
 	}
 
-	user := auth.AccountOf(r)
-	if user == nil {
-		httperror.LostAccount(w)
-		return
-	}
-
-	_, err = h.app.Dao.Relationship().Create(ctx, user.ID, target.ID)
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-
-	relationship, err := h.app.Dao.Relationship().Relationship(ctx, user.ID, target.ID)
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-
 	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(relationship); err != nil {
+	if err := json.NewEncoder(w).Encode(accounts); err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}

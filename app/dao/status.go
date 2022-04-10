@@ -25,7 +25,7 @@ func NewStatus(db *sqlx.DB) repository.Status {
 
 // FindByID : アカウントIDから投稿をとってくる
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
-	entity := new(object.Status)
+	status := new(object.Status)
 	query := `
 	SELECT
 		s.id,
@@ -37,14 +37,14 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	FROM status AS s INNER JOIN account AS a
 		ON s.account_id = a.id
 	WHERE s.id = ?`
-	err := r.db.QueryRowxContext(ctx, query, id).StructScan(entity)
+	err := r.db.QueryRowxContext(ctx, query, id).StructScan(status)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	return entity, nil
+	return status, nil
 }
 
 // Create: ステータス作成
@@ -78,7 +78,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 
 // GetAll : ステータス情報を全て取得
 func (r *status) All(ctx context.Context) ([]object.Status, error) {
-	var entity []object.Status
+	var statuses []object.Status
 	query := `
 	SELECT
 		s.id, 
@@ -89,12 +89,12 @@ func (r *status) All(ctx context.Context) ([]object.Status, error) {
 		a.create_at AS "account.create_at"
 	FROM status AS s INNER JOIN account AS a 
 		ON s.account_id = a.id`
-	err := r.db.SelectContext(ctx, &entity, query)
+	err := r.db.SelectContext(ctx, &statuses, query)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	return entity, nil
+	return statuses, nil
 }

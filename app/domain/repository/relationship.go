@@ -18,4 +18,7 @@ type Relationship interface {
 
 	// Fetch all following accounts
 	FollowingAccounts(ctx context.Context, username string) ([]object.Account, error)
+
+	// Fetch all follower accounts
+	FollowerAccounts(ctx context.Context, username string) ([]object.Account, error)
 }

@@ -96,3 +96,28 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 	}
 	return accounts, nil
 }
+
+func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
+	var accounts []object.Account
+	query := `
+	SELECT
+		a.id,
+		a.username,
+		a.password_hash,
+		a.display_name,
+		a.avatar,
+		a.header,
+		a.note,
+		a.create_at
+	FROM account AS a INNER JOIN relationship AS r
+		ON a.id = r.user_id
+	WHERE r.follow_id = (SELECT id FROM account WHERE username = ?)`
+	err := r.db.SelectContext(ctx, &accounts, query, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("%w", err)
+	}
+	return accounts, nil
+}

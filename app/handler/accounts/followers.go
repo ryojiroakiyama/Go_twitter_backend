@@ -8,10 +8,12 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
-// Handle request for `POST /v1/accounts/{username}/following`
-func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
+// Handle request for `POST /v1/accounts/{username}/followers`
+func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
+	_ = r.FormValue("max_id")
+	_ = r.FormValue("since_id")
 	_ = r.FormValue("limit")
 
 	username, err := request.UserNameOf(r)
@@ -20,7 +22,7 @@ func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accounts, err := h.app.Dao.Relationship().FollowingAccounts(ctx, username)
+	accounts, err := h.app.Dao.Relationship().FollowerAccounts(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}

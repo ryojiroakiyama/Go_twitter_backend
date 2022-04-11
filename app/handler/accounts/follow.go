@@ -9,10 +9,6 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
-const (
-	TextNoAccount = "No such account"
-)
-
 // Handle request for `POST /v1/accounts/{username}/follow`
 func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()

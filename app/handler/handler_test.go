@@ -38,7 +38,7 @@ func TestAccountRegistration(t *testing.T) {
 		statusExpected int
 	}{
 		{
-			name:           "account create normal",
+			name:           "create account",
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
@@ -46,7 +46,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name: "account create duplicate",
+			name: "create account duplicate",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
@@ -59,7 +59,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusConflict,
 		},
 		{
-			name: "account fetch",
+			name: "fetch account",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
@@ -71,7 +71,15 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name: "status fetch",
+			name:           "fetch no exist account",
+			db:             nil,
+			method:         "GET",
+			apiPath:        "/v1/accounts/john",
+			bodyExpected:   []byte(accounts.TextNoAccount + "\n"),
+			statusExpected: http.StatusNotFound,
+		},
+		{
+			name: "fetch status",
 			db: func() *dbMock {
 				s := make(statusTableMock)
 				s[1] = *johnStatus
@@ -83,7 +91,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name: "status create",
+			name: "create status",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john

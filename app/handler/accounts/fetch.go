@@ -8,6 +8,10 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
+const (
+	TextNoAccount = "No such account"
+)
+
 // Handle request for `GET /v1/accounts/{username}`
 func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -24,7 +28,7 @@ func (h *handler) Fetch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if account == nil {
-		httperror.Error(w, http.StatusNotFound)
+		http.Error(w, TextNoAccount, http.StatusNotFound)
 		return
 	}
 

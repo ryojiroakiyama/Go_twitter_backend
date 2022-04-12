@@ -22,6 +22,7 @@ func NewRouter(app *app.App) http.Handler {
 	r.Group(func(r chi.Router) {
 		r.Use(auth.Middleware(app))
 		r.Post("/{username}/follow", h.Follow)
+		r.Post("/{username}/unfollow", h.UnFollow)
 	})
 	r.Post("/", h.Create)
 	r.Get("/{username}", h.Fetch)

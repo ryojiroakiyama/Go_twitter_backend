@@ -72,6 +72,7 @@ func (r *relationship) Create(ctx context.Context, userID object.AccountID, targ
 	return id, nil
 }
 
+// FollowingAccounts: userのフォローしているアカウントを返す
 func (r *relationship) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
@@ -97,6 +98,7 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 	return accounts, nil
 }
 
+// FollowerAccounts: userのフォロワーのアカウントを返す
 func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
@@ -120,4 +122,17 @@ func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([
 		return nil, fmt.Errorf("%w", err)
 	}
 	return accounts, nil
+}
+
+// Delete: フォロー関係削除
+func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
+	query := `
+	DELETE
+	FROM relationship
+	WHERE user_id=? AND follow_id=?`
+	_, err := r.db.ExecContext(ctx, query, userID, targetID)
+	if err != nil {
+		return fmt.Errorf("%w", err)
+	}
+	return nil
 }

@@ -21,4 +21,7 @@ type Relationship interface {
 
 	// Fetch all follower accounts
 	FollowerAccounts(ctx context.Context, username string) ([]object.Account, error)
+
+	// Delete Relationship
+	Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error
 }

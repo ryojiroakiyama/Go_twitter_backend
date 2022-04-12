@@ -8,10 +8,6 @@ import (
 	"yatter-backend-go/app/handler/httperror"
 )
 
-const (
-	TextUserConflict = "username already exits"
-)
-
 // Request body for `POST /v1/accounts`
 type AddRequest struct {
 	Username string
@@ -39,7 +35,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	} else if accountFound != nil {
-		http.Error(w, TextUserConflict, http.StatusConflict)
+		httperror.Error(w, http.StatusConflict)
 		return
 	}
 

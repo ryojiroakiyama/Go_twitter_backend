@@ -24,7 +24,7 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if target == nil {
-		http.Error(w, TextNoAccount, http.StatusNotFound)
+		httperror.Error(w, http.StatusNotFound)
 		return
 	}
 

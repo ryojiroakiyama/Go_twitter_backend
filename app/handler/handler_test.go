@@ -15,8 +15,6 @@ import (
 	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
-	"yatter-backend-go/app/handler/accounts"
-	"yatter-backend-go/app/handler/statuses"
 )
 
 func TestAccountRegistration(t *testing.T) {
@@ -56,7 +54,7 @@ func TestAccountRegistration(t *testing.T) {
 			method:         "POST",
 			apiPath:        "/v1/accounts",
 			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   []byte(accounts.TextUserConflict + "\n"),
+			bodyExpected:   []byte(http.StatusText(http.StatusConflict) + "\n"),
 			statusExpected: http.StatusConflict,
 		},
 		{
@@ -75,7 +73,7 @@ func TestAccountRegistration(t *testing.T) {
 			name:           "fetch non-exist account",
 			method:         "GET",
 			apiPath:        "/v1/accounts/john",
-			bodyExpected:   []byte(accounts.TextNoAccount + "\n"),
+			bodyExpected:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
 			statusExpected: http.StatusNotFound,
 		},
 		{
@@ -94,7 +92,7 @@ func TestAccountRegistration(t *testing.T) {
 			name:           "fetch non-exist status",
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
-			bodyExpected:   []byte(statuses.TextNoStatus + "\n"),
+			bodyExpected:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
 			statusExpected: http.StatusNotFound,
 		},
 		{

@@ -8,10 +8,6 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
-const (
-	TextNoFollowers = "no followers"
-)
-
 // Handle request for `POST /v1/accounts/{username}/followers`
 func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -31,7 +27,7 @@ func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 	}
 	if accounts == nil {
-		http.Error(w, TextNoFollowers, http.StatusNotFound)
+		httperror.Error(w, http.StatusNotFound)
 		return
 	}
 

@@ -47,7 +47,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name: "create account duplicate",
+			name: "create duplicate account",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
@@ -72,7 +72,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name:           "fetch no exist account",
+			name:           "fetch non-exist account",
 			method:         "GET",
 			apiPath:        "/v1/accounts/john",
 			bodyExpected:   []byte(accounts.TextNoAccount + "\n"),
@@ -91,7 +91,7 @@ func TestAccountRegistration(t *testing.T) {
 			statusExpected: http.StatusOK,
 		},
 		{
-			name:           "fetch status no exist",
+			name:           "fetch non-exist status",
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
 			bodyExpected:   []byte(statuses.TextNoStatus + "\n"),

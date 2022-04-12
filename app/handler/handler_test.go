@@ -16,6 +16,7 @@ import (
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
 	"yatter-backend-go/app/handler/accounts"
+	"yatter-backend-go/app/handler/statuses"
 )
 
 func TestAccountRegistration(t *testing.T) {
@@ -72,7 +73,6 @@ func TestAccountRegistration(t *testing.T) {
 		},
 		{
 			name:           "fetch no exist account",
-			db:             nil,
 			method:         "GET",
 			apiPath:        "/v1/accounts/john",
 			bodyExpected:   []byte(accounts.TextNoAccount + "\n"),
@@ -89,6 +89,13 @@ func TestAccountRegistration(t *testing.T) {
 			apiPath:        "/v1/statuses/1",
 			bodyExpected:   jsonFormat(t, johnStatus),
 			statusExpected: http.StatusOK,
+		},
+		{
+			name:           "fetch status no exist",
+			method:         "GET",
+			apiPath:        "/v1/statuses/1",
+			bodyExpected:   []byte(statuses.TextNoStatus + "\n"),
+			statusExpected: http.StatusNotFound,
 		},
 		{
 			name: "create status",
@@ -219,7 +226,7 @@ func newStatusMock(db *dbMock) repository.Status {
 func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	s, exist := r.db.status[id]
 	if !exist {
-		return nil, fmt.Errorf("FindByID: Status not exist")
+		return nil, nil
 	}
 	return &s, nil
 }

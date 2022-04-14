@@ -77,7 +77,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 }
 
 // GetAll : ステータス情報を全て取得
-func (r *status) All(ctx context.Context) ([]object.Status, error) {
+func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	var statuses []object.Status
 	query := `
 	SELECT

@@ -17,7 +17,7 @@ type Status interface {
 	Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error
 
 	// Fetch all statuses
-	All(ctx context.Context) ([]object.Status, error)
+	AllStatuses(ctx context.Context) ([]object.Status, error)
 
 	// Fetch following account's statuses
 	FollowingStatuses(ctx context.Context, username string) ([]object.Status, error)

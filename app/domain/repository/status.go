@@ -18,4 +18,7 @@ type Status interface {
 
 	// Fetch all statuses
 	All(ctx context.Context) ([]object.Status, error)
+
+	// Fetch following account's statuses
+	FollowingStatuses(ctx context.Context, username string) ([]object.Status, error)
 }

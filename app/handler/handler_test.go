@@ -254,6 +254,10 @@ func (r *statusMock) All(ctx context.Context) ([]object.Status, error) {
 	return statuses, nil
 }
 
+func (r *statusMock) FollowStatuses(ctx context.Context, username string) ([]object.Status, error) {
+	return nil, nil
+}
+
 type daoMock struct {
 	db *dbMock
 }

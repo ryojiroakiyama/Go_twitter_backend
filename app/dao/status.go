@@ -98,3 +98,39 @@ func (r *status) All(ctx context.Context) ([]object.Status, error) {
 	}
 	return statuses, nil
 }
+
+// サブクエリ: フォローしているユーザのみのアカウントで構成されたアカウントテーブル
+// クエリ: サブアカウントテーブルとステータステーブルをJOIN
+func (r *status) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
+	var statuses []object.Status
+	query := `
+	SELECT
+		s.id, 
+		s.content, 
+		s.create_at, 
+		a.id AS "account.id", 
+		a.username AS "account.username",
+		a.create_at AS "account.create_at"
+	FROM status AS s INNER JOIN
+	(SELECT
+		a.id,
+		a.username,
+		a.password_hash,
+		a.display_name,
+		a.avatar,
+		a.header,
+		a.note,
+		a.create_at
+	FROM account AS a INNER JOIN relationship AS r
+		ON a.id = r.follow_id
+	WHERE r.user_id = (SELECT id FROM account WHERE username = ?))
+	AS a ON s.account_id = a.id`
+	err := r.db.SelectContext(ctx, &statuses, query, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("%w", err)
+	}
+	return statuses, nil
+}

@@ -145,9 +145,8 @@ func (r *relationship) NumberOfFollowingAccounts(ctx context.Context, username s
 	FROM account AS a INNER JOIN relationship AS r
 		ON a.id = r.follow_id
 	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
-	err := r.db.SelectContext(ctx, &count, query, username)
-	if err != nil {
-		return 0, fmt.Errorf("%w", err)
+	if err := r.db.QueryRowContext(ctx, query, username).Scan(&count); err != nil {
+		return 0, err
 	}
 	return count, nil
 }

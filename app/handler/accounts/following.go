@@ -23,6 +23,7 @@ func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 	accounts, err := h.app.Dao.Relationship().FollowingAccounts(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
+		return
 	}
 	if accounts == nil {
 		httperror.Error(w, http.StatusNotFound)

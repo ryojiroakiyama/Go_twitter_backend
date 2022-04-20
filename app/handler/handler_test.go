@@ -21,8 +21,13 @@ func TestAccountRegistration(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
 	}
-	johnStatus := &object.Status{
+	johnStatus1 := &object.Status{
 		ID:      1,
+		Content: "johnStatus",
+		Account: john,
+	}
+	johnStatus2 := &object.Status{
+		ID:      2,
 		Content: "johnStatus",
 		Account: john,
 	}
@@ -80,12 +85,12 @@ func TestAccountRegistration(t *testing.T) {
 			name: "fetch status",
 			db: func() *dbMock {
 				s := make(statusTableMock)
-				s[1] = *johnStatus
+				s[1] = *johnStatus1
 				return &dbMock{status: s}
 			}(),
 			method:         "GET",
 			apiPath:        "/v1/statuses/1",
-			bodyExpected:   jsonFormat(t, johnStatus),
+			bodyExpected:   jsonFormat(t, johnStatus1),
 			statusExpected: http.StatusOK,
 		},
 		{
@@ -106,7 +111,23 @@ func TestAccountRegistration(t *testing.T) {
 			apiPath:        "/v1/statuses",
 			body:           bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
 			userAuth:       john.Username,
-			bodyExpected:   jsonFormat(t, johnStatus),
+			bodyExpected:   jsonFormat(t, johnStatus1),
+			statusExpected: http.StatusOK,
+		},
+		{
+			name: "create duplicate status",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				s := make(statusTableMock)
+				a[john.Username] = *john
+				s[1] = *johnStatus1
+				return &dbMock{account: a, status: s}
+			}(),
+			method:         "POST",
+			apiPath:        "/v1/statuses",
+			body:           bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
+			userAuth:       john.Username,
+			bodyExpected:   jsonFormat(t, johnStatus2),
 			statusExpected: http.StatusOK,
 		},
 	}

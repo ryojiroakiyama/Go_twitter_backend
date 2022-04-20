@@ -136,3 +136,18 @@ func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targ
 	}
 	return nil
 }
+
+// NumberOfFollowingAccounts: userのフォローしているアカウント数を返す
+func (r *relationship) NumberOfFollowingAccounts(ctx context.Context, username string) (int64, error) {
+	var count int64
+	query := `
+	SELECT COUNT(*)
+	FROM account AS a INNER JOIN relationship AS r
+		ON a.id = r.follow_id
+	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
+	err := r.db.SelectContext(ctx, &count, query, username)
+	if err != nil {
+		return 0, fmt.Errorf("%w", err)
+	}
+	return count, nil
+}

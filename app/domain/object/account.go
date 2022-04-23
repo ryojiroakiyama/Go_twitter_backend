@@ -8,8 +8,9 @@ import (
 )
 
 type (
-	AccountID    = int64
-	PasswordHash = string
+	AccountID     = int64
+	NumOfAccounts = int64
+	PasswordHash  = string
 
 	Account struct {
 		// The internal ID of the account
@@ -23,6 +24,12 @@ type (
 
 		// The account's display name
 		DisplayName *string `json:"display_name,omitempty" db:"display_name"`
+
+		// Number of following account
+		FollowingCount NumOfAccounts `json:"following_count,omitempty" db:"following_count"`
+
+		// Number of follower account
+		FollowersCount NumOfAccounts `json:"followers_count,omitempty" db:"followers_count"`
 
 		// URL to the avatar image
 		Avatar *string `json:"avatar,omitempty"`

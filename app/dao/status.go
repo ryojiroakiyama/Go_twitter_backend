@@ -121,10 +121,10 @@ func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	return statuses, nil
 }
 
-// サブクエリ: フォローしているユーザのみのアカウントで構成されたアカウントテーブル
-// クエリ: サブアカウントテーブルとステータステーブルをJOIN
 func (r *status) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
 	var statuses []object.Status
+	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
+	// サブクエリ	: userがフォローしているアカウントのみで構成されたmeta_accountテーブル
 	query := `
 	SELECT
 		s.id, 

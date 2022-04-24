@@ -34,7 +34,10 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 		a.id AS "account.id",
 		a.username AS "account.username",
 		a.create_at AS "account.create_at"
-	FROM status AS s INNER JOIN account AS a
+	FROM
+		status AS s
+		INNER JOIN
+		account AS a
 		ON s.account_id = a.id
 	WHERE s.id = ?`
 	err := r.db.QueryRowxContext(ctx, query, id).StructScan(status)
@@ -50,7 +53,8 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 // Create: ステータス作成
 func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
-	INSERT INTO status
+	INSERT
+		INTO status
 		(account_id, content) VALUES (?, ?)`
 	result, err := r.db.ExecContext(ctx, query, entity.Account.ID, entity.Content)
 	if err != nil {
@@ -87,7 +91,10 @@ func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 		a.id AS "account.id", 
 		a.username AS "account.username",
 		a.create_at AS "account.create_at"
-	FROM status AS s INNER JOIN account AS a 
+	FROM
+		status AS s
+		INNER JOIN
+		account AS a 
 		ON s.account_id = a.id`
 	err := r.db.SelectContext(ctx, &statuses, query)
 	if err != nil {

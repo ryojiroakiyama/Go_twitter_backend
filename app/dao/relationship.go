@@ -88,8 +88,10 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 		ma.create_at,
 		ma.following_count,
 		ma.followers_count
-	FROM meta_account AS ma
-		INNER JOIN relationship AS r
+	FROM
+		meta_account AS ma
+		INNER JOIN
+		relationship AS r
 		ON ma.id = r.follow_id
 	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
 	err := r.db.SelectContext(ctx, &accounts, query, username)
@@ -117,8 +119,10 @@ func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([
 		ma.create_at,
 		ma.following_count,
 		ma.followers_count
-	FROM meta_account AS ma
-		INNER JOIN relationship AS r
+	FROM
+		meta_account AS ma
+		INNER JOIN
+		relationship AS r
 		ON ma.id = r.user_id
 	WHERE r.follow_id = (SELECT id FROM account WHERE username = ?)`
 	err := r.db.SelectContext(ctx, &accounts, query, username)

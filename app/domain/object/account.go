@@ -26,9 +26,11 @@ type (
 		DisplayName *string `json:"display_name,omitempty" db:"display_name"`
 
 		// Number of following account
+		// jsonでomitemptyにしてしまうと, フォロー関係が無くて'0'の時もomitされてしまう
 		FollowingCount NumOfAccounts `json:"following_count" db:"following_count"`
 
 		// Number of follower account
+		// jsonでomitemptyにしてしまうと, フォロー関係が無くて'0'の時もomitされてしまう
 		FollowersCount NumOfAccounts `json:"followers_count" db:"followers_count"`
 
 		// URL to the avatar image

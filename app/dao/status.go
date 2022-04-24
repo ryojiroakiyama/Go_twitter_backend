@@ -26,19 +26,27 @@ func NewStatus(db *sqlx.DB) repository.Status {
 // FindByID : アカウントIDから投稿をとってくる
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	status := new(object.Status)
+	// *object.Status内のaccountをscanの格納先として指示するために"account.~"
 	query := `
 	SELECT
 		s.id,
 		s.content,
 		s.create_at,
-		a.id AS "account.id",
-		a.username AS "account.username",
-		a.create_at AS "account.create_at"
+		ma.id AS "account.id",
+		ma.username AS "account.username",
+		ma.password_hash AS "account.password_hash",
+		ma.display_name AS "account.display_name",
+		ma.avatar AS "account.avatar",
+		ma.header AS "account.header",
+		ma.note AS "account.note",
+		ma.create_at AS "account.create_at",
+		ma.following_count AS "account.following_count",
+		ma.followers_count AS "account.followers_count"
 	FROM
 		status AS s
 		INNER JOIN
-		account AS a
-		ON s.account_id = a.id
+		meta_account AS ma
+		ON s.account_id = ma.id
 	WHERE s.id = ?`
 	err := r.db.QueryRowxContext(ctx, query, id).StructScan(status)
 	if err != nil {
@@ -88,14 +96,21 @@ func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 		s.id, 
 		s.content, 
 		s.create_at, 
-		a.id AS "account.id", 
-		a.username AS "account.username",
-		a.create_at AS "account.create_at"
+		ma.id AS "account.id",
+		ma.username AS "account.username",
+		ma.password_hash AS "account.password_hash",
+		ma.display_name AS "account.display_name",
+		ma.avatar AS "account.avatar",
+		ma.header AS "account.header",
+		ma.note AS "account.note",
+		ma.create_at AS "account.create_at",
+		ma.following_count AS "account.following_count",
+		ma.followers_count AS "account.followers_count"
 	FROM
 		status AS s
 		INNER JOIN
-		account AS a 
-		ON s.account_id = a.id`
+		meta_account AS ma 
+		ON s.account_id = ma.id`
 	err := r.db.SelectContext(ctx, &statuses, query)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
@@ -115,23 +130,38 @@ func (r *status) FollowingStatuses(ctx context.Context, username string) ([]obje
 		s.id, 
 		s.content, 
 		s.create_at, 
-		a.id AS "account.id", 
-		a.username AS "account.username",
-		a.create_at AS "account.create_at"
-	FROM status AS s INNER JOIN
-	(SELECT
-		a.id,
-		a.username,
-		a.password_hash,
-		a.display_name,
-		a.avatar,
-		a.header,
-		a.note,
-		a.create_at
-	FROM account AS a INNER JOIN relationship AS r
-		ON a.id = r.follow_id
-	WHERE r.user_id = (SELECT id FROM account WHERE username = ?))
-	AS a ON s.account_id = a.id`
+		ma.id AS "account.id",
+		ma.username AS "account.username",
+		ma.password_hash AS "account.password_hash",
+		ma.display_name AS "account.display_name",
+		ma.avatar AS "account.avatar",
+		ma.header AS "account.header",
+		ma.note AS "account.note",
+		ma.create_at AS "account.create_at",
+		ma.following_count AS "account.following_count",
+		ma.followers_count AS "account.followers_count"
+	FROM
+		status AS s
+		INNER JOIN
+			(SELECT
+				ma.id,
+				ma.username,
+				ma.password_hash,
+				ma.display_name,
+				ma.avatar,
+				ma.header,
+				ma.note,
+				ma.create_at,
+				ma.following_count,
+				ma.followers_count
+			FROM
+				meta_account AS ma
+				INNER JOIN
+				relationship AS r
+			ON ma.id = r.follow_id
+			WHERE r.user_id = (SELECT id FROM account WHERE username = ?))
+		AS ma
+		ON s.account_id = ma.id`
 	err := r.db.SelectContext(ctx, &statuses, query, username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {

@@ -77,16 +77,19 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 	var accounts []object.Account
 	query := `
 	SELECT
-		a.id,
-		a.username,
-		a.password_hash,
-		a.display_name,
-		a.avatar,
-		a.header,
-		a.note,
-		a.create_at
-	FROM account AS a INNER JOIN relationship AS r
-		ON a.id = r.follow_id
+		ma.id,
+		ma.username,
+		ma.password_hash,
+		ma.display_name,
+		ma.avatar,
+		ma.header,
+		ma.note,
+		ma.create_at,
+		ma.following_count,
+		ma.followers_count
+	FROM meta_account AS ma
+		INNER JOIN relationship AS r
+		ON ma.id = r.follow_id
 	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
 	err := r.db.SelectContext(ctx, &accounts, query, username)
 	if err != nil {
@@ -103,16 +106,19 @@ func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([
 	var accounts []object.Account
 	query := `
 	SELECT
-		a.id,
-		a.username,
-		a.password_hash,
-		a.display_name,
-		a.avatar,
-		a.header,
-		a.note,
-		a.create_at
-	FROM account AS a INNER JOIN relationship AS r
-		ON a.id = r.user_id
+		ma.id,
+		ma.username,
+		ma.password_hash,
+		ma.display_name,
+		ma.avatar,
+		ma.header,
+		ma.note,
+		ma.create_at,
+		ma.following_count,
+		ma.followers_count
+	FROM meta_account AS ma
+		INNER JOIN relationship AS r
+		ON ma.id = r.user_id
 	WHERE r.follow_id = (SELECT id FROM account WHERE username = ?)`
 	err := r.db.SelectContext(ctx, &accounts, query, username)
 	if err != nil {
@@ -135,32 +141,4 @@ func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targ
 		return fmt.Errorf("%w", err)
 	}
 	return nil
-}
-
-// NumberOfFollowingAccounts: userのフォローしているアカウント数を返す
-func (r *relationship) NumberOfFollowingAccounts(ctx context.Context, username string) (int64, error) {
-	var count int64
-	query := `
-	SELECT COUNT(*)
-	FROM account AS a INNER JOIN relationship AS r
-		ON a.id = r.follow_id
-	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
-	if err := r.db.QueryRowContext(ctx, query, username).Scan(&count); err != nil {
-		return 0, err
-	}
-	return count, nil
-}
-
-// NumberOfFollowerAccounts: userをフォローしているアカウント数を返す
-func (r *relationship) NumberOfFollowerAccounts(ctx context.Context, username string) (int64, error) {
-	var count int64
-	query := `
-	SELECT COUNT(*)
-	FROM account AS a INNER JOIN relationship AS r
-		ON a.id = r.user_id
-	WHERE r.follow_id = (SELECT id FROM account WHERE username = ?)`
-	if err := r.db.QueryRowContext(ctx, query, username).Scan(&count); err != nil {
-		return 0, err
-	}
-	return count, nil
 }

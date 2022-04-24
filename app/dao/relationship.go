@@ -23,7 +23,7 @@ func NewRelationship(db *sqlx.DB) repository.Relationship {
 	return &relationship{db: db}
 }
 
-// IsFollowing: followしているかどうかを返す
+// IsFollowing: userがtargertをfollowしているかを取得する
 func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
 	query := `
 	SELECT id
@@ -39,7 +39,7 @@ func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID,
 	return true, nil
 }
 
-// Relationship: フォロー関係を返す
+// Relationship: userとtargetのフォロー関係を取得する
 func (r *relationship) Relationship(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
 	isFollowing, err := r.IsFollowing(ctx, userID, targetID)
 	if err != nil {
@@ -56,7 +56,7 @@ func (r *relationship) Relationship(ctx context.Context, userID object.AccountID
 	}, nil
 }
 
-// Create: フォロー関係作成
+// Create: userがtargetをフォローする関係を登録
 func (r *relationship) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	query := `
 	INSERT INTO relationship
@@ -72,7 +72,7 @@ func (r *relationship) Create(ctx context.Context, userID object.AccountID, targ
 	return id, nil
 }
 
-// FollowingAccounts: userのフォローしているアカウントを返す
+// FollowingAccounts: userがフォローしているアカウント集合を返す
 func (r *relationship) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
@@ -101,7 +101,7 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 	return accounts, nil
 }
 
-// FollowerAccounts: userのフォロワーのアカウントを返す
+// FollowerAccounts: userをフォロワーのアカウント集合を返す
 func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
@@ -130,7 +130,7 @@ func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([
 	return accounts, nil
 }
 
-// Delete: フォロー関係削除
+// Delete: userがtargetをフォローする関係を削除
 func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
 	query := `
 	DELETE

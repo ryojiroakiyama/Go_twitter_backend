@@ -9,17 +9,23 @@ AS
     a.header,
     a.note,
     a.create_at,
-    r_group_by_user.cnt AS "following_count",
-    r_group_by_follow.cnt AS "followers_count"
+    CASE WHEN r_group_by_user.cnt IS NULL
+         THEN 0
+         ELSE r_group_by_user.cnt
+    END AS "following_count",
+    CASE WHEN r_group_by_follow.cnt IS NULL
+         THEN 0
+         ELSE r_group_by_follow.cnt
+    END AS "followers_count"
   FROM account AS a
-    INNER JOIN
+    LEFT OUTER JOIN
       (SELECT
         user_id,
         COUNT(*) AS cnt
       FROM relationship
       GROUP BY user_id) AS r_group_by_user
     ON a.id = r_group_by_user.user_id
-    INNER JOIN
+    LEFT OUTER JOIN
       (SELECT
         follow_id,
         COUNT(*) AS cnt

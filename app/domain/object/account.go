@@ -26,10 +26,10 @@ type (
 		DisplayName *string `json:"display_name,omitempty" db:"display_name"`
 
 		// Number of following account
-		FollowingCount NumOfAccounts `json:"following_count,omitempty" db:"following_count"`
+		FollowingCount NumOfAccounts `json:"following_count" db:"following_count"`
 
 		// Number of follower account
-		FollowersCount NumOfAccounts `json:"followers_count,omitempty" db:"followers_count"`
+		FollowersCount NumOfAccounts `json:"followers_count" db:"followers_count"`
 
 		// URL to the avatar image
 		Avatar *string `json:"avatar,omitempty"`

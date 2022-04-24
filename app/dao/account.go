@@ -43,7 +43,8 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 // Create: アカウント作成
 func (r *account) Create(ctx context.Context, account *object.Account) (object.AccountID, error) {
 	query := `
-	INSERT INTO account
+	INSERT
+		INTO account
 		(username, password_hash) VALUES (?, ?)`
 	result, err := r.db.ExecContext(ctx, query, account.Username, account.PasswordHash)
 	if err != nil {

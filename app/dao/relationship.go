@@ -59,7 +59,8 @@ func (r *relationship) Relationship(ctx context.Context, userID object.AccountID
 // Create: userがtargetをフォローする関係を登録
 func (r *relationship) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	query := `
-	INSERT INTO relationship
+	INSERT
+		INTO relationship
 		(user_id, follow_id) VALUES (?, ?)`
 	result, err := r.db.ExecContext(ctx, query, userID, targetID)
 	if err != nil {

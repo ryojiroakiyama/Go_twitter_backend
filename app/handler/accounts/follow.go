@@ -46,7 +46,7 @@ func (h *handler) Follow(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	relationship, err := h.app.Dao.Relationship().Relationship(ctx, user.ID, target.ID)
+	relationship, err := h.app.Dao.Relationship().Fetch(ctx, user.ID, target.ID)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

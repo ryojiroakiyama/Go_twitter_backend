@@ -6,14 +6,15 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
+// Relationship inplements db operation abount follow relationships
 type Relationship interface {
 	// Return whether the user is currently following the target
 	IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error)
 
-	// Fetch Relationship
-	Relationship(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error)
+	// Fetch infomation of relationship
+	Fetch(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error)
 
-	// Create Relationship to follow
+	// Create relationship
 	Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error)
 
 	// Fetch all following accounts
@@ -22,6 +23,6 @@ type Relationship interface {
 	// Fetch all follower accounts
 	FollowerAccounts(ctx context.Context, username string) ([]object.Account, error)
 
-	// Delete Relationship
+	// Delete relationship
 	Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error
 }

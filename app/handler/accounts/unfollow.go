@@ -40,7 +40,7 @@ func (h *handler) UnFollow(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 	}
 
-	relationship, err := h.app.Dao.Relationship().Relationship(ctx, user.ID, target.ID)
+	relationship, err := h.app.Dao.Relationship().Fetch(ctx, user.ID, target.ID)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

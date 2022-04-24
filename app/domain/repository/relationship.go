@@ -24,7 +24,4 @@ type Relationship interface {
 
 	// Delete Relationship
 	Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error
-
-	// Get number of following accounts
-	NumberOfFollowingAccounts(ctx context.Context, username string) (int64, error)
 }

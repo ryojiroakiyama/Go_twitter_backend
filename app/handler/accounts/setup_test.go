@@ -70,6 +70,16 @@ func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))
 }
 
+func (c *C) PostWithAuth(apiPath string, payload string, authUser string) (*http.Response, error) {
+	req, err := http.NewRequest("POST", c.asURL(apiPath), bytes.NewReader([]byte(payload)))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authentication", "username "+authUser)
+	return c.Server.Client().Do(req)
+}
+
 func (c *C) asURL(apiPath string) string {
 	baseURL, _ := url.Parse(c.Server.URL)
 	baseURL.Path = path.Join(baseURL.Path, apiPath)

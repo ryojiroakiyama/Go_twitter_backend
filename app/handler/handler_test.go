@@ -10,6 +10,12 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
+// 複数のテストパッケージに共有される用のutil_test.go的なのは作れない
+// 理由1. _test.goは特定のテスト対象に対してのみ作れるので,
+//       どこかのテストパッケージに属する必要がある
+// 理由2. importパスとしてテストパッケージを指定するやり方がわからない
+// 解決:  通常のパッケージとしてutilを含める(テストでしか使わないが毎度コンパイルされる)
+// 結論:  テストパッケージで行うことはそのパッケージ内で完結させる
 func TestAccountRegistration(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
@@ -39,7 +45,7 @@ func TestAccountRegistration(t *testing.T) {
 			method:     "POST",
 			apiPath:    "/v1/accounts",
 			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   ToJsonFormat(t, john),
+			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
 		},
 		{
@@ -64,7 +70,7 @@ func TestAccountRegistration(t *testing.T) {
 			}(),
 			method:     "GET",
 			apiPath:    "/v1/accounts/john",
-			wantBody:   ToJsonFormat(t, john),
+			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
 		},
 		{
@@ -83,7 +89,7 @@ func TestAccountRegistration(t *testing.T) {
 			}(),
 			method:     "GET",
 			apiPath:    "/v1/statuses/1",
-			wantBody:   ToJsonFormat(t, johnStatus1),
+			wantBody:   toJsonFormat(t, johnStatus1),
 			wantStatus: http.StatusOK,
 		},
 		{
@@ -104,7 +110,7 @@ func TestAccountRegistration(t *testing.T) {
 			apiPath:      "/v1/statuses",
 			body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
 			authUserName: john.Username,
-			wantBody:     ToJsonFormat(t, johnStatus1),
+			wantBody:     toJsonFormat(t, johnStatus1),
 			wantStatus:   http.StatusOK,
 		},
 		{
@@ -120,7 +126,7 @@ func TestAccountRegistration(t *testing.T) {
 			apiPath:      "/v1/statuses",
 			body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
 			authUserName: john.Username,
-			wantBody:     ToJsonFormat(t, johnStatus2),
+			wantBody:     toJsonFormat(t, johnStatus2),
 			wantStatus:   http.StatusOK,
 		},
 	}
@@ -155,7 +161,7 @@ func TestAccountRegistration(t *testing.T) {
 	}
 }
 
-func ToJsonFormat(t *testing.T, body interface{}) []byte {
+func toJsonFormat(t *testing.T, body interface{}) []byte {
 	t.Helper()
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {

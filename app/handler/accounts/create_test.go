@@ -22,14 +22,14 @@ func TestCreate(t *testing.T) {
 		wantBody   []byte
 	}{
 		{
-			name:       "create account",
+			name:       "success",
 			body:       `{"username":"john"}`,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody:   toJsonFormat(t, john),
 		},
 		{
-			name: "duplicate account",
+			name: "duplicate",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john

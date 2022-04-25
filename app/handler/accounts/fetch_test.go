@@ -46,7 +46,7 @@ func TestFetch(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Do("GET", "/"+tt.username, nil, "")
+			resp, err := c.Get("/" + tt.username)
 			if err != nil {
 				t.Fatal(err)
 			}

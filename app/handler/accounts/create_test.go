@@ -16,14 +16,14 @@ func TestCreate(t *testing.T) {
 	tests := []struct {
 		name       string
 		db         *dbMock
-		body       io.Reader
+		body       string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
 	}{
 		{
 			name:       "create account",
-			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
+			body:       `{"username":"john"}`,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody:   toJsonFormat(t, john),
@@ -35,7 +35,7 @@ func TestCreate(t *testing.T) {
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
+			body:       `{"username":"john"}`,
 			wantStatus: http.StatusConflict,
 			toTestBody: false,
 		},
@@ -46,7 +46,7 @@ func TestCreate(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Do("POST", "/", tt.body, "")
+			resp, err := c.PostJSON("/", tt.body)
 			if err != nil {
 				t.Fatal(err)
 			}

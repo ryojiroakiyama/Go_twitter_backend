@@ -2,7 +2,6 @@ package accounts_test
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 	"testing"
@@ -10,7 +9,7 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
-func TestAccountRegistration(t *testing.T) {
+func TestCreate(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
 	}
@@ -42,27 +41,8 @@ func TestAccountRegistration(t *testing.T) {
 			method:     "POST",
 			apiPath:    "/",
 			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   []byte(http.StatusText(http.StatusConflict) + "\n"),
+			wantBody:   nil, // bodyの確認省略
 			wantStatus: http.StatusConflict,
-		},
-		{
-			name: "fetch account",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.Username] = *john
-				return &dbMock{account: a}
-			}(),
-			method:     "GET",
-			apiPath:    "/john",
-			wantBody:   toJsonFormat(t, john),
-			wantStatus: http.StatusOK,
-		},
-		{
-			name:       "fetch non-exist account",
-			method:     "GET",
-			apiPath:    "/john",
-			wantBody:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
-			wantStatus: http.StatusNotFound,
 		},
 	}
 	for _, tt := range tests {
@@ -94,17 +74,4 @@ func TestAccountRegistration(t *testing.T) {
 			}
 		})
 	}
-}
-
-func toJsonFormat(t *testing.T, body interface{}) []byte {
-	t.Helper()
-	buf := new(bytes.Buffer)
-	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		t.Fatal(err)
-	}
-	out, err := io.ReadAll(buf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return out
 }

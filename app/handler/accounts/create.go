@@ -9,7 +9,7 @@ import (
 )
 
 // Request body for `POST /v1/accounts`
-type AddRequest struct {
+type requestSyntax struct {
 	Username string
 	Password string
 }
@@ -18,7 +18,7 @@ type AddRequest struct {
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	var req AddRequest
+	var req requestSyntax
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		httperror.BadRequest(w, err)
 		return

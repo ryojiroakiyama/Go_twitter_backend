@@ -18,7 +18,6 @@ func TestFollow(t *testing.T) {
 		db         *dbMock
 		authUser   string
 		followUser string
-		payload    string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
@@ -32,7 +31,6 @@ func TestFollow(t *testing.T) {
 			}(),
 			authUser:   "john",
 			followUser: "no_such_account",
-			payload:    "",
 			wantStatus: http.StatusNotFound,
 			toTestBody: false,
 		},
@@ -43,7 +41,7 @@ func TestFollow(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.PostWithAuth("/"+tt.followUser+"/follow", tt.payload, tt.authUser)
+			resp, err := c.PostWithAuth("/"+tt.followUser+"/follow", "", tt.authUser)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -14,19 +14,20 @@ func TestCreate(t *testing.T) {
 		Username: "john",
 	}
 	tests := []struct {
-		name       string
-		db         *dbMock
-		body       string
-		wantStatus int
-		toTestBody bool
-		wantBody   []byte
+		name        string
+		db          *dbMock
+		postPayload string
+		wantStatus  int
+		toTestBody  bool
+		wantBody    []byte
 	}{
 		{
-			name:       "success",
-			body:       `{"username":"john"}`,
-			wantStatus: http.StatusOK,
-			toTestBody: true,
-			wantBody:   toJsonFormat(t, john),
+			name:        "success",
+			db:          nil, // 空のDBがセットされる
+			postPayload: `{"username":"john"}`,
+			wantStatus:  http.StatusOK,
+			toTestBody:  true,
+			wantBody:    toJsonFormat(t, john),
 		},
 		{
 			name: "duplicate",
@@ -35,9 +36,9 @@ func TestCreate(t *testing.T) {
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			body:       `{"username":"john"}`,
-			wantStatus: http.StatusConflict,
-			toTestBody: false,
+			postPayload: `{"username":"john"}`,
+			wantStatus:  http.StatusConflict,
+			toTestBody:  false,
 		},
 	}
 	for _, tt := range tests {
@@ -46,7 +47,7 @@ func TestCreate(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.PostJSON("/", tt.body)
+			resp, err := c.PostJSON("/", tt.postPayload)
 			if err != nil {
 				t.Fatal(err)
 			}

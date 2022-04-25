@@ -10,7 +10,13 @@ import (
 
 type accountTableMock map[string]object.Account
 type statusTableMock map[object.StatusID]object.Status
-type relationshipTableMock map[object.RelationshipID]object.Relationship
+type relationshipTableMock map[object.RelationshipID]dataRelationShip
+
+// object.RelationShipにはuserIDなどDBをモックするには要素が足りないのでこちらで用意
+type dataRelationShip struct {
+	userID   object.AccountID
+	targetID object.AccountID
+}
 
 // dbMock: 各テーブルをmapで模したdbモック
 type dbMock struct {
@@ -102,7 +108,12 @@ func newRelationShipMock(db *dbMock) repository.Relationship {
 }
 
 func (r *relationshipMock) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
-	return true, nil
+	for _, value := range r.db.relationship {
+		if value.userID == userID && value.targetID == targetID {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 
 func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
@@ -122,7 +133,12 @@ func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, t
 }
 
 func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
-	return 0, nil
+	newID := int64(len(r.db.status) + 1)
+	r.db.relationship[newID] = dataRelationShip{
+		userID:   userID,
+		targetID: targetID,
+	}
+	return newID, nil
 }
 
 func (r *relationshipMock) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {

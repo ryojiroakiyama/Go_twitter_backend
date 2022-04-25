@@ -11,7 +11,12 @@ import (
 
 func TestFollow(t *testing.T) {
 	john := &object.Account{
+		ID:       1,
 		Username: "john",
+	}
+	benben := &object.Account{
+		ID:       2,
+		Username: "benben",
 	}
 	tests := []struct {
 		name       string
@@ -23,7 +28,25 @@ func TestFollow(t *testing.T) {
 		wantBody   []byte
 	}{
 		{
-			name: "try non-exist user",
+			name: "success",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				a[john.Username] = *john
+				a[benben.Username] = *benben
+				return &dbMock{account: a}
+			}(),
+			authUser:   "john",
+			followUser: "benben",
+			wantStatus: http.StatusOK,
+			toTestBody: true,
+			wantBody: toJsonFormat(t,
+				object.Relationship{
+					TargetID:  benben.ID,
+					Following: true,
+					FllowedBy: false}),
+		},
+		{
+			name: "non-exist user to follow",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john

@@ -2,7 +2,6 @@ package handler_test
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 	"testing"
@@ -10,13 +9,15 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
+// 関数分けが終わったら, bodyの確認とかその辺は消して内容を省略する
+
 // 複数のテストパッケージに共有される用のutil_test.go的なのは作れない
 // 理由1. _test.goは特定のテスト対象に対してのみ作れるので,
 //       どこかのテストパッケージに属する必要がある
 // 理由2. importパスとしてテストパッケージを指定するやり方がわからない
 // 解決:  通常のパッケージとしてutilを含める(テストでしか使わないが毎度コンパイルされる)
 // 結論:  テストパッケージで行うことはそのパッケージ内で完結させる
-func TestAccountRegistration(t *testing.T) {
+func TestHandler(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
 	}
@@ -49,19 +50,6 @@ func TestAccountRegistration(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		{
-			name: "create duplicate account",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.Username] = *john
-				return &dbMock{account: a}
-			}(),
-			method:     "POST",
-			apiPath:    "/v1/accounts",
-			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   []byte(http.StatusText(http.StatusConflict) + "\n"),
-			wantStatus: http.StatusConflict,
-		},
-		{
 			name: "fetch account",
 			db: func() *dbMock {
 				a := make(accountTableMock)
@@ -72,13 +60,6 @@ func TestAccountRegistration(t *testing.T) {
 			apiPath:    "/v1/accounts/john",
 			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
-		},
-		{
-			name:       "fetch non-exist account",
-			method:     "GET",
-			apiPath:    "/v1/accounts/john",
-			wantBody:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
-			wantStatus: http.StatusNotFound,
 		},
 		{
 			name: "fetch status",
@@ -159,17 +140,4 @@ func TestAccountRegistration(t *testing.T) {
 			}
 		})
 	}
-}
-
-func toJsonFormat(t *testing.T, body interface{}) []byte {
-	t.Helper()
-	buf := new(bytes.Buffer)
-	if err := json.NewEncoder(buf).Encode(body); err != nil {
-		t.Fatal(err)
-	}
-	out, err := io.ReadAll(buf)
-	if err != nil {
-		t.Fatal(err)
-	}
-	return out
 }

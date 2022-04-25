@@ -10,6 +10,17 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
+type TestSource []struct {
+	Name         string
+	DB           *dbMock
+	Method       string
+	ApiPath      string
+	Body         io.Reader
+	AuthUserName string
+	WantBody     []byte
+	WantStatus   int
+}
+
 func TestAccountRegistration(t *testing.T) {
 	john := &object.Account{
 		Username: "john",
@@ -24,138 +35,129 @@ func TestAccountRegistration(t *testing.T) {
 		Content: "johnStatus",
 		Account: john,
 	}
-	tests := []struct {
-		name           string
-		db             *dbMock
-		method         string
-		apiPath        string
-		body           io.Reader
-		userAuth       string
-		bodyExpected   []byte
-		statusExpected int
-	}{
+	tests := TestSource{
 		{
-			name:           "create account",
-			method:         "POST",
-			apiPath:        "/v1/accounts",
-			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   jsonFormat(t, john),
-			statusExpected: http.StatusOK,
+			Name:       "create account",
+			Method:     "POST",
+			ApiPath:    "/v1/accounts",
+			Body:       bytes.NewReader([]byte(`{"username":"john"}`)),
+			WantBody:   ToJsonFormat(t, john),
+			WantStatus: http.StatusOK,
 		},
 		{
-			name: "create duplicate account",
-			db: func() *dbMock {
+			Name: "create duplicate account",
+			DB: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			method:         "POST",
-			apiPath:        "/v1/accounts",
-			body:           bytes.NewReader([]byte(`{"username":"john"}`)),
-			bodyExpected:   []byte(http.StatusText(http.StatusConflict) + "\n"),
-			statusExpected: http.StatusConflict,
+			Method:     "POST",
+			ApiPath:    "/v1/accounts",
+			Body:       bytes.NewReader([]byte(`{"username":"john"}`)),
+			WantBody:   []byte(http.StatusText(http.StatusConflict) + "\n"),
+			WantStatus: http.StatusConflict,
 		},
 		{
-			name: "fetch account",
-			db: func() *dbMock {
+			Name: "fetch account",
+			DB: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			method:         "GET",
-			apiPath:        "/v1/accounts/john",
-			bodyExpected:   jsonFormat(t, john),
-			statusExpected: http.StatusOK,
+			Method:     "GET",
+			ApiPath:    "/v1/accounts/john",
+			WantBody:   ToJsonFormat(t, john),
+			WantStatus: http.StatusOK,
 		},
 		{
-			name:           "fetch non-exist account",
-			method:         "GET",
-			apiPath:        "/v1/accounts/john",
-			bodyExpected:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
-			statusExpected: http.StatusNotFound,
+			Name:       "fetch non-exist account",
+			Method:     "GET",
+			ApiPath:    "/v1/accounts/john",
+			WantBody:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
+			WantStatus: http.StatusNotFound,
 		},
 		{
-			name: "fetch status",
-			db: func() *dbMock {
+			Name: "fetch status",
+			DB: func() *dbMock {
 				s := make(statusTableMock)
 				s[1] = *johnStatus1
 				return &dbMock{status: s}
 			}(),
-			method:         "GET",
-			apiPath:        "/v1/statuses/1",
-			bodyExpected:   jsonFormat(t, johnStatus1),
-			statusExpected: http.StatusOK,
+			Method:     "GET",
+			ApiPath:    "/v1/statuses/1",
+			WantBody:   ToJsonFormat(t, johnStatus1),
+			WantStatus: http.StatusOK,
 		},
 		{
-			name:           "fetch non-exist status",
-			method:         "GET",
-			apiPath:        "/v1/statuses/1",
-			bodyExpected:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
-			statusExpected: http.StatusNotFound,
+			Name:       "fetch non-exist status",
+			Method:     "GET",
+			ApiPath:    "/v1/statuses/1",
+			WantBody:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
+			WantStatus: http.StatusNotFound,
 		},
 		{
-			name: "create status",
-			db: func() *dbMock {
+			Name: "create status",
+			DB: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			method:         "POST",
-			apiPath:        "/v1/statuses",
-			body:           bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
-			userAuth:       john.Username,
-			bodyExpected:   jsonFormat(t, johnStatus1),
-			statusExpected: http.StatusOK,
+			Method:       "POST",
+			ApiPath:      "/v1/statuses",
+			Body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
+			AuthUserName: john.Username,
+			WantBody:     ToJsonFormat(t, johnStatus1),
+			WantStatus:   http.StatusOK,
 		},
 		{
-			name: "create duplicate status",
-			db: func() *dbMock {
+			Name: "create duplicate status",
+			DB: func() *dbMock {
 				a := make(accountTableMock)
 				s := make(statusTableMock)
 				a[john.Username] = *john
 				s[1] = *johnStatus1
 				return &dbMock{account: a, status: s}
 			}(),
-			method:         "POST",
-			apiPath:        "/v1/statuses",
-			body:           bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
-			userAuth:       john.Username,
-			bodyExpected:   jsonFormat(t, johnStatus2),
-			statusExpected: http.StatusOK,
+			Method:       "POST",
+			ApiPath:      "/v1/statuses",
+			Body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
+			AuthUserName: john.Username,
+			WantBody:     ToJsonFormat(t, johnStatus2),
+			WantStatus:   http.StatusOK,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+		t.Run(tt.Name, func(t *testing.T) {
+			c := setup(t, tt.DB)
 			defer c.Close()
 
-			resp, err := c.Do(tt.method, tt.apiPath, tt.body, tt.userAuth)
+			resp, err := c.Do(tt.Method, tt.ApiPath, tt.Body, tt.AuthUserName)
 			if err != nil {
 				t.Fatal(err)
 			}
 			defer resp.Body.Close()
 
 			// check status code
-			if resp.StatusCode != tt.statusExpected {
-				t.Fatalf("code expected: %v, returned: %v", tt.statusExpected, resp.StatusCode)
+			if resp.StatusCode != tt.WantStatus {
+				t.Fatalf("code expected: %v, returned: %v", tt.WantStatus, resp.StatusCode)
 			}
 
 			// check response body
-			if tt.bodyExpected != nil {
+			if tt.WantBody != nil {
 				body, err := io.ReadAll(resp.Body)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if bytes.Compare(body, tt.bodyExpected) != 0 {
-					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.bodyExpected), string(body))
+				if bytes.Compare(body, tt.WantBody) != 0 {
+					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.WantBody), string(body))
 				}
 			}
 		})
 	}
 }
 
-func jsonFormat(t *testing.T, body interface{}) []byte {
+func ToJsonFormat(t *testing.T, body interface{}) []byte {
 	t.Helper()
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {

@@ -10,13 +10,16 @@ import (
 
 type accountTableMock map[string]object.Account
 type statusTableMock map[object.StatusID]object.Status
+type relationshipTableMock map[object.RelationshipID]object.Relationship
 
+// dbMock: 各テーブルをmapで模したdbモック
 type dbMock struct {
-	account accountTableMock
-	status  statusTableMock
+	account      accountTableMock
+	status       statusTableMock
+	relationship relationshipTableMock
 }
 
-// accountMock: accountに関するrepojitoryとtableをモック
+// accountMock: account repojitoryをモック
 type accountMock struct {
 	db *dbMock
 }
@@ -43,7 +46,7 @@ func (r *accountMock) Create(ctx context.Context, entity *object.Account) (objec
 	return int64(id), nil
 }
 
-// statusMock: statusに関するrepojitoryとtableをモック
+// statusMock: status repojitoryをモック
 type statusMock struct {
 	db *dbMock
 }
@@ -89,6 +92,52 @@ func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]
 	return nil, nil
 }
 
+// relationshipMock: relationship repojitoryをモック
+type relationshipMock struct {
+	db *dbMock
+}
+
+func newRelationShipMock(db *dbMock) repository.Relationship {
+	return &relationshipMock{db: db}
+}
+
+func (r *relationshipMock) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
+	return true, nil
+}
+
+func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
+	isFollowing, err := r.IsFollowing(ctx, userID, targetID)
+	if err != nil {
+		return nil, err
+	}
+	isFollowed, err := r.IsFollowing(ctx, targetID, userID)
+	if err != nil {
+		return nil, err
+	}
+	return &object.Relationship{
+		TargetID:  targetID,
+		Following: isFollowing,
+		FllowedBy: isFollowed,
+	}, nil
+}
+
+func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
+	return 0, nil
+}
+
+func (r *relationshipMock) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {
+	return nil, nil
+}
+
+func (r *relationshipMock) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
+	return nil, nil
+}
+
+func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
+	return nil
+}
+
+// daoMock: daoのモック
 type daoMock struct {
 	db *dbMock
 }
@@ -102,7 +151,7 @@ func (d *daoMock) Status() repository.Status {
 }
 
 func (d *daoMock) Relationship() repository.Relationship {
-	return nil
+	return newRelationShipMock(d.db)
 }
 
 func (d *daoMock) InitAll() error {

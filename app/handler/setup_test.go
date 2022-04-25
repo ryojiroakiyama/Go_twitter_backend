@@ -33,6 +33,9 @@ func fillDB(db *dbMock) *dbMock {
 	if db.status == nil {
 		db.status = make(statusTableMock)
 	}
+	if db.relationship == nil {
+		db.relationship = make(relationshipTableMock)
+	}
 	return db
 }
 

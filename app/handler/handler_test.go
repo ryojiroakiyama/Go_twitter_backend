@@ -42,14 +42,6 @@ func TestHandler(t *testing.T) {
 		wantStatus   int
 	}{
 		{
-			name:       "create account",
-			method:     "POST",
-			apiPath:    "/v1/accounts",
-			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   toJsonFormat(t, john),
-			wantStatus: http.StatusOK,
-		},
-		{
 			name: "fetch account",
 			db: func() *dbMock {
 				a := make(accountTableMock)

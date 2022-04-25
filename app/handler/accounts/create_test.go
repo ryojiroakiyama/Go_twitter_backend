@@ -14,35 +14,30 @@ func TestCreate(t *testing.T) {
 		Username: "john",
 	}
 	tests := []struct {
-		name         string
-		db           *dbMock
-		method       string
-		apiPath      string
-		body         io.Reader
-		authUserName string
-		wantBody     []byte
-		wantStatus   int
+		name       string
+		db         *dbMock
+		body       io.Reader
+		wantStatus int
+		toTestBody bool
+		wantBody   []byte
 	}{
 		{
 			name:       "create account",
-			method:     "POST",
-			apiPath:    "/",
 			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
+			toTestBody: true,
+			wantBody:   toJsonFormat(t, john),
 		},
 		{
-			name: "create duplicate account",
+			name: "duplicate account",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			method:     "POST",
-			apiPath:    "/",
 			body:       bytes.NewReader([]byte(`{"username":"john"}`)),
-			wantBody:   nil, // bodyの確認省略
 			wantStatus: http.StatusConflict,
+			toTestBody: false,
 		},
 	}
 	for _, tt := range tests {
@@ -51,7 +46,7 @@ func TestCreate(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Do(tt.method, tt.apiPath, tt.body, tt.authUserName)
+			resp, err := c.Do("POST", "/", tt.body, "")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -63,13 +58,13 @@ func TestCreate(t *testing.T) {
 			}
 
 			// check response body
-			if tt.wantBody != nil {
-				body, err := io.ReadAll(resp.Body)
+			if tt.toTestBody {
+				responseBody, err := io.ReadAll(resp.Body)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if bytes.Compare(body, tt.wantBody) != 0 {
-					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(body))
+				if bytes.Compare(responseBody, tt.wantBody) != 0 {
+					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(responseBody))
 				}
 			}
 		})

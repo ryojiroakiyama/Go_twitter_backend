@@ -16,27 +16,28 @@ func TestFetch(t *testing.T) {
 	tests := []struct {
 		name       string
 		db         *dbMock
-		apiPath    string
-		body       io.Reader
-		wantBody   []byte
+		username   string
 		wantStatus int
+		toTestBody bool
+		wantBody   []byte
 	}{
 		{
-			name: "simple",
+			name: "success",
 			db: func() *dbMock {
 				a := make(accountTableMock)
 				a[john.Username] = *john
 				return &dbMock{account: a}
 			}(),
-			apiPath:    "/john",
+			username:   "john",
+			toTestBody: true,
 			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
 		},
 		{
 			name:       "non-exist",
-			apiPath:    "/john",
-			wantBody:   nil, // body確認省略
+			username:   "john",
 			wantStatus: http.StatusNotFound,
+			toTestBody: false,
 		},
 	}
 	for _, tt := range tests {
@@ -45,7 +46,7 @@ func TestFetch(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Do("GET", tt.apiPath, tt.body, "")
+			resp, err := c.Do("GET", "/"+tt.username, nil, "")
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -57,13 +58,13 @@ func TestFetch(t *testing.T) {
 			}
 
 			// check response body
-			if tt.wantBody != nil {
-				body, err := io.ReadAll(resp.Body)
+			if tt.toTestBody {
+				responseBody, err := io.ReadAll(resp.Body)
 				if err != nil {
 					t.Fatal(err)
 				}
-				if bytes.Compare(body, tt.wantBody) != 0 {
-					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(body))
+				if bytes.Compare(responseBody, tt.wantBody) != 0 {
+					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(responseBody))
 				}
 			}
 		})

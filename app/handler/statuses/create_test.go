@@ -7,6 +7,7 @@ import (
 	"testing"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/handlertest"
+	"yatter-backend-go/app/handler/statuses"
 )
 
 func TestCreate(t *testing.T) {
@@ -32,6 +33,8 @@ func TestCreate(t *testing.T) {
 			}(),
 			postPayload: `{"status":"new status"}`,
 			authUser:    john.UserName,
+			wantStatus:  http.StatusOK,
+			toTestBody:  true,
 			wantBody: handlertest.ToJsonFormat(t, object.Status{
 				ID:      1, //IDは1から始まるので
 				Content: "new status",
@@ -39,21 +42,23 @@ func TestCreate(t *testing.T) {
 					Username: john.UserName,
 				},
 			}),
-			wantStatus: http.StatusOK,
 		},
 		{
-			name:        "bad request",
-			db:          nil,
+			name: "bad request",
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
+			}(),
 			postPayload: "notjson",
 			authUser:    john.UserName,
 			wantStatus:  http.StatusBadRequest,
-			toTestBody:  false,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := handlertest.Setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db, statuses.NewRouter)
 			defer c.Close()
 
 			resp, err := c.PostJsonWithAuth("/", tt.postPayload, tt.authUser)

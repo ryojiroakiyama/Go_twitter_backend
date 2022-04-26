@@ -2,7 +2,6 @@ package handlertest
 
 import (
 	"bytes"
-	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -10,13 +9,12 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/app"
-	"yatter-backend-go/app/handler/accounts"
 )
 
-func Setup(t *testing.T, db *DBMock) *C {
+func Setup(t *testing.T, db *DBMock, newRouter func(app *app.App) http.Handler) *C {
 	db = fillDB(db)
 	app := &app.App{Dao: &DaoMock{db: db}}
-	server := httptest.NewServer(accounts.NewRouter(app))
+	server := httptest.NewServer(newRouter(app))
 	return &C{
 		App:    app,
 		Server: server,
@@ -52,19 +50,19 @@ func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
 	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
 }
 
-func (c *C) Do(method, apiPath string, body io.Reader, userAuth string) (*http.Response, error) {
-	req, err := http.NewRequest(method, c.asURL(apiPath), body)
-	if err != nil {
-		return nil, err
-	}
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
-	}
-	if userAuth != "" {
-		req.Header.Set("Authentication", "username "+userAuth)
-	}
-	return c.Server.Client().Do(req)
-}
+//func (c *C) Do(method, apiPath string, body io.Reader, userAuth string) (*http.Response, error) {
+//	req, err := http.NewRequest(method, c.asURL(apiPath), body)
+//	if err != nil {
+//		return nil, err
+//	}
+//	if body != nil {
+//		req.Header.Set("Content-Type", "application/json")
+//	}
+//	if userAuth != "" {
+//		req.Header.Set("Authentication", "username "+userAuth)
+//	}
+//	return c.Server.Client().Do(req)
+//}
 
 func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))

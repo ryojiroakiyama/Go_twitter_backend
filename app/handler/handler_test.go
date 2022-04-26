@@ -19,11 +19,7 @@ func TestHandler(t *testing.T) {
 		Content: "johnStatus",
 		Account: john,
 	}
-	johnStatus2 := &object.Status{
-		ID:      2,
-		Content: "johnStatus",
-		Account: john,
-	}
+
 	tests := []struct {
 		name         string
 		db           *dbMock
@@ -77,22 +73,6 @@ func TestHandler(t *testing.T) {
 			body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
 			authUserName: john.Username,
 			wantBody:     toJsonFormat(t, johnStatus1),
-			wantStatus:   http.StatusOK,
-		},
-		{
-			name: "create duplicate status",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				s := make(statusTableMock)
-				a[john.Username] = *john
-				s[1] = *johnStatus1
-				return &dbMock{account: a, status: s}
-			}(),
-			method:       "POST",
-			apiPath:      "/v1/statuses",
-			body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
-			authUserName: john.Username,
-			wantBody:     toJsonFormat(t, johnStatus2),
 			wantStatus:   http.StatusOK,
 		},
 	}

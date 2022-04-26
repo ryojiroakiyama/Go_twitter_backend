@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"testing"
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/accounts"
 	"yatter-backend-go/app/handler/handlertest"
 )
 
@@ -40,13 +41,12 @@ func TestCreate(t *testing.T) {
 			}(),
 			postPayload: `{"username":"john"}`,
 			wantStatus:  http.StatusConflict,
-			toTestBody:  false,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := handlertest.Setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db, accounts.NewRouter)
 			defer c.Close()
 
 			resp, err := c.PostJSON("/", tt.postPayload)

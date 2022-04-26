@@ -137,7 +137,7 @@ func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.
 
 func (r *statusMock) Create(ctx context.Context, Status *object.Status) (object.AccountID, error) {
 	newID := int64(len(r.db.Status) + 1)
-	r.db.Status[newID] = StatusData{ID: newID, UserName: Status.Account.Username}
+	r.db.Status[newID] = StatusData{ID: newID, UserName: Status.Account.Username, Content: Status.Content}
 	return newID, nil
 }
 

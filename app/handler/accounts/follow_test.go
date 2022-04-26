@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/accounts"
 	"yatter-backend-go/app/handler/handlertest"
 )
 
@@ -56,13 +57,12 @@ func TestFollow(t *testing.T) {
 			authUser:   john.UserName,
 			followUser: "no_such_account",
 			wantStatus: http.StatusNotFound,
-			toTestBody: false,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := handlertest.Setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db, accounts.NewRouter)
 			defer c.Close()
 
 			resp, err := c.PostJsonWithAuth("/"+tt.followUser+"/follow", "", tt.authUser)

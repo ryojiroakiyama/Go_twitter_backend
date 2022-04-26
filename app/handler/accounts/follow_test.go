@@ -7,20 +7,21 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestFollow(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
-	benben := accountData{
-		id:       2,
-		username: "benben",
+	benben := handlertest.AccountData{
+		ID:       2,
+		UserName: "benben",
 	}
 	tests := []struct {
 		name       string
-		db         *dbMock
+		db         *handlertest.DBMock
 		authUser   string
 		followUser string
 		wantStatus int
@@ -29,30 +30,30 @@ func TestFollow(t *testing.T) {
 	}{
 		{
 			name: "success",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				return &handlertest.DBMock{Account: a}
 			}(),
-			authUser:   john.username,
-			followUser: benben.username,
+			authUser:   john.UserName,
+			followUser: benben.UserName,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
-			wantBody: toJsonFormat(t,
+			wantBody: handlertest.ToJsonFormat(t,
 				object.Relationship{
-					TargetID:  benben.id,
+					TargetID:  benben.ID,
 					Following: true,
 					FllowedBy: false}),
 		},
 		{
 			name: "non-exist user to follow",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
 			}(),
-			authUser:   john.username,
+			authUser:   john.UserName,
 			followUser: "no_such_account",
 			wantStatus: http.StatusNotFound,
 			toTestBody: false,
@@ -61,7 +62,7 @@ func TestFollow(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
 			resp, err := c.PostJsonWithAuth("/"+tt.followUser+"/follow", "", tt.authUser)

@@ -7,36 +7,37 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestFetch(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "benben",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "benben",
 	}
 	tests := []struct {
 		name       string
-		db         *dbMock
-		username   string
+		db         *handlertest.DBMock
+		UserName   string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
 	}{
 		{
 			name: "success",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
 			}(),
-			username:   john.username,
+			UserName:   john.UserName,
 			toTestBody: true,
-			wantBody:   toJsonFormat(t, object.Account{Username: john.username}),
+			wantBody:   handlertest.ToJsonFormat(t, object.Account{Username: john.UserName}),
 			wantStatus: http.StatusOK,
 		},
 		{
 			name:       "non-exist",
-			username:   "john",
+			UserName:   "john",
 			wantStatus: http.StatusNotFound,
 			toTestBody: false,
 		},
@@ -44,10 +45,10 @@ func TestFetch(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Get("/" + tt.username)
+			resp, err := c.Get("/" + tt.UserName)
 			if err != nil {
 				t.Fatal(err)
 			}

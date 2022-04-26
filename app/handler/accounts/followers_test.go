@@ -7,61 +7,62 @@ import (
 	"testing"
 
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestFollowers(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
-	benben := accountData{
-		id:       2,
-		username: "benben",
+	benben := handlertest.AccountData{
+		ID:       2,
+		UserName: "benben",
 	}
-	relation := relationshipData{
-		userID:   john.id,
-		targetID: benben.id,
+	relation := handlertest.RelationShipData{
+		UserID:   john.ID,
+		TargetID: benben.ID,
 	}
 	tests := []struct {
 		name       string
-		db         *dbMock
-		username   string
+		db         *handlertest.DBMock
+		UserName   string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
 	}{
 		{
 			name: "success",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				r := make(relationshipTableMock)
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				r := make(handlertest.RelationShipTableMock)
 				r[0] = relation
-				return &dbMock{account: a, relationship: r}
+				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			username:   benben.username,
+			UserName:   benben.UserName,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
-			wantBody: toJsonFormat(t,
+			wantBody: handlertest.ToJsonFormat(t,
 				[]object.Account{
 					{
-						ID:       john.id,
-						Username: john.username,
+						ID:       john.ID,
+						Username: john.UserName,
 					},
 				}),
 		},
 		{
 			name: "not_found",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				r := make(relationshipTableMock)
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				r := make(handlertest.RelationShipTableMock)
 				r[0] = relation
-				return &dbMock{account: a, relationship: r}
+				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			username:   john.username,
+			UserName:   john.UserName,
 			wantStatus: http.StatusNotFound,
 			toTestBody: false,
 		},
@@ -69,10 +70,10 @@ func TestFollowers(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.Get("/" + tt.username + "/followers")
+			resp, err := c.Get("/" + tt.UserName + "/followers")
 			if err != nil {
 				t.Fatal(err)
 			}

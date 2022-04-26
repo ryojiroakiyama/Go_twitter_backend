@@ -6,24 +6,25 @@ import (
 	"net/http"
 	"testing"
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestUnFollow(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
-	benben := accountData{
-		id:       2,
-		username: "benben",
+	benben := handlertest.AccountData{
+		ID:       2,
+		UserName: "benben",
 	}
-	relation := relationshipData{
-		userID:   john.id,
-		targetID: benben.id,
+	relation := handlertest.RelationShipData{
+		UserID:   john.ID,
+		TargetID: benben.ID,
 	}
 	tests := []struct {
 		name         string
-		db           *dbMock
+		db           *handlertest.DBMock
 		authUser     string
 		unFollowUser string
 		wantStatus   int
@@ -32,47 +33,47 @@ func TestUnFollow(t *testing.T) {
 	}{
 		{
 			name: "success",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				r := make(relationshipTableMock)
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				r := make(handlertest.RelationShipTableMock)
 				r[0] = relation
-				return &dbMock{account: a, relationship: r}
+				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			authUser:     john.username,
-			unFollowUser: benben.username,
+			authUser:     john.UserName,
+			unFollowUser: benben.UserName,
 			wantStatus:   http.StatusOK,
 			toTestBody:   true,
-			wantBody: toJsonFormat(t, &object.Relationship{
-				TargetID:  benben.id,
+			wantBody: handlertest.ToJsonFormat(t, &object.Relationship{
+				TargetID:  benben.ID,
 				Following: false,
 				FllowedBy: false,
 			}),
 		},
 		{
 			name: "non-exist account",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				return &handlertest.DBMock{Account: a}
 			}(),
-			authUser:     john.username,
+			authUser:     john.UserName,
 			unFollowUser: "no such account",
 			wantStatus:   http.StatusNotFound,
 			toTestBody:   false,
 		},
 		{ // これでエラーにはならないという意味でのテスト
 			name: "already not following",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				a[benben.id] = benben
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				return &handlertest.DBMock{Account: a}
 			}(),
-			authUser:     john.username,
-			unFollowUser: benben.username,
+			authUser:     john.UserName,
+			unFollowUser: benben.UserName,
 			wantStatus:   http.StatusOK,
 			toTestBody:   false,
 		},
@@ -80,7 +81,7 @@ func TestUnFollow(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
 			resp, err := c.PostJsonWithAuth("/"+tt.unFollowUser+"/unfollow", "", tt.authUser)

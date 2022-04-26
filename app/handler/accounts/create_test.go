@@ -6,16 +6,17 @@ import (
 	"net/http"
 	"testing"
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestCreate(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
 	tests := []struct {
 		name        string
-		db          *dbMock
+		db          *handlertest.DBMock
 		postPayload string
 		wantStatus  int
 		toTestBody  bool
@@ -27,15 +28,15 @@ func TestCreate(t *testing.T) {
 			postPayload: `{"username":"john"}`,
 			wantStatus:  http.StatusOK,
 			toTestBody:  true,
-			wantBody: toJsonFormat(t,
-				object.Account{Username: john.username}),
+			wantBody: handlertest.ToJsonFormat(t,
+				object.Account{Username: john.UserName}),
 		},
 		{
 			name: "duplicate",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
 			}(),
 			postPayload: `{"username":"john"}`,
 			wantStatus:  http.StatusConflict,
@@ -45,7 +46,7 @@ func TestCreate(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
 			resp, err := c.PostJSON("/", tt.postPayload)

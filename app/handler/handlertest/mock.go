@@ -50,14 +50,14 @@ type AccountData struct {
 type StatusTableMock map[int64]StatusData
 type StatusData struct {
 	ID       int64
-	content  string
+	Content  string
 	UserName string
 }
 
 type RelationShipTableMock map[int64]RelationShipData
 type RelationShipData struct {
-	userID   int64
-	targetID int64
+	UserID   int64
+	TargetID int64
 }
 
 // accountMock: Account repojitoryをモック
@@ -93,8 +93,8 @@ func (r *accountMock) Following(ctx context.Context, username string) ([]object.
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
 	for _, v := range r.db.RelationShip {
-		if v.userID == a.ID {
-			ta := r.db.Account[v.targetID]
+		if v.UserID == a.ID {
+			ta := r.db.Account[v.TargetID]
 			res = append(res, object.Account{ID: ta.ID, Username: ta.UserName})
 		}
 	}
@@ -105,8 +105,8 @@ func (r *accountMock) Followers(ctx context.Context, username string) ([]object.
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
 	for _, v := range r.db.RelationShip {
-		if v.targetID == a.ID {
-			ua := r.db.Account[v.userID]
+		if v.TargetID == a.ID {
+			ua := r.db.Account[v.UserID]
 			res = append(res, object.Account{ID: ua.ID, Username: ua.UserName})
 		}
 	}
@@ -129,7 +129,7 @@ func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.
 	}
 	return &object.Status{
 		ID:      s.ID,
-		Content: s.content,
+		Content: s.Content,
 		Account: &object.Account{
 			Username: s.UserName},
 	}, nil
@@ -152,7 +152,7 @@ func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 		statuses = append(statuses,
 			object.Status{
 				ID:      v.ID,
-				Content: v.content,
+				Content: v.Content,
 				Account: &object.Account{Username: v.UserName}})
 	}
 	return statuses, nil
@@ -173,7 +173,7 @@ func newRelationShipMock(db *DBMock) repository.Relationship {
 
 func (r *relationshipMock) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
 	for _, value := range r.db.RelationShip {
-		if value.userID == userID && value.targetID == targetID {
+		if value.UserID == userID && value.TargetID == targetID {
 			return true, nil
 		}
 	}
@@ -199,15 +199,15 @@ func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, t
 func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	newID := int64(len(r.db.Status) + 1)
 	r.db.RelationShip[newID] = RelationShipData{
-		userID:   userID,
-		targetID: targetID,
+		UserID:   userID,
+		TargetID: targetID,
 	}
 	return newID, nil
 }
 
 func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
 	for ID, v := range r.db.RelationShip {
-		if v.userID == userID && v.targetID == targetID {
+		if v.UserID == userID && v.TargetID == targetID {
 			delete(r.db.RelationShip, ID)
 		}
 	}

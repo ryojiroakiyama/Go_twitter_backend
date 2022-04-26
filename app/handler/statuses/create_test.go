@@ -14,11 +14,6 @@ func TestCreate(t *testing.T) {
 		ID:       1,
 		UserName: "john",
 	}
-	//johnsStatus := statusData{
-	//	ID:       1,
-	//	content:  "john's status",
-	//	UserName: john.UserName,
-	//}
 	tests := []struct {
 		name        string
 		db          *handlertest.DBMock
@@ -46,22 +41,14 @@ func TestCreate(t *testing.T) {
 			}),
 			wantStatus: http.StatusOK,
 		},
-		//{
-		//	name: "create duplicate status",
-		//	db: func() *dbMock {
-		//		a := make(accountTableMock)
-		//		s := make(statusTableMock)
-		//		a[john.Username] = *john
-		//		s[1] = *johnStatus1
-		//		return &dbMock{Account: a, status: s}
-		//	}(),
-		//	method:       "POST",
-		//	apiPath:      "/v1/statuses",
-		//	body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
-		//	authUserName: john.Username,
-		//	wantBody:     toJsonFormat(t, johnStatus2),
-		//	wantStatus:   http.StatusOK,
-		//},
+		{
+			name:        "bad request",
+			db:          nil,
+			postPayload: "notjson",
+			authUser:    john.UserName,
+			wantStatus:  http.StatusBadRequest,
+			toTestBody:  false,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt

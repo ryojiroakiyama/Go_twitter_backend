@@ -46,6 +46,14 @@ func (r *accountMock) Create(ctx context.Context, entity *object.Account) (objec
 	return int64(id), nil
 }
 
+func (r *accountMock) Following(ctx context.Context, username string) ([]object.Account, error) {
+	return nil, nil
+}
+
+func (r *accountMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
+	return nil, nil
+}
+
 // statusMock: status repojitoryをモック
 type statusMock struct {
 	db *dbMock
@@ -123,14 +131,6 @@ func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, t
 
 func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	return 0, nil
-}
-
-func (r *relationshipMock) Following(ctx context.Context, username string) ([]object.Account, error) {
-	return nil, nil
-}
-
-func (r *relationshipMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
-	return nil, nil
 }
 
 func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {

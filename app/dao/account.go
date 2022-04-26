@@ -56,3 +56,65 @@ func (r *account) Create(ctx context.Context, account *object.Account) (object.A
 	}
 	return id, nil
 }
+
+// Following: userがフォローしているアカウント集合を返す
+func (r *account) Following(ctx context.Context, username string) ([]object.Account, error) {
+	var accounts []object.Account
+	query := `
+	SELECT
+		ma.id,
+		ma.username,
+		ma.password_hash,
+		ma.display_name,
+		ma.avatar,
+		ma.header,
+		ma.note,
+		ma.create_at,
+		ma.following_count,
+		ma.followers_count
+	FROM
+		meta_account AS ma
+		INNER JOIN
+		relationship AS r
+		ON ma.id = r.follow_id
+	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
+	err := r.db.SelectContext(ctx, &accounts, query, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("%w", err)
+	}
+	return accounts, nil
+}
+
+// Followers: userをフォロワーのアカウント集合を返す
+func (r *account) Followers(ctx context.Context, username string) ([]object.Account, error) {
+	var accounts []object.Account
+	query := `
+	SELECT
+		ma.id,
+		ma.username,
+		ma.password_hash,
+		ma.display_name,
+		ma.avatar,
+		ma.header,
+		ma.note,
+		ma.create_at,
+		ma.following_count,
+		ma.followers_count
+	FROM
+		meta_account AS ma
+		INNER JOIN
+		relationship AS r
+		ON ma.id = r.user_id
+	WHERE r.follow_id = (SELECT id FROM account WHERE username = ?)`
+	err := r.db.SelectContext(ctx, &accounts, query, username)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("%w", err)
+	}
+	return accounts, nil
+}

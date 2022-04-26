@@ -13,4 +13,10 @@ type Account interface {
 
 	// Create Account
 	Create(ctx context.Context, entity *object.Account) (object.AccountID, error)
+
+	// Fetch all following accounts
+	Following(ctx context.Context, username string) ([]object.Account, error)
+
+	// Fetch all follower accounts
+	Followers(ctx context.Context, username string) ([]object.Account, error)
 }

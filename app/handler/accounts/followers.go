@@ -22,7 +22,7 @@ func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accounts, err := h.app.Dao.Relationship().Followers(ctx, username)
+	accounts, err := h.app.Dao.Account().Followers(ctx, username)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}

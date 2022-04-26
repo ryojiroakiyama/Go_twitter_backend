@@ -17,12 +17,6 @@ type Relationship interface {
 	// Create relationship
 	Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error)
 
-	// Fetch all following accounts
-	Following(ctx context.Context, username string) ([]object.Account, error)
-
-	// Fetch all follower accounts
-	Followers(ctx context.Context, username string) ([]object.Account, error)
-
 	// Delete relationship
 	Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error
 }

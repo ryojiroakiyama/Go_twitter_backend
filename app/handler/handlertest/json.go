@@ -1,4 +1,4 @@
-package statuses_test
+package handlertest
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func toJsonFormat(t *testing.T, body interface{}) []byte {
+func ToJsonFormat(t *testing.T, body interface{}) []byte {
 	t.Helper()
 	buf := new(bytes.Buffer)
 	if err := json.NewEncoder(buf).Encode(body); err != nil {

@@ -1,4 +1,4 @@
-package statuses_test
+package handlertest
 
 import (
 	"context"
@@ -12,69 +12,69 @@ import (
  * 構成はdaoと同じようにした
  */
 
-// daoMock: daoのモック
-type daoMock struct {
-	db *dbMock
+// DaoMock: daoのモック
+type DaoMock struct {
+	db *DBMock
 }
 
-func (d *daoMock) Account() repository.Account {
+func (d *DaoMock) Account() repository.Account {
 	return newAccountMock(d.db)
 }
 
-func (d *daoMock) Status() repository.Status {
+func (d *DaoMock) Status() repository.Status {
 	return newStatusMock(d.db)
 }
 
-func (d *daoMock) Relationship() repository.Relationship {
+func (d *DaoMock) Relationship() repository.Relationship {
 	return newRelationShipMock(d.db)
 }
 
-func (d *daoMock) InitAll() error {
+func (d *DaoMock) InitAll() error {
 	d.db = nil
 	return nil
 }
 
-// dbMock: 各テーブルをmapで模したdbモック
-type dbMock struct {
-	account      accountTableMock
-	status       statusTableMock
-	relationship relationshipTableMock
+// DBMock: 各テーブルをmapで模したdbモック
+type DBMock struct {
+	Account      AccountTableMock
+	Status       StatusTableMock
+	RelationShip RelationShipTableMock
 }
 
-type accountTableMock map[int64]accountData
-type accountData struct {
-	id       int64
-	username string
+type AccountTableMock map[int64]AccountData
+type AccountData struct {
+	ID       int64
+	UserName string
 }
 
-type statusTableMock map[int64]statusData
-type statusData struct {
-	id       int64
+type StatusTableMock map[int64]StatusData
+type StatusData struct {
+	ID       int64
 	content  string
-	username string
+	UserName string
 }
 
-type relationshipTableMock map[int64]relationshipData
-type relationshipData struct {
+type RelationShipTableMock map[int64]RelationShipData
+type RelationShipData struct {
 	userID   int64
 	targetID int64
 }
 
-// accountMock: account repojitoryをモック
+// accountMock: Account repojitoryをモック
 type accountMock struct {
-	db *dbMock
+	db *DBMock
 }
 
-func newAccountMock(db *dbMock) repository.Account {
+func newAccountMock(db *DBMock) repository.Account {
 	return &accountMock{db: db}
 }
 
 func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
-	for _, value := range r.db.account {
-		if value.username == username {
+	for _, value := range r.db.Account {
+		if value.UserName == username {
 			return &object.Account{
-					ID:       value.id,
-					Username: value.username},
+					ID:       value.ID,
+					Username: value.UserName},
 				nil
 		}
 	}
@@ -82,20 +82,20 @@ func (r *accountMock) FindByUsername(ctx context.Context, username string) (*obj
 }
 
 func (r *accountMock) Create(ctx context.Context, account *object.Account) (object.AccountID, error) {
-	newID := int64(len(r.db.account) + 1)
-	r.db.account[int64(newID)] = accountData{
-		id:       newID,
-		username: account.Username}
+	newID := int64(len(r.db.Account) + 1)
+	r.db.Account[int64(newID)] = AccountData{
+		ID:       newID,
+		UserName: account.Username}
 	return newID, nil
 }
 
 func (r *accountMock) Following(ctx context.Context, username string) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
-	for _, v := range r.db.relationship {
+	for _, v := range r.db.RelationShip {
 		if v.userID == a.ID {
-			ta := r.db.account[v.targetID]
-			res = append(res, object.Account{ID: ta.id, Username: ta.username})
+			ta := r.db.Account[v.targetID]
+			res = append(res, object.Account{ID: ta.ID, Username: ta.UserName})
 		}
 	}
 	return res, nil
@@ -104,56 +104,56 @@ func (r *accountMock) Following(ctx context.Context, username string) ([]object.
 func (r *accountMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
-	for _, v := range r.db.relationship {
+	for _, v := range r.db.RelationShip {
 		if v.targetID == a.ID {
-			ua := r.db.account[v.userID]
-			res = append(res, object.Account{ID: ua.id, Username: ua.username})
+			ua := r.db.Account[v.userID]
+			res = append(res, object.Account{ID: ua.ID, Username: ua.UserName})
 		}
 	}
 	return res, nil
 }
 
-// statusMock: status repojitoryをモック
+// statusMock: Status repojitoryをモック
 type statusMock struct {
-	db *dbMock
+	db *DBMock
 }
 
-func newStatusMock(db *dbMock) repository.Status {
+func newStatusMock(db *DBMock) repository.Status {
 	return &statusMock{db: db}
 }
 
 func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
-	s, exist := r.db.status[id]
+	s, exist := r.db.Status[id]
 	if !exist {
 		return nil, nil
 	}
 	return &object.Status{
-		ID:      s.id,
+		ID:      s.ID,
 		Content: s.content,
 		Account: &object.Account{
-			Username: s.username},
+			Username: s.UserName},
 	}, nil
 }
 
-func (r *statusMock) Create(ctx context.Context, status *object.Status) (object.AccountID, error) {
-	newID := int64(len(r.db.status) + 1)
-	r.db.status[newID] = statusData{id: newID, username: status.Account.Username}
+func (r *statusMock) Create(ctx context.Context, Status *object.Status) (object.AccountID, error) {
+	newID := int64(len(r.db.Status) + 1)
+	r.db.Status[newID] = StatusData{ID: newID, UserName: Status.Account.Username}
 	return newID, nil
 }
 
 func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
-	delete(r.db.status, status_id)
+	delete(r.db.Status, status_id)
 	return nil
 }
 
 func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	var statuses []object.Status
-	for _, v := range r.db.status {
+	for _, v := range r.db.Status {
 		statuses = append(statuses,
 			object.Status{
-				ID:      v.id,
+				ID:      v.ID,
 				Content: v.content,
-				Account: &object.Account{Username: v.username}})
+				Account: &object.Account{Username: v.UserName}})
 	}
 	return statuses, nil
 }
@@ -162,17 +162,17 @@ func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]
 	return nil, nil
 }
 
-// relationshipMock: relationship repojitoryをモック
+// relationshipMock: RelationShip repojitoryをモック
 type relationshipMock struct {
-	db *dbMock
+	db *DBMock
 }
 
-func newRelationShipMock(db *dbMock) repository.Relationship {
+func newRelationShipMock(db *DBMock) repository.Relationship {
 	return &relationshipMock{db: db}
 }
 
 func (r *relationshipMock) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
-	for _, value := range r.db.relationship {
+	for _, value := range r.db.RelationShip {
 		if value.userID == userID && value.targetID == targetID {
 			return true, nil
 		}
@@ -197,8 +197,8 @@ func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, t
 }
 
 func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
-	newID := int64(len(r.db.status) + 1)
-	r.db.relationship[newID] = relationshipData{
+	newID := int64(len(r.db.Status) + 1)
+	r.db.RelationShip[newID] = RelationShipData{
 		userID:   userID,
 		targetID: targetID,
 	}
@@ -206,9 +206,9 @@ func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, 
 }
 
 func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
-	for id, v := range r.db.relationship {
+	for ID, v := range r.db.RelationShip {
 		if v.userID == userID && v.targetID == targetID {
-			delete(r.db.relationship, id)
+			delete(r.db.RelationShip, ID)
 		}
 	}
 	return nil

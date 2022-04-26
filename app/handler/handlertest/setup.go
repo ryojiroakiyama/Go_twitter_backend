@@ -1,4 +1,4 @@
-package statuses_test
+package handlertest
 
 import (
 	"bytes"
@@ -13,9 +13,9 @@ import (
 	"yatter-backend-go/app/handler/accounts"
 )
 
-func setup(t *testing.T, db *dbMock) *C {
+func Setup(t *testing.T, db *DBMock) *C {
 	db = fillDB(db)
-	app := &app.App{Dao: &daoMock{db: db}}
+	app := &app.App{Dao: &DaoMock{db: db}}
 	server := httptest.NewServer(accounts.NewRouter(app))
 	return &C{
 		App:    app,
@@ -23,18 +23,18 @@ func setup(t *testing.T, db *dbMock) *C {
 	}
 }
 
-func fillDB(db *dbMock) *dbMock {
+func fillDB(db *DBMock) *DBMock {
 	if db == nil {
-		db = new(dbMock)
+		db = new(DBMock)
 	}
-	if db.account == nil {
-		db.account = make(accountTableMock)
+	if db.Account == nil {
+		db.Account = make(AccountTableMock)
 	}
-	if db.status == nil {
-		db.status = make(statusTableMock)
+	if db.Status == nil {
+		db.Status = make(StatusTableMock)
 	}
-	if db.relationship == nil {
-		db.relationship = make(relationshipTableMock)
+	if db.RelationShip == nil {
+		db.RelationShip = make(RelationShipTableMock)
 	}
 	return db
 }

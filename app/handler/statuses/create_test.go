@@ -6,21 +6,22 @@ import (
 	"net/http"
 	"testing"
 	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
 func TestCreate(t *testing.T) {
-	john := accountData{
-		id:       1,
-		username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
 	//johnsStatus := statusData{
-	//	id:       1,
+	//	ID:       1,
 	//	content:  "john's status",
-	//	username: john.username,
+	//	UserName: john.UserName,
 	//}
 	tests := []struct {
 		name        string
-		db          *dbMock
+		db          *handlertest.DBMock
 		postPayload string
 		authUser    string
 		wantStatus  int
@@ -29,18 +30,18 @@ func TestCreate(t *testing.T) {
 	}{
 		{
 			name: "success",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				return &dbMock{account: a}
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
 			}(),
 			postPayload: `{"status":"new status"}`,
-			authUser:    john.username,
-			wantBody: toJsonFormat(t, object.Status{
+			authUser:    john.UserName,
+			wantBody: handlertest.ToJsonFormat(t, object.Status{
 				ID:      1, //IDは1から始まるので
 				Content: "new status",
 				Account: &object.Account{
-					Username: john.username,
+					Username: john.UserName,
 				},
 			}),
 			wantStatus: http.StatusOK,
@@ -52,7 +53,7 @@ func TestCreate(t *testing.T) {
 		//		s := make(statusTableMock)
 		//		a[john.Username] = *john
 		//		s[1] = *johnStatus1
-		//		return &dbMock{account: a, status: s}
+		//		return &dbMock{Account: a, status: s}
 		//	}(),
 		//	method:       "POST",
 		//	apiPath:      "/v1/statuses",
@@ -65,7 +66,7 @@ func TestCreate(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db)
 			defer c.Close()
 
 			resp, err := c.PostJsonWithAuth("/", tt.postPayload, tt.authUser)

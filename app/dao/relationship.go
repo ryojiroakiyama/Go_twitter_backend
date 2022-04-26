@@ -73,8 +73,8 @@ func (r *relationship) Create(ctx context.Context, userID object.AccountID, targ
 	return id, nil
 }
 
-// FollowingAccounts: userがフォローしているアカウント集合を返す
-func (r *relationship) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {
+// Following: userがフォローしているアカウント集合を返す
+func (r *relationship) Following(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
 	SELECT
@@ -104,8 +104,8 @@ func (r *relationship) FollowingAccounts(ctx context.Context, username string) (
 	return accounts, nil
 }
 
-// FollowerAccounts: userをフォロワーのアカウント集合を返す
-func (r *relationship) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
+// Followers: userをフォロワーのアカウント集合を返す
+func (r *relationship) Followers(ctx context.Context, username string) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
 	SELECT

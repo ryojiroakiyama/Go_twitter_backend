@@ -125,11 +125,11 @@ func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, 
 	return 0, nil
 }
 
-func (r *relationshipMock) FollowingAccounts(ctx context.Context, username string) ([]object.Account, error) {
+func (r *relationshipMock) Following(ctx context.Context, username string) ([]object.Account, error) {
 	return nil, nil
 }
 
-func (r *relationshipMock) FollowerAccounts(ctx context.Context, username string) ([]object.Account, error) {
+func (r *relationshipMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
 	return nil, nil
 }
 

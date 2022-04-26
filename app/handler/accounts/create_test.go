@@ -5,13 +5,13 @@ import (
 	"io"
 	"net/http"
 	"testing"
-
 	"yatter-backend-go/app/domain/object"
 )
 
 func TestCreate(t *testing.T) {
-	john := &object.Account{
-		Username: "john",
+	john := accountData{
+		id:       1,
+		username: "john",
 	}
 	tests := []struct {
 		name        string
@@ -27,13 +27,14 @@ func TestCreate(t *testing.T) {
 			postPayload: `{"username":"john"}`,
 			wantStatus:  http.StatusOK,
 			toTestBody:  true,
-			wantBody:    toJsonFormat(t, john),
+			wantBody: toJsonFormat(t,
+				object.Account{Username: john.username}),
 		},
 		{
 			name: "duplicate",
 			db: func() *dbMock {
 				a := make(accountTableMock)
-				a[john.Username] = *john
+				a[john.id] = john
 				return &dbMock{account: a}
 			}(),
 			postPayload: `{"username":"john"}`,

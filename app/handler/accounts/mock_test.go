@@ -2,20 +2,36 @@ package accounts_test
 
 import (
 	"context"
-	"fmt"
 
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/domain/repository"
 )
 
-type accountTableMock map[string]object.Account
-type statusTableMock map[object.StatusID]object.Status
-type relationshipTableMock map[object.RelationshipID]dataRelationShip
+/*
+ * dao, db, repojitoryをモック
+ * 構成はdaoと同じようにした
+ */
 
-// object.RelationShipにはuserIDなどDBをモックするには要素が足りないのでこちらで用意
-type dataRelationShip struct {
-	userID   object.AccountID
-	targetID object.AccountID
+// daoMock: daoのモック
+type daoMock struct {
+	db *dbMock
+}
+
+func (d *daoMock) Account() repository.Account {
+	return newAccountMock(d.db)
+}
+
+func (d *daoMock) Status() repository.Status {
+	return newStatusMock(d.db)
+}
+
+func (d *daoMock) Relationship() repository.Relationship {
+	return newRelationShipMock(d.db)
+}
+
+func (d *daoMock) InitAll() error {
+	d.db = nil
+	return nil
 }
 
 // dbMock: 各テーブルをmapで模したdbモック
@@ -23,6 +39,24 @@ type dbMock struct {
 	account      accountTableMock
 	status       statusTableMock
 	relationship relationshipTableMock
+}
+
+type accountTableMock map[int64]accountData
+type accountData struct {
+	id       int64
+	username string
+}
+
+type statusTableMock map[int64]statusData
+type statusData struct {
+	id       int64
+	username string
+}
+
+type relationshipTableMock map[int64]relationshipData
+type relationshipData struct {
+	userID   int64
+	targetID int64
 }
 
 // accountMock: account repojitoryをモック
@@ -35,21 +69,23 @@ func newAccountMock(db *dbMock) repository.Account {
 }
 
 func (r *accountMock) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
-	a, exist := r.db.account[username]
-	if !exist {
-		return nil, nil
+	for _, value := range r.db.account {
+		if value.username == username {
+			return &object.Account{
+					ID:       value.id,
+					Username: value.username},
+				nil
+		}
 	}
-	return &a, nil
+	return nil, nil
 }
 
-func (r *accountMock) Create(ctx context.Context, entity *object.Account) (object.AccountID, error) {
-	_, exist := r.db.account[entity.Username]
-	if exist {
-		return 0, fmt.Errorf("Create: Account aready exist")
-	}
-	r.db.account[entity.Username] = *entity
-	id := len(r.db.account) + 1
-	return int64(id), nil
+func (r *accountMock) Create(ctx context.Context, account *object.Account) (object.AccountID, error) {
+	newID := int64(len(r.db.account) + 1)
+	r.db.account[int64(newID)] = accountData{
+		id:       newID,
+		username: account.Username}
+	return newID, nil
 }
 
 // statusMock: status repojitoryをモック
@@ -66,22 +102,20 @@ func (r *statusMock) FindByID(ctx context.Context, id object.StatusID) (*object.
 	if !exist {
 		return nil, nil
 	}
-	return &s, nil
+	return &object.Status{
+		ID: s.id,
+		Account: &object.Account{
+			Username: s.username},
+	}, nil
 }
 
-func (r *statusMock) Create(ctx context.Context, entity *object.Status) (object.AccountID, error) {
-	entity.ID = int64(len(r.db.status) + 1)
-	r.db.status[entity.ID] = *entity
-	return entity.ID, nil
+func (r *statusMock) Create(ctx context.Context, status *object.Status) (object.AccountID, error) {
+	newID := int64(len(r.db.status) + 1)
+	r.db.status[newID] = statusData{id: newID, username: status.Account.Username}
+	return newID, nil
 }
 
 func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
-	s, exist := r.db.status[status_id]
-	if !exist {
-		return fmt.Errorf("Delete: No status matched")
-	} else if s.Account.ID != account_id {
-		return fmt.Errorf("Delete: No status matched")
-	}
 	delete(r.db.status, status_id)
 	return nil
 }
@@ -89,7 +123,10 @@ func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, acco
 func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	var statuses []object.Status
 	for _, value := range r.db.status {
-		statuses = append(statuses, value)
+		statuses = append(statuses,
+			object.Status{
+				ID:      value.id,
+				Account: &object.Account{Username: value.username}})
 	}
 	return statuses, nil
 }
@@ -134,7 +171,7 @@ func (r *relationshipMock) Fetch(ctx context.Context, userID object.AccountID, t
 
 func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	newID := int64(len(r.db.status) + 1)
-	r.db.relationship[newID] = dataRelationShip{
+	r.db.relationship[newID] = relationshipData{
 		userID:   userID,
 		targetID: targetID,
 	}
@@ -150,27 +187,5 @@ func (r *relationshipMock) FollowerAccounts(ctx context.Context, username string
 }
 
 func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
-	return nil
-}
-
-// daoMock: daoのモック
-type daoMock struct {
-	db *dbMock
-}
-
-func (d *daoMock) Account() repository.Account {
-	return newAccountMock(d.db)
-}
-
-func (d *daoMock) Status() repository.Status {
-	return newStatusMock(d.db)
-}
-
-func (d *daoMock) Relationship() repository.Relationship {
-	return newRelationShipMock(d.db)
-}
-
-func (d *daoMock) InitAll() error {
-	d.db = nil
 	return nil
 }

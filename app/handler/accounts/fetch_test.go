@@ -10,8 +10,9 @@ import (
 )
 
 func TestFetch(t *testing.T) {
-	john := &object.Account{
-		Username: "john",
+	john := accountData{
+		id:       1,
+		username: "benben",
 	}
 	tests := []struct {
 		name       string
@@ -25,12 +26,12 @@ func TestFetch(t *testing.T) {
 			name: "success",
 			db: func() *dbMock {
 				a := make(accountTableMock)
-				a[john.Username] = *john
+				a[john.id] = john
 				return &dbMock{account: a}
 			}(),
-			username:   "john",
+			username:   john.username,
 			toTestBody: true,
-			wantBody:   toJsonFormat(t, john),
+			wantBody:   toJsonFormat(t, object.Account{Username: john.username}),
 			wantStatus: http.StatusOK,
 		},
 		{

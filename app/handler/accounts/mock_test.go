@@ -101,7 +101,15 @@ func (r *accountMock) Following(ctx context.Context, username string) ([]object.
 }
 
 func (r *accountMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
-	return nil, nil
+	a, _ := r.FindByUsername(ctx, username)
+	var res []object.Account
+	for _, v := range r.db.relationship {
+		if v.targetID == a.ID {
+			ua := r.db.account[v.userID]
+			res = append(res, object.Account{ID: ua.id, Username: ua.username})
+		}
+	}
+	return res, nil
 }
 
 // statusMock: status repojitoryをモック

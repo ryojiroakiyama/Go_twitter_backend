@@ -73,6 +73,8 @@ func (r *relationship) Create(ctx context.Context, userID object.AccountID, targ
 }
 
 // Delete: userがtargetをフォローする関係を削除
+// followしてないアカウントを指定してもエラーにならない,
+// そもそも実際の操作画面では表示されないはず
 func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
 	query := `
 	DELETE

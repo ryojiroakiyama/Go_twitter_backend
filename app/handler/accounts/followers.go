@@ -8,7 +8,7 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
-// Handle request for `POST /v1/accounts/{username}/followers`
+// Handle request for `GET /v1/accounts/{username}/followers`
 func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 

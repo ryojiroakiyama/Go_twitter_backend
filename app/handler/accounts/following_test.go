@@ -9,7 +9,7 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
-func TestFollow(t *testing.T) {
+func TestFollowing(t *testing.T) {
 	john := accountData{
 		id:       1,
 		username: "john",
@@ -18,11 +18,14 @@ func TestFollow(t *testing.T) {
 		id:       2,
 		username: "benben",
 	}
+	relation := relationshipData{
+		userID:   john.id,
+		targetID: benben.id,
+	}
 	tests := []struct {
 		name       string
 		db         *dbMock
-		authUser   string
-		followUser string
+		username   string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
@@ -33,29 +36,20 @@ func TestFollow(t *testing.T) {
 				a := make(accountTableMock)
 				a[john.id] = john
 				a[benben.id] = benben
-				return &dbMock{account: a}
+				r := make(relationshipTableMock)
+				r[0] = relation
+				return &dbMock{account: a, relationship: r}
 			}(),
-			authUser:   john.username,
-			followUser: benben.username,
+			username:   john.username,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody: toJsonFormat(t,
-				object.Relationship{
-					TargetID:  benben.id,
-					Following: true,
-					FllowedBy: false}),
-		},
-		{
-			name: "non-exist user to follow",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.id] = john
-				return &dbMock{account: a}
-			}(),
-			authUser:   john.username,
-			followUser: "no_such_account",
-			wantStatus: http.StatusNotFound,
-			toTestBody: false,
+				[]object.Account{
+					{
+						ID:       benben.id,
+						Username: benben.username,
+					},
+				}),
 		},
 	}
 	for _, tt := range tests {
@@ -64,7 +58,7 @@ func TestFollow(t *testing.T) {
 			c := setup(t, tt.db)
 			defer c.Close()
 
-			resp, err := c.PostJsonWithAuth("/"+tt.followUser+"/follow", "", tt.authUser)
+			resp, err := c.Get("/" + tt.username + "/following")
 			if err != nil {
 				t.Fatal(err)
 			}

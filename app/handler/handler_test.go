@@ -1,81 +1,58 @@
 package handler_test
 
 import (
-	"bytes"
-	"io"
 	"net/http"
 	"testing"
 
-	"yatter-backend-go/app/domain/object"
+	"yatter-backend-go/app/handler"
+	"yatter-backend-go/app/handler/handlertest"
 )
 
-// 関数分けが終わったら, bodyの確認とかその辺は消して内容を省略する
+// GETのみ試して, 各ルーティングができているかのみ確認する
 func TestHandler(t *testing.T) {
-	john := &object.Account{
-		Username: "john",
+	john := handlertest.AccountData{
+		ID:       1,
+		UserName: "john",
 	}
-	johnStatus1 := &object.Status{
-		ID:      1,
-		Content: "johnStatus",
-		Account: john,
+	johnsStatus := handlertest.StatusData{
+		ID:       1,
+		Content:  "john's status",
+		UserName: john.UserName,
 	}
-
 	tests := []struct {
-		name         string
-		db           *dbMock
-		method       string
-		apiPath      string
-		body         io.Reader
-		authUserName string
-		wantBody     []byte
-		wantStatus   int
+		name       string
+		db         *handlertest.DBMock
+		apiPath    string
+		wantStatus int
 	}{
 		{
-			name: "fetch account",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.Username] = *john
-				return &dbMock{account: a}
+			name: "account",
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				return &handlertest.DBMock{Account: a}
 			}(),
-			method:     "GET",
 			apiPath:    "/v1/accounts/john",
-			wantBody:   toJsonFormat(t, john),
 			wantStatus: http.StatusOK,
 		},
 		{
-			name: "fetch status",
-			db: func() *dbMock {
-				s := make(statusTableMock)
-				s[1] = *johnStatus1
-				return &dbMock{status: s}
+			name: "status",
+			db: func() *handlertest.DBMock {
+				s := make(handlertest.StatusTableMock)
+				s[johnsStatus.ID] = johnsStatus
+				return &handlertest.DBMock{Status: s}
 			}(),
-			method:     "GET",
 			apiPath:    "/v1/statuses/1",
-			wantBody:   toJsonFormat(t, johnStatus1),
 			wantStatus: http.StatusOK,
-		},
-		{
-			name: "create status",
-			db: func() *dbMock {
-				a := make(accountTableMock)
-				a[john.Username] = *john
-				return &dbMock{account: a}
-			}(),
-			method:       "POST",
-			apiPath:      "/v1/statuses",
-			body:         bytes.NewReader([]byte(`{"status":"johnStatus"}`)),
-			authUserName: john.Username,
-			wantBody:     toJsonFormat(t, johnStatus1),
-			wantStatus:   http.StatusOK,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			c := setup(t, tt.db)
+			c := handlertest.Setup(t, tt.db, handler.NewRouter)
 			defer c.Close()
 
-			resp, err := c.Do(tt.method, tt.apiPath, tt.body, tt.authUserName)
+			resp, err := c.Get(tt.apiPath)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -84,17 +61,6 @@ func TestHandler(t *testing.T) {
 			// check status code
 			if resp.StatusCode != tt.wantStatus {
 				t.Fatalf("code expected: %v, returned: %v", tt.wantStatus, resp.StatusCode)
-			}
-
-			// check response body
-			if tt.wantBody != nil {
-				body, err := io.ReadAll(resp.Body)
-				if err != nil {
-					t.Fatal(err)
-				}
-				if bytes.Compare(body, tt.wantBody) != 0 {
-					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(body))
-				}
 			}
 		})
 	}

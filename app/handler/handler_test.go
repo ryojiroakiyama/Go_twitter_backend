@@ -55,13 +55,6 @@ func TestHandler(t *testing.T) {
 			wantStatus: http.StatusOK,
 		},
 		{
-			name:       "fetch non-exist status",
-			method:     "GET",
-			apiPath:    "/v1/statuses/1",
-			wantBody:   []byte(http.StatusText(http.StatusNotFound) + "\n"),
-			wantStatus: http.StatusNotFound,
-		},
-		{
 			name: "create status",
 			db: func() *dbMock {
 				a := make(accountTableMock)

@@ -203,5 +203,10 @@ func (r *relationshipMock) Create(ctx context.Context, userID object.AccountID, 
 }
 
 func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
+	for id, v := range r.db.relationship {
+		if v.userID == userID && v.targetID == targetID {
+			delete(r.db.relationship, id)
+		}
+	}
 	return nil
 }

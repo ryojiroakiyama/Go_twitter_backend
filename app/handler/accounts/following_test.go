@@ -51,6 +51,20 @@ func TestFollowing(t *testing.T) {
 					},
 				}),
 		},
+		{
+			name: "not_found",
+			db: func() *dbMock {
+				a := make(accountTableMock)
+				a[john.id] = john
+				a[benben.id] = benben
+				r := make(relationshipTableMock)
+				r[0] = relation
+				return &dbMock{account: a, relationship: r}
+			}(),
+			username:   benben.username,
+			wantStatus: http.StatusNotFound,
+			toTestBody: false,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt

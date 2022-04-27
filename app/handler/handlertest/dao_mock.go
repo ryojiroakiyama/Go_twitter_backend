@@ -8,11 +8,9 @@ import (
 )
 
 /*
- * dao, repojitoryをモック
  * 構成はソースパッケージのdaoと同じようにした
  */
 
-// DaoMock: daoのモック
 type DaoMock struct {
 	db *DBMock
 }
@@ -34,7 +32,7 @@ func (d *DaoMock) InitAll() error {
 	return nil
 }
 
-// accountMock: Account repojitoryをモック
+// accountMock: Account repojitoryを実装
 type accountMock struct {
 	db *DBMock
 }
@@ -87,7 +85,7 @@ func (r *accountMock) Followers(ctx context.Context, username string) ([]object.
 	return res, nil
 }
 
-// statusMock: Status repojitoryをモック
+// statusMock: Status repojitoryを実装
 type statusMock struct {
 	db *DBMock
 }
@@ -136,7 +134,7 @@ func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]
 	return nil, nil
 }
 
-// relationshipMock: RelationShip repojitoryをモック
+// relationshipMock: RelationShip repojitoryを実装
 type relationshipMock struct {
 	db *DBMock
 }

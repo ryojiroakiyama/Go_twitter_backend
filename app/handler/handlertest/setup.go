@@ -1,5 +1,20 @@
 package handlertest
 
+// Package handlertest はhandler配下のパッケージのテストで使われる
+// 機能をまとめたものです。
+
+// 各テストパッケージで多くの共通する機能があったためパッケージとして独立させた
+// 問題点:
+//  テスト以外でもコンパイルされるというオーバーヘッドがある
+// 改善点:
+//  各テストパッケージではその中でテスト処理を完結させる(他テストパッケージをimportしない)
+//  テストパッケージが大きくなるようなコードを書かない(今回だとhandler系パッケージをさらに分けるべき？)
+// 留意点:
+//  _test.goのみで構成されたディレクトリ, パッケージは作れない(テスト対象パッケージがあってのテストパッケージ)
+//  _testパッケージはimportの仕様が(今の所)分からない
+// 疑問点:
+//  複数のテストパッケージで共有したい機能をテスト時のみコンパイルするような形で実現することは可能か？
+
 import (
 	"bytes"
 	"net/http"
@@ -11,8 +26,8 @@ import (
 	"yatter-backend-go/app/app"
 )
 
-// ここ引数多いしあんまり使い勝手良くない
-// そもそもC structがいるかという, 作るならもっと活用できそう
+// 引数が多く機能にまとまりもないので, 使い勝手が良くない
+// そもそもC structがいるのか, 使うならもっと活用できそう
 func Setup(t *testing.T, db *DBMock, newRouter func(app *app.App) http.Handler) *C {
 	db = fillDB(db)
 	app := &app.App{Dao: &DaoMock{db: db}}
@@ -48,35 +63,12 @@ func (c *C) Close() {
 	c.Server.Close()
 }
 
-func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
-	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
-}
-
-//func (c *C) Do(method, apiPath string, body io.Reader, userAuth string) (*http.Response, error) {
-//	req, err := http.NewRequest(method, c.asURL(apiPath), body)
-//	if err != nil {
-//		return nil, err
-//	}
-//	if body != nil {
-//		req.Header.Set("Content-Type", "application/json")
-//	}
-//	if userAuth != "" {
-//		req.Header.Set("Authentication", "username "+userAuth)
-//	}
-//	return c.Server.Client().Do(req)
-//}
-
 func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))
 }
 
-func (c *C) DeleteWithAuth(apiPath string, authUser string) (*http.Response, error) {
-	req, err := http.NewRequest("DELETE", c.asURL(apiPath), nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authentication", "username "+authUser)
-	return c.Server.Client().Do(req)
+func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
+	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
 }
 
 func (c *C) PostJsonWithAuth(apiPath string, payload string, authUser string) (*http.Response, error) {
@@ -85,6 +77,15 @@ func (c *C) PostJsonWithAuth(apiPath string, payload string, authUser string) (*
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authentication", "username "+authUser)
+	return c.Server.Client().Do(req)
+}
+
+func (c *C) DeleteWithAuth(apiPath string, authUser string) (*http.Response, error) {
+	req, err := http.NewRequest("DELETE", c.asURL(apiPath), nil)
+	if err != nil {
+		return nil, err
+	}
 	req.Header.Set("Authentication", "username "+authUser)
 	return c.Server.Client().Do(req)
 }

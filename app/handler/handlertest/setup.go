@@ -70,6 +70,15 @@ func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))
 }
 
+func (c *C) DeleteWithAuth(apiPath string, authUser string) (*http.Response, error) {
+	req, err := http.NewRequest("DELETE", c.asURL(apiPath), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authentication", "username "+authUser)
+	return c.Server.Client().Do(req)
+}
+
 func (c *C) PostJsonWithAuth(apiPath string, payload string, authUser string) (*http.Response, error) {
 	req, err := http.NewRequest("POST", c.asURL(apiPath), bytes.NewReader([]byte(payload)))
 	if err != nil {

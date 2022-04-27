@@ -29,10 +29,7 @@ func TestPublic(t *testing.T) {
 	tests := []struct {
 		name       string
 		db         *handlertest.DBMock
-		only_media string
-		max_id     string
-		since_id   string
-		limit      string
+		prameter   params
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
@@ -46,6 +43,7 @@ func TestPublic(t *testing.T) {
 				s[sonsonsStatus.ID] = sonsonsStatus
 				return &handlertest.DBMock{Status: s}
 			}(),
+			prameter:   params{},
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody: handlertest.ToJsonFormat(t, []object.Status{
@@ -79,7 +77,7 @@ func TestPublic(t *testing.T) {
 			c := handlertest.Setup(t, tt.db, timelines.NewRouter)
 			defer c.Close()
 
-			resp, err := c.Get("/public")
+			resp, err := c.Get("/public" + tt.prameter.asURI())
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -36,13 +36,16 @@ func (r *accountMock) Create(ctx context.Context, account *object.Account) (obje
 	return newID, nil
 }
 
-func (r *accountMock) Following(ctx context.Context, username string) ([]object.Account, error) {
+func (r *accountMock) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
 	for _, v := range r.db.RelationShip {
 		if v.UserID == a.ID {
 			ta := r.db.Account[v.TargetID]
 			res = append(res, object.Account{ID: ta.ID, Username: ta.UserName})
+		}
+		if limit <= int64(len(res)) {
+			break
 		}
 	}
 	return res, nil

@@ -58,7 +58,7 @@ func (r *account) Create(ctx context.Context, account *object.Account) (object.A
 }
 
 // Following: userがフォローしているアカウント集合を返す
-func (r *account) Following(ctx context.Context, username string) ([]object.Account, error) {
+func (r *account) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
 	SELECT
@@ -77,8 +77,9 @@ func (r *account) Following(ctx context.Context, username string) ([]object.Acco
 		INNER JOIN
 		relationship AS r
 		ON ma.id = r.follow_id
-	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)`
-	err := r.db.SelectContext(ctx, &accounts, query, username)
+	WHERE r.user_id = (SELECT id FROM account WHERE username = ?)
+	LIMIT ?`
+	err := r.db.SelectContext(ctx, &accounts, query, username, limit)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

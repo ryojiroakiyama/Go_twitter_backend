@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"yatter-backend-go/app/handler/httperror"
+	"yatter-backend-go/app/handler/params"
 	"yatter-backend-go/app/handler/request"
 )
 
@@ -12,7 +13,7 @@ import (
 func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	_ = r.FormValue("limit")
+	limit := params.FormValue(r, "limit", 40, 0, 80)
 
 	username, err := request.UserNameOf(r)
 	if err != nil {
@@ -20,7 +21,7 @@ func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accounts, err := h.app.Dao.Account().Following(ctx, username)
+	accounts, err := h.app.Dao.Account().Following(ctx, username, limit)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

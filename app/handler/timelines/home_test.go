@@ -42,7 +42,7 @@ func TestHome(t *testing.T) {
 			}
 			defer c.Close()
 
-			resp, err := c.GetWithAuth("/home"+handlertest.ParamAsURI(tt.param), tt.authUser)
+			resp, err := c.GetWithParamAuth("/home", handlertest.ParamAsURI(tt.param), tt.authUser)
 			if err != nil {
 				t.Fatal(err)
 			}

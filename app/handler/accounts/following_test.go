@@ -11,6 +11,10 @@ import (
 	"yatter-backend-go/app/handler/handlertest"
 )
 
+const (
+	limit = "limit"
+)
+
 func TestFollowing(t *testing.T) {
 	john := handlertest.AccountData{
 		ID:       1,
@@ -20,29 +24,69 @@ func TestFollowing(t *testing.T) {
 		ID:       2,
 		UserName: "benben",
 	}
-	relation := handlertest.RelationShipData{
+	sonson := handlertest.AccountData{
+		ID:       3,
+		UserName: "sonson",
+	}
+	john_follow_benben := handlertest.RelationShipData{
 		UserID:   john.ID,
 		TargetID: benben.ID,
+	}
+	john_follow_sonson := handlertest.RelationShipData{
+		UserID:   john.ID,
+		TargetID: sonson.ID,
 	}
 	tests := []struct {
 		name       string
 		db         *handlertest.DBMock
-		UserName   string
+		param      map[string]string
+		username   string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
 	}{
 		{
-			name: "success",
+			name: "success default",
 			db: func() *handlertest.DBMock {
 				a := make(handlertest.AccountTableMock)
 				a[john.ID] = john
 				a[benben.ID] = benben
+				a[sonson.ID] = sonson
 				r := make(handlertest.RelationShipTableMock)
-				r[0] = relation
+				r[0] = john_follow_benben
+				r[1] = john_follow_sonson
 				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			UserName:   john.UserName,
+			param:      nil,
+			username:   john.UserName,
+			wantStatus: http.StatusOK,
+			toTestBody: true,
+			wantBody: handlertest.ToJsonFormat(t,
+				[]object.Account{
+					{
+						ID:       benben.ID,
+						Username: benben.UserName,
+					},
+					{
+						ID:       sonson.ID,
+						Username: sonson.UserName,
+					},
+				}),
+		},
+		{
+			name: "success limit=1",
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[john.ID] = john
+				a[benben.ID] = benben
+				a[sonson.ID] = sonson
+				r := make(handlertest.RelationShipTableMock)
+				r[0] = john_follow_benben
+				r[1] = john_follow_sonson
+				return &handlertest.DBMock{Account: a, RelationShip: r}
+			}(),
+			param:      map[string]string{limit: "1"},
+			username:   john.UserName,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody: handlertest.ToJsonFormat(t,
@@ -60,10 +104,11 @@ func TestFollowing(t *testing.T) {
 				a[john.ID] = john
 				a[benben.ID] = benben
 				r := make(handlertest.RelationShipTableMock)
-				r[0] = relation
+				r[0] = john_follow_benben
 				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			UserName:   benben.UserName,
+			param:      nil,
+			username:   benben.UserName,
 			wantStatus: http.StatusNotFound,
 		},
 	}
@@ -73,7 +118,7 @@ func TestFollowing(t *testing.T) {
 			c := handlertest.Setup(t, tt.db, accounts.NewRouter)
 			defer c.Close()
 
-			resp, err := c.Get("/" + tt.UserName + "/following")
+			resp, err := c.GetWithParam("/"+tt.username+"/following", handlertest.ParamAsURI(tt.param))
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -84,7 +84,7 @@ func TestPublic(t *testing.T) {
 			c := handlertest.Setup(t, tt.db, timelines.NewRouter)
 			defer c.Close()
 
-			resp, err := c.Get("/public" + handlertest.ParamAsURI(tt.param))
+			resp, err := c.GetWithParam("/public", handlertest.ParamAsURI(tt.param))
 			if err != nil {
 				t.Fatal(err)
 			}

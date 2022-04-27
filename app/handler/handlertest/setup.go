@@ -72,8 +72,21 @@ func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))
 }
 
+func (c *C) GetWithParam(apiPath string, param string) (*http.Response, error) {
+	return c.Server.Client().Get(c.asURL(apiPath) + param)
+}
+
 func (c *C) GetWithAuth(apiPath string, authUser string) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.asURL(apiPath), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authentication", "username "+authUser)
+	return c.Server.Client().Do(req)
+}
+
+func (c *C) GetWithParamAuth(apiPath string, param string, authUser string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", c.asURL(apiPath)+param, nil)
 	if err != nil {
 		return nil, err
 	}

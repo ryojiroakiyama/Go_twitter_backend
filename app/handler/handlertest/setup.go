@@ -72,6 +72,15 @@ func (c *C) Get(apiPath string) (*http.Response, error) {
 	return c.Server.Client().Get(c.asURL(apiPath))
 }
 
+func (c *C) GetWithAuth(apiPath string, authUser string) (*http.Response, error) {
+	req, err := http.NewRequest("GET", c.asURL(apiPath), nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authentication", "username "+authUser)
+	return c.Server.Client().Do(req)
+}
+
 func (c *C) PostJSON(apiPath string, payload string) (*http.Response, error) {
 	return c.Server.Client().Post(c.asURL(apiPath), "application/json", bytes.NewReader([]byte(payload)))
 }

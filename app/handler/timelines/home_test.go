@@ -17,7 +17,7 @@ import (
 func TestHome(t *testing.T) {
 	tests := []struct {
 		name       string
-		prameter   params
+		param      map[string]string
 		authUser   string
 		wantStatus int
 		toTestBody bool
@@ -25,7 +25,7 @@ func TestHome(t *testing.T) {
 	}{
 		{
 			name:       "success",
-			prameter:   params{},
+			param:      nil,
 			authUser:   registeredUser,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
@@ -42,7 +42,7 @@ func TestHome(t *testing.T) {
 			}
 			defer c.Close()
 
-			resp, err := c.GetWithAuth("/home"+tt.prameter.asURI(), tt.authUser)
+			resp, err := c.GetWithAuth("/home"+handlertest.ParamAsURI(tt.param), tt.authUser)
 			if err != nil {
 				t.Fatal(err)
 			}

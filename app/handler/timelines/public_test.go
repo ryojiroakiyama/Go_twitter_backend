@@ -10,6 +10,13 @@ import (
 	"yatter-backend-go/app/handler/timelines"
 )
 
+const (
+	only_media = "only_media"
+	max_id     = "max_id"
+	since_id   = "since_id"
+	limit      = "limit"
+)
+
 func TestPublic(t *testing.T) {
 	johnsStatus := handlertest.StatusData{
 		ID:       1,
@@ -29,7 +36,7 @@ func TestPublic(t *testing.T) {
 	tests := []struct {
 		name       string
 		db         *handlertest.DBMock
-		prameter   params
+		param      map[string]string
 		wantStatus int
 		toTestBody bool
 		wantBody   []byte
@@ -43,7 +50,7 @@ func TestPublic(t *testing.T) {
 				s[sonsonsStatus.ID] = sonsonsStatus
 				return &handlertest.DBMock{Status: s}
 			}(),
-			prameter:   params{},
+			param:      nil,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody: handlertest.ToJsonFormat(t, []object.Status{
@@ -77,7 +84,7 @@ func TestPublic(t *testing.T) {
 			c := handlertest.Setup(t, tt.db, timelines.NewRouter)
 			defer c.Close()
 
-			resp, err := c.Get("/public" + tt.prameter.asURI())
+			resp, err := c.Get("/public" + handlertest.ParamAsURI(tt.param))
 			if err != nil {
 				t.Fatal(err)
 			}

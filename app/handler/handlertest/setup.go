@@ -11,6 +11,8 @@ import (
 	"yatter-backend-go/app/app"
 )
 
+// ここ引数多いしあんまり使い勝手良くない
+// そもそもC structがいるかという, 作るならもっと活用できそう
 func Setup(t *testing.T, db *DBMock, newRouter func(app *app.App) http.Handler) *C {
 	db = fillDB(db)
 	app := &app.App{Dao: &DaoMock{db: db}}

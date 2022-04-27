@@ -12,6 +12,8 @@ import (
 	"yatter-backend-go/app/handler/timelines"
 )
 
+// このテストのみhandlertest内のmockではなく,
+// 実際に挙動をベタ書きしたmock(home_mock_tes.go内)でやってみた
 func TestHome(t *testing.T) {
 	tests := []struct {
 		name       string

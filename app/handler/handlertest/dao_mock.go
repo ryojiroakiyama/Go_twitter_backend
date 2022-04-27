@@ -130,8 +130,8 @@ func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	return statuses, nil
 }
 
+// 今からこれ再現するのはコスト高いので保留
 func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
-	//for _,
 	return nil, nil
 }
 

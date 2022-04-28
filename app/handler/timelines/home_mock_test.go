@@ -37,7 +37,7 @@ func (r *accountMock) Create(ctx context.Context, account *object.Account) (obje
 func (r *accountMock) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	return nil, nil
 }
-func (r *accountMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
+func (r *accountMock) Followers(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Account, error) {
 	return nil, nil
 }
 

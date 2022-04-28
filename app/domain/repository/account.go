@@ -18,5 +18,5 @@ type Account interface {
 	Following(ctx context.Context, username string, limit int64) ([]object.Account, error)
 
 	// Fetch all follower accounts
-	Followers(ctx context.Context, username string) ([]object.Account, error)
+	Followers(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Account, error)
 }

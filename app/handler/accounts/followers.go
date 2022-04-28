@@ -2,9 +2,11 @@ package accounts
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
 
 	"yatter-backend-go/app/handler/httperror"
+	"yatter-backend-go/app/handler/params"
 	"yatter-backend-go/app/handler/request"
 )
 
@@ -12,9 +14,9 @@ import (
 func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	_ = r.FormValue("max_id")
-	_ = r.FormValue("since_id")
-	_ = r.FormValue("limit")
+	since_id := params.FormValue(r, "since_id", 0, 0, math.MaxInt64)
+	max_id := params.FormValue(r, "max_id", math.MaxInt64, 0, math.MaxInt64)
+	limit := params.FormValue(r, "limit", 40, 0, 80)
 
 	username, err := request.UserNameOf(r)
 	if err != nil {
@@ -22,7 +24,7 @@ func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accounts, err := h.app.Dao.Account().Followers(ctx, username)
+	accounts, err := h.app.Dao.Account().Followers(ctx, username, since_id, max_id, limit)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 	}

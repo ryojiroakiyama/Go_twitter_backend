@@ -51,11 +51,11 @@ func (r *accountMock) Following(ctx context.Context, username string, limit int6
 	return res, nil
 }
 
-func (r *accountMock) Followers(ctx context.Context, username string) ([]object.Account, error) {
+func (r *accountMock) Followers(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
 	for _, v := range r.db.RelationShip {
-		if v.TargetID == a.ID {
+		if v.TargetID == a.ID && since_id <= v.UserID && v.UserID <= max_id {
 			ua := r.db.Account[v.UserID]
 			res = append(res, object.Account{ID: ua.ID, Username: ua.UserName})
 		}

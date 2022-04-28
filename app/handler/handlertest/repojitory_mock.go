@@ -48,6 +48,7 @@ func (r *accountMock) Following(ctx context.Context, username string, limit int6
 			break
 		}
 	}
+	sortAccounts(res)
 	return res, nil
 }
 
@@ -60,6 +61,7 @@ func (r *accountMock) Followers(ctx context.Context, username string, since_id i
 			res = append(res, object.Account{ID: ua.ID, Username: ua.UserName})
 		}
 	}
+	sortAccounts(res)
 	return res, nil
 }
 
@@ -106,6 +108,7 @@ func (r *statusMock) AllStatuses(ctx context.Context, since_id int64, max_id int
 				Content: v.Content,
 				Account: &object.Account{Username: v.UserName}})
 	}
+	sortStatuses(statuses)
 	return statuses, nil
 }
 
@@ -164,4 +167,26 @@ func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, 
 		}
 	}
 	return nil
+}
+
+func sortAccounts(a []object.Account) {
+	l := len(a)
+	for i := int64(0); i < int64(l); i++ {
+		for j := i + 1; j < int64(l); j++ {
+			if a[i].ID > a[j].ID {
+				a[i], a[j] = a[j], a[i]
+			}
+		}
+	}
+}
+
+func sortStatuses(a []object.Status) {
+	l := len(a)
+	for i := int64(0); i < int64(l); i++ {
+		for j := i + 1; j < int64(l); j++ {
+			if a[i].ID > a[j].ID {
+				a[i], a[j] = a[j], a[i]
+			}
+		}
+	}
 }

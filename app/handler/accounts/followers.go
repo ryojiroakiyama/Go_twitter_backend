@@ -10,13 +10,19 @@ import (
 	"yatter-backend-go/app/handler/request"
 )
 
+const (
+	since_id = "since_id"
+	max_id   = "max_id"
+	limit    = "limit"
+)
+
 // Handle request for `GET /v1/accounts/{username}/followers`
 func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	since_id := params.FormValue(r, "since_id", 0, 0, math.MaxInt64)
-	max_id := params.FormValue(r, "max_id", math.MaxInt64, 0, math.MaxInt64)
-	limit := params.FormValue(r, "limit", 40, 0, 80)
+	since_id := params.FormValue(r, since_id, 0, 0, math.MaxInt64)
+	max_id := params.FormValue(r, max_id, math.MaxInt64, 0, math.MaxInt64)
+	limit := params.FormValue(r, limit, 40, 0, 80)
 
 	username, err := request.UserNameOf(r)
 	if err != nil {

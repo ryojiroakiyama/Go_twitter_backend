@@ -11,6 +11,7 @@ import (
 	"yatter-backend-go/app/handler/handlertest"
 )
 
+// daoテストとの役割でパラメータについてテストするか決める
 func TestFollowers(t *testing.T) {
 	john := handlertest.AccountData{
 		ID:       1,

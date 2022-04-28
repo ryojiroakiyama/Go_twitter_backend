@@ -17,6 +17,7 @@ const (
 	limit      = "limit"
 )
 
+// TODO: parameterに関するテスト
 func TestPublic(t *testing.T) {
 	johnsStatus := handlertest.StatusData{
 		ID:       1,

@@ -96,7 +96,8 @@ func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, acco
 	return nil
 }
 
-func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
+// TODO: parameter対応
+func (r *statusMock) AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	for _, v := range r.db.Status {
 		statuses = append(statuses,

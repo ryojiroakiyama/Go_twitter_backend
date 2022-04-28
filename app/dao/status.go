@@ -89,7 +89,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 }
 
 // GetAll : ステータス情報を全て取得
-func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
+func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	query := `
 	SELECT
@@ -110,8 +110,12 @@ func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 		status AS s
 		INNER JOIN
 		meta_account AS ma 
-		ON s.account_id = ma.id`
-	err := r.db.SelectContext(ctx, &statuses, query)
+		ON s.account_id = ma.id
+	WHERE
+			? <= s.id
+		AND s.id <= ?
+	LIMIT ?`
+	err := r.db.SelectContext(ctx, &statuses, query, since_id, max_id, limit)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -165,7 +169,7 @@ func (r *status) FollowingStatuses(ctx context.Context, username string, since_i
 		AS ma
 		ON s.account_id = ma.id
 	WHERE
-		? <= s.id
+			? <= s.id
 		AND s.id <= ?
 	LIMIT ?`
 	err := r.db.SelectContext(ctx, &statuses, query, username, username, since_id, max_id, limit)

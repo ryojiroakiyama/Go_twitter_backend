@@ -17,7 +17,7 @@ type Status interface {
 	Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error
 
 	// Fetch all statuses
-	AllStatuses(ctx context.Context) ([]object.Status, error)
+	AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error)
 
 	// Fetch following account's statuses
 	FollowingStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error)

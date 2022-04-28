@@ -14,7 +14,7 @@ import (
 func (h *handler) Home(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	_ = params.FormValue(r, "only_media", 40, 0, 80)
+	_ = params.FormValue(r, params.OnlyMedia, 40, 0, 80)
 	since_id := params.FormValue(r, params.SinceID, 0, 0, math.MaxInt64)
 	max_id := params.FormValue(r, params.MaxID, math.MaxInt64, 0, math.MaxInt64)
 	limit := params.FormValue(r, params.Limit, 40, 0, 80)

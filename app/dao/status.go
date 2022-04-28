@@ -124,7 +124,7 @@ func (r *status) AllStatuses(ctx context.Context) ([]object.Status, error) {
 func (r *status) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
-	// サブクエリ	: userがフォローしているアカウントのみで構成されたmeta_accountテーブル
+	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル
 	query := `
 	SELECT
 		s.id, 
@@ -159,10 +159,12 @@ func (r *status) FollowingStatuses(ctx context.Context, username string) ([]obje
 				INNER JOIN
 				relationship AS r
 			ON ma.id = r.follow_id
-			WHERE r.user_id = (SELECT id FROM account WHERE username = ?))
+			WHERE
+				r.user_id = (SELECT id FROM account WHERE username = ?)
+				OR ma.username = ?)
 		AS ma
 		ON s.account_id = ma.id`
-	err := r.db.SelectContext(ctx, &statuses, query, username)
+	err := r.db.SelectContext(ctx, &statuses, query, username, username)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

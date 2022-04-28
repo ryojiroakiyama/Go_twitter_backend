@@ -109,7 +109,7 @@ func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 }
 
 // 今からこれ再現するのはコスト高いので保留
-func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
+func (r *statusMock) FollowingStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	return nil, nil
 }
 

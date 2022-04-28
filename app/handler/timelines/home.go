@@ -2,27 +2,29 @@ package timelines
 
 import (
 	"encoding/json"
+	"math"
 	"net/http"
 
 	"yatter-backend-go/app/handler/auth"
 	"yatter-backend-go/app/handler/httperror"
+	"yatter-backend-go/app/handler/params"
 )
 
 // Handle request for `GET /v1/timelines/home`
 func (h *handler) Home(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	_ = r.FormValue("only_media")
-	_ = r.FormValue("max_id")
-	_ = r.FormValue("since_id")
-	_ = r.FormValue("limit")
+	_ = params.FormValue(r, "only_media", 40, 0, 80)
+	since_id := params.FormValue(r, params.SinceID, 0, 0, math.MaxInt64)
+	max_id := params.FormValue(r, params.MaxID, math.MaxInt64, 0, math.MaxInt64)
+	limit := params.FormValue(r, params.Limit, 40, 0, 80)
 
 	account := auth.AccountOf(r)
 	if account == nil {
 		httperror.LostAccount(w)
 		return
 	}
-	statuses, err := h.app.Dao.Status().FollowingStatuses(ctx, account.Username)
+	statuses, err := h.app.Dao.Status().FollowingStatuses(ctx, account.Username, since_id, max_id, limit)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

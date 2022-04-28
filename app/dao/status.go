@@ -165,7 +165,7 @@ func (r *status) FollowingStatuses(ctx context.Context, username string, since_i
 		AS ma
 		ON s.account_id = ma.id
 	WHERE
-		AND ? <= s.id
+		? <= s.id
 		AND s.id <= ?
 	LIMIT ?`
 	err := r.db.SelectContext(ctx, &statuses, query, username, username, since_id, max_id, limit)

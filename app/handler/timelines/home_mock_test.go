@@ -55,6 +55,6 @@ func (r *statusMock) Delete(ctx context.Context, status_id object.StatusID, acco
 func (r *statusMock) AllStatuses(ctx context.Context) ([]object.Status, error) {
 	return nil, nil
 }
-func (r *statusMock) FollowingStatuses(ctx context.Context, username string) ([]object.Status, error) {
+func (r *statusMock) FollowingStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	return []object.Status{}, nil
 }

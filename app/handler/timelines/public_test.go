@@ -10,13 +10,6 @@ import (
 	"yatter-backend-go/app/handler/timelines"
 )
 
-const (
-	only_media = "only_media"
-	max_id     = "max_id"
-	since_id   = "since_id"
-	limit      = "limit"
-)
-
 // TODO: parameterに関するテスト
 func TestPublic(t *testing.T) {
 	johnsStatus := handlertest.StatusData{

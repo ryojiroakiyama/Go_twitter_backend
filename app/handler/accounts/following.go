@@ -13,7 +13,7 @@ import (
 func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	limit := params.FormValue(r, limit, 40, 0, 80)
+	limit := params.FormValue(r, params.Limit, 40, 0, 80)
 
 	username, err := request.UserNameOf(r)
 	if err != nil {

@@ -9,10 +9,7 @@ import (
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/accounts"
 	"yatter-backend-go/app/handler/handlertest"
-)
-
-const (
-	limit = "limit"
+	"yatter-backend-go/app/handler/params"
 )
 
 func TestFollowing(t *testing.T) {
@@ -85,7 +82,7 @@ func TestFollowing(t *testing.T) {
 				r[1] = john_follow_sonson
 				return &handlertest.DBMock{Account: a, RelationShip: r}
 			}(),
-			param:      map[string]string{limit: "1"},
+			param:      map[string]string{params.Limit: "1"},
 			username:   john.UserName,
 			wantStatus: http.StatusOK,
 			toTestBody: true,

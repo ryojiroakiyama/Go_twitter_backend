@@ -5,6 +5,15 @@ import (
 	"strconv"
 )
 
+// Example key name of parameter
+// URI/?since_id=10 の部分
+const (
+	SinceID   = "since_id"
+	MaxID     = "max_id"
+	Limit     = "limit"
+	OnlyMedia = "only_media"
+)
+
 func FormValue(r *http.Request, key string, defaut int64, min int64, max int64) int64 {
 	if v := r.FormValue(key); v == "" {
 		return defaut

@@ -60,6 +60,7 @@ func TestCreate(t *testing.T) {
 				t.Fatalf("code expected: %v, returned: %v", tt.wantStatus, resp.StatusCode)
 			}
 
+			// Readはしないとkeep-aliveされずにcolseされる(今回は関係ない)
 			responseBody, err := io.ReadAll(resp.Body)
 			if err != nil {
 				t.Fatal(err)

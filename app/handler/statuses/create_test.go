@@ -72,12 +72,12 @@ func TestCreate(t *testing.T) {
 				t.Fatalf("code expected: %v, returned: %v", tt.wantStatus, resp.StatusCode)
 			}
 
+			responseBody, err := io.ReadAll(resp.Body)
+			if err != nil {
+				t.Fatal(err)
+			}
 			// check response body
 			if tt.toTestBody {
-				responseBody, err := io.ReadAll(resp.Body)
-				if err != nil {
-					t.Fatal(err)
-				}
 				if bytes.Compare(responseBody, tt.wantBody) != 0 {
 					t.Fatalf("body \nexpected: [%v], \nreturned: [%v]", string(tt.wantBody), string(responseBody))
 				}

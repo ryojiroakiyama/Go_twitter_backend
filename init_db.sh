@@ -2,4 +2,4 @@
 
 set -eux
 
-rm -rfd .data/mysql
+rm -rfd .data/mysql .data/testmysql

@@ -12,7 +12,10 @@ services:
       MYSQL_PASSWORD: yatter
     volumes:
       - "./.data/mysql:/var/lib/mysql"
-      - "./ddl/mysql:/docker-entrypoint-initdb.d"
+      - "./ddl:/docker-entrypoint-initdb.d"
+      # docより'コンテナ初回起動時に実行'とあったが, 
+      # 実際にはdbデータを消すと毎起動で実行されることを確認
+      # 逆にdbデータが残ったままでimageを消してから再起動したり, no-cacheでビルドしても実行されずに元のデータのみだった
     restart: on-failure
 
   testmysql:
@@ -27,7 +30,7 @@ services:
       MYSQL_PASSWORD: tatter
     volumes:
       - "./.data/testmysql:/var/lib/mysql"
-      - "./ddl/testmysql:/docker-entrypoint-initdb.d"
+      - "./ddl:/docker-entrypoint-initdb.d"
     restart: on-failure
   
   phpmyadmin:

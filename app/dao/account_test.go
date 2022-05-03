@@ -23,15 +23,23 @@ func TestAccount(t *testing.T) {
 	if err != nil {
 		log.Fatal("Open: ", err)
 	}
-
 	pingErr := db.Ping()
 	if pingErr != nil {
 		log.Fatal("Ping: ", pingErr)
 	}
 
-	account := new(object.Account)
 	ctx := context.Background()
 	query := `
+	INSERT
+		INTO account
+		(username, password_hash) VALUES (?, ?)`
+	_, err = db.ExecContext(ctx, query, "rakiyama", "rrr")
+	if err != nil {
+		log.Fatal("failt to insert")
+	}
+
+	account := new(object.Account)
+	query = `
 	SELECT *
 	FROM meta_account
 	WHERE username = ?`

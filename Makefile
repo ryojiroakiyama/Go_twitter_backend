@@ -29,6 +29,9 @@ mod:
 test:
 	go test $(shell go list ${MAKEFILE_DIR}/...)
 
+uptest:
+	docker-compose exec web make test
+
 lint:
 	if ! [ -x $(GOPATH)/bin/golangci-lint ]; then \
 		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH)/bin v1.38.0 ; \

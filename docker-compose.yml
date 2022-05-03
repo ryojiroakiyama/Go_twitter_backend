@@ -60,7 +60,8 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - docker-compose-default.env
+      - ./env/docker-compose-default.env
+      - ./env/docker-compose-test.env
     depends_on:
       - mysql
     healthcheck:

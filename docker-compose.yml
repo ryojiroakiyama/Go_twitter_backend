@@ -64,6 +64,7 @@ services:
       - ./env/docker-compose-test.env
     depends_on:
       - mysql
+      - testmysql
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/v1/health"]
       interval: 1m

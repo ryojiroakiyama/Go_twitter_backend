@@ -1,23 +1,46 @@
 package dao_test
 
-//import (
-//	"database/sql"
-//	"log"
-//	"testing"
-//	"yatter-backend-go/app/config"
-//)
+import (
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+	"log"
+	"testing"
+	"yatter-backend-go/app/domain/object"
 
-//func TestAccount(t *testing.T) {
-//	cfg := config.MySQLConfig(test_mysql{})
-//	db, err := sql.Open("mysql", cfg.FormatDSN())
-//	if err != nil {
-//		log.Fatal("Open: ", err)
-//	}
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+)
 
-//	pingErr := db.Ping()
-//	if pingErr != nil {
-//		log.Fatal("Ping: ", pingErr)
-//	}
+type DBConfig interface {
+	FormatDSN() string
+}
 
-//	res, err := db
-//}
+func TestAccount(t *testing.T) {
+	cfg := NewConfig()
+	db, err := sqlx.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		log.Fatal("Open: ", err)
+	}
+
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal("Ping: ", pingErr)
+	}
+
+	account := new(object.Account)
+	ctx := context.Background()
+	query := `
+	SELECT *
+	FROM meta_account
+	WHERE username = ?`
+	err = db.QueryRowxContext(ctx, query, "rakiyama").StructScan(account)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			log.Fatal("no rows")
+		}
+		log.Fatal("fail to query")
+	}
+	fmt.Println("------->", account.Username)
+}

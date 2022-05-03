@@ -44,12 +44,13 @@ func (r *accountMock) Following(ctx context.Context, username string, limit int6
 			ta := r.db.Account[v.TargetID]
 			res = append(res, object.Account{ID: ta.ID, Username: ta.UserName})
 		}
-		if limit <= int64(len(res)) {
-			break
-		}
 	}
 	sortAccounts(res)
-	return res, nil
+	if int64(len(res)) < limit {
+		return res, nil
+	} else {
+		return res[:limit], nil
+	}
 }
 
 func (r *accountMock) Followers(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Account, error) {
@@ -62,7 +63,11 @@ func (r *accountMock) Followers(ctx context.Context, username string, since_id i
 		}
 	}
 	sortAccounts(res)
-	return res, nil
+	if int64(len(res)) < limit {
+		return res, nil
+	} else {
+		return res[:limit], nil
+	}
 }
 
 // statusMock: Status repojitoryを実装
@@ -169,6 +174,7 @@ func (r *relationshipMock) Delete(ctx context.Context, userID object.AccountID, 
 	return nil
 }
 
+// mapで取り出されたarrayは順番がランダムなので用意した
 func sortAccounts(a []object.Account) {
 	l := len(a)
 	for i := int64(0); i < int64(l); i++ {

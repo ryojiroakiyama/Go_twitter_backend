@@ -8,8 +8,10 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
+// このやり方上手く使いたかったけど思い付かず断念
 // accessor namespace
-var MySQL _mysql
+//var MySQL _mysql
+// MySQL.Host()って感じで使える
 
 type _mysql struct{}
 
@@ -62,19 +64,31 @@ func (_mysql) Location() *time.Location {
 	return loc
 }
 
+type Accessor interface {
+	Host() string
+	User() string
+	Password() string
+	Database() string
+	Location() *time.Location
+}
+
 // Build mysql.Config
-func MySQLConfig() *mysql.Config {
+func MySQLConfig(a Accessor) *mysql.Config {
+	if a == nil {
+		a = _mysql{}
+	}
+
 	cfg := mysql.NewConfig()
 
 	cfg.ParseTime = true
-	cfg.Loc = MySQL.Location()
-	if host := MySQL.Host(); host != "" {
+	cfg.Loc = a.Location()
+	if host := a.Host(); host != "" {
 		cfg.Net = "tcp"
 		cfg.Addr = host
 	}
-	cfg.User = MySQL.User()
-	cfg.Passwd = MySQL.Password()
-	cfg.DBName = MySQL.Database()
+	cfg.User = a.User()
+	cfg.Passwd = a.Password()
+	cfg.DBName = a.Database()
 
 	return cfg
 }

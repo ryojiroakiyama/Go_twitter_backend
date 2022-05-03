@@ -13,7 +13,7 @@ type App struct {
 // Create dependency manager
 func NewApp() (*App, error) {
 	// panic if lacking something
-	daoCfg := config.MySQLConfig(nil)
+	daoCfg := config.MySQLConfig()
 
 	dao, err := dao.New(daoCfg)
 	if err != nil {

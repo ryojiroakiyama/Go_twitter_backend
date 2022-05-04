@@ -36,7 +36,6 @@ test:
 	go test $(shell go list ${MAKEFILE_DIR}/...)
 
 uptest:
-	docker-compose up -d
 	docker-compose exec web make test
 
 lint:

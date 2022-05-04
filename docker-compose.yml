@@ -18,35 +18,6 @@ services:
       # 逆にdbデータが残ったままでimageを消してから再起動したり, no-cacheでビルドしても実行されずに元のデータのみだった
     restart: on-failure
 
-  testmysql:
-    image: mysql:5.7
-    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-time-zone='+9:00'"
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_DATABASE: tatter
-      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
-      MYSQL_USER: tatter
-      MYSQL_PASSWORD: tatter
-    volumes:
-      - "./.data/testmysql:/var/lib/mysql"
-      - "./ddl:/docker-entrypoint-initdb.d"
-    restart: on-failure
-
-  testphpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - testmysql
-    environment:
-      PMA_ARBITRARY: 1
-      PMA_HOSTS: testmysql
-      PMA_USER: tatter
-      PMA_PASSWORD: tatter
-    ports:
-      - "3001:80"
-    volumes:
-      - "./.data/testphpmyadmin:/sessions"
-  
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
@@ -95,3 +66,32 @@ services:
       - ./openapi.yml:/data/openapi.yml
     environment:
       SWAGGER_JSON: /data/openapi.yml
+
+  testmysql:
+    image: mysql:5.7
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-time-zone='+9:00'"
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: tatter
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_USER: tatter
+      MYSQL_PASSWORD: tatter
+    volumes:
+      - "./.data/testmysql:/var/lib/mysql"
+      - "./ddl:/docker-entrypoint-initdb.d"
+    restart: on-failure
+
+  testphpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - testmysql
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: testmysql
+      PMA_USER: tatter
+      PMA_PASSWORD: tatter
+    ports:
+      - "3001:80"
+    volumes:
+      - "./.data/testphpmyadmin:/sessions"

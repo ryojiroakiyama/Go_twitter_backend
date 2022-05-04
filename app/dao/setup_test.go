@@ -34,6 +34,10 @@ func NewConfig() dao.DBConfig {
 }
 
 func Done(d dao.Dao) {
-	d.InitAll()
-	d.Close()
+	if err := d.InitAll(); err != nil {
+		log.Fatal("InitAll fail")
+	}
+	if err := d.Close(); err != nil {
+		log.Fatal("Close fail")
+	}
 }

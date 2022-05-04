@@ -19,5 +19,10 @@ func initDb(config DBConfig) (*sqlx.DB, error) {
 		return nil, fmt.Errorf("sqlx.Open failed: %w", err)
 	}
 
+	err = db.Ping()
+	if err != nil {
+		return nil, fmt.Errorf("sqlx.Ping failed: %w", err)
+	}
+
 	return db, nil
 }

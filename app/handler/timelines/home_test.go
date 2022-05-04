@@ -4,20 +4,21 @@ import (
 	"bytes"
 	"io"
 	"net/http"
-	"net/http/httptest"
 	"testing"
-	"yatter-backend-go/app/app"
 	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/handlertest"
 	"yatter-backend-go/app/handler/timelines"
 )
 
-// このテストのみhandlertest内のmockではなく,
-// 実際に挙動をベタ書きしたmock(home_mock_tes.go内)でやってみた
 // TODO: parameterに関するテスト
 func TestHome(t *testing.T) {
+	registeredUser := handlertest.AccountData{
+		ID:       1,
+		UserName: "benben",
+	}
 	tests := []struct {
 		name       string
+		db         *handlertest.DBMock
 		param      map[string]string
 		authUser   string
 		wantStatus int
@@ -25,9 +26,14 @@ func TestHome(t *testing.T) {
 		wantBody   []byte
 	}{
 		{
-			name:       "success",
+			name: "success",
+			db: func() *handlertest.DBMock {
+				a := make(handlertest.AccountTableMock)
+				a[registeredUser.ID] = registeredUser
+				return &handlertest.DBMock{Account: a}
+			}(),
 			param:      nil,
-			authUser:   registeredUser,
+			authUser:   registeredUser.UserName,
 			wantStatus: http.StatusOK,
 			toTestBody: true,
 			wantBody:   handlertest.ToJsonFormat(t, []object.Status{}),
@@ -36,11 +42,7 @@ func TestHome(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			app := &app.App{Dao: &daoMock{}}
-			c := &handlertest.C{
-				App:    app,
-				Server: httptest.NewServer(timelines.NewRouter(app)),
-			}
+			c := handlertest.Setup(t, tt.db, timelines.NewRouter)
 			defer c.Close()
 
 			resp, err := c.GetWithParamAuth("/home", handlertest.ParamAsURI(tt.param), tt.authUser)

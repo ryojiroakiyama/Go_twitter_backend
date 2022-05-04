@@ -7,5 +7,6 @@ import (
 )
 
 func TestAccount(t *testing.T) {
-	NewDB(t)
+	dao := NewDao()
+	defer Done(dao)
 }

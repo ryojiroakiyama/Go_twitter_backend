@@ -28,3 +28,7 @@ func (d *DaoMock) InitAll() error {
 	d.db = nil
 	return nil
 }
+
+func (d *DaoMock) Close() error {
+	return nil
+}

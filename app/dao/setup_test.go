@@ -1,18 +1,27 @@
 package dao_test
 
 import (
+	"log"
 	"os"
-	"testing"
 	"time"
+	"yatter-backend-go/app/dao"
 
 	"github.com/go-sql-driver/mysql"
 )
 
-func NewConfig(t *testing.T) DBConfig {
+func NewDao() dao.Dao {
+	dao, err := dao.New(NewConfig())
+	if err != nil {
+		log.Fatal("NewTestDao() fail", err)
+	}
+	return dao
+}
+
+func NewConfig() dao.DBConfig {
 	cfg := mysql.NewConfig()
 	cfg.ParseTime = true
 	if loc, err := time.LoadLocation(os.Getenv("TEST_MYSQL_TZ")); err != nil {
-		t.Fatal("Invalid timezone")
+		log.Fatal("Invalid timezone")
 	} else {
 		cfg.Loc = loc
 	}
@@ -22,4 +31,9 @@ func NewConfig(t *testing.T) DBConfig {
 	cfg.Passwd = os.Getenv("TEST_MYSQL_PASSWORD")
 	cfg.DBName = os.Getenv("TEST_MYSQL_DATABASE")
 	return cfg
+}
+
+func Done(d dao.Dao) {
+	d.InitAll()
+	d.Close()
 }

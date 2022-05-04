@@ -23,6 +23,9 @@ func (d *daoMock) Relationship() repository.Relationship {
 func (d *daoMock) InitAll() error {
 	return nil
 }
+func (d *daoMock) Close() error {
+	return nil
+}
 
 type accountMock struct{}
 

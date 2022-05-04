@@ -22,6 +22,9 @@ type (
 
 		// Clear all data in DB
 		InitAll() error
+
+		// Close DB
+		Close() error
 	}
 
 	// Implementation for DAO
@@ -71,6 +74,10 @@ func (d *dao) InitAll() error {
 	}
 
 	return nil
+}
+
+func (d *dao) Close() error {
+	return d.db.Close()
 }
 
 func (d *dao) exec(query string, args ...interface{}) error {

@@ -37,15 +37,16 @@ services:
     image: phpmyadmin/phpmyadmin
     depends_on:
       - mysql
+      - testmysql
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOSTS=mysql
-      - PMA_USER=yatter
-      - PMA_PASSWORD=yatter
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: mysql
+      PMA_USER: yatter
+      PMA_PASSWORD: yatter
     ports:
       - "3000:80"
     volumes:
-      - ./docker/phpmyadmin/sessions:/sessions
+      - "./.data/phpmyadmin:/sessions"
 
   web:
     build:

@@ -37,13 +37,18 @@ prepare: mod
 mod:
 	go mod download
 
+# daoパッケージはコンテナ内で実行するので除く
 .PHONY: test
 test:
+	go test $(filter-out %/dao, $(shell go list ${MAKEFILE_DIR}/...))
+
+.PHONY: alltest
+alltest:
 	go test $(shell go list ${MAKEFILE_DIR}/...)
 
-.PHONY: uptest
-uptest:
-	docker-compose exec web make test
+.PHONY: wtest
+wtest:
+	docker-compose exec web make alltest
 
 .PHONY: lint
 lint:

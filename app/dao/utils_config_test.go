@@ -1,18 +1,18 @@
 package dao_test
 
 import (
-	"log"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
 )
 
-func NewConfig() DBConfig {
+func NewConfig(t *testing.T) DBConfig {
 	cfg := mysql.NewConfig()
 	cfg.ParseTime = true
 	if loc, err := time.LoadLocation(os.Getenv("TEST_MYSQL_TZ")); err != nil {
-		log.Fatal("Invalid timezone")
+		t.Fatal("Invalid timezone")
 	} else {
 		cfg.Loc = loc
 	}

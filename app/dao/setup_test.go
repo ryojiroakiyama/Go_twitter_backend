@@ -32,12 +32,3 @@ func NewConfig() dao.DBConfig {
 	cfg.DBName = os.Getenv("TEST_MYSQL_DATABASE")
 	return cfg
 }
-
-func Done(d dao.Dao) {
-	if err := d.InitAll(); err != nil {
-		log.Fatal("InitAll fail")
-	}
-	if err := d.Close(); err != nil {
-		log.Fatal("Close fail")
-	}
-}

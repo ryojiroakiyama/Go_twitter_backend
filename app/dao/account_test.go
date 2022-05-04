@@ -12,5 +12,5 @@ func TestAccount(t *testing.T) {
 	dao := NewDao()
 	a := object.Account{Username: "test"}
 	dao.Account().Create(context.Background(), &a)
-	defer Done(dao) // NOTE: コネクションが違うと削除されない？？
+	defer dao.InitAll()
 }

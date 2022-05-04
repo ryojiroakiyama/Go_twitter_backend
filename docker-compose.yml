@@ -32,12 +32,25 @@ services:
       - "./.data/testmysql:/var/lib/mysql"
       - "./ddl:/docker-entrypoint-initdb.d"
     restart: on-failure
+
+  testphpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    depends_on:
+      - testmysql
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: testmysql
+      PMA_USER: tatter
+      PMA_PASSWORD: tatter
+    ports:
+      - "3001:80"
+    volumes:
+      - "./.data/testphpmyadmin:/sessions"
   
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     depends_on:
       - mysql
-      - testmysql
     environment:
       PMA_ARBITRARY: 1
       PMA_HOSTS: mysql

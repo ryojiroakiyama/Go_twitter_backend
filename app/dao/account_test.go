@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccount(t *testing.T) {
-	dao := NewDao()
+	dao := NewDao(t)
 	a := object.Account{Username: "test"}
 	dao.Account().Create(context.Background(), &a)
 	defer dao.InitAll()

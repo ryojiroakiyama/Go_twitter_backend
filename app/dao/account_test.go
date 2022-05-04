@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	testuser = "benben"
+	testUserName = "benben"
 )
 
 func TestAccountFindByUsername(t *testing.T) {
@@ -17,7 +17,7 @@ func TestAccountFindByUsername(t *testing.T) {
 	dao := NewDao(t)
 	defer dao.InitAll()
 	ctx := context.Background()
-	account := object.Account{Username: testuser}
+	account := object.Account{Username: testUserName}
 	dao.Account().Create(ctx, &account)
 
 	type args struct {
@@ -34,10 +34,10 @@ func TestAccountFindByUsername(t *testing.T) {
 			name: "simple",
 			args: args{
 				ctx:      ctx,
-				username: testuser,
+				username: testUserName,
 			},
 			want: &object.Account{
-				Username: testuser,
+				Username: testUserName,
 			},
 			wantErr: false,
 		},
@@ -63,6 +63,69 @@ func TestAccountFindByUsername(t *testing.T) {
 				if got.Username != tt.want.Username {
 					t.Errorf("account.FindByUsername() = %v, want %v", got, tt.want)
 				}
+			}
+		})
+	}
+}
+
+func TestAccountCreate(t *testing.T) {
+	// set up
+	dao := NewDao(t)
+	defer dao.InitAll()
+	ctx := context.Background()
+
+	type args struct {
+		ctx     context.Context
+		account *object.Account
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    object.AccountID
+		wantErr bool
+	}{
+		{
+			name: "simple",
+			args: args{
+				ctx: ctx,
+				account: &object.Account{
+					Username: testUserName,
+				},
+			},
+			want:    1,
+			wantErr: false,
+		},
+		{
+			name: "account duplicate",
+			args: args{
+				ctx: ctx,
+				account: &object.Account{
+					Username: testUserName,
+				},
+			},
+			want:    1,
+			wantErr: true,
+		},
+	}
+	for _, tt := range tests {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := dao.Account().Create(ctx, tt.args.account)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("account.Create() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			} else if tt.wantErr {
+				return
+			}
+			if got != tt.want {
+				t.Errorf("account.Create() = %v, want %v", got, tt.want)
+				return
+			}
+			ac, err := dao.Account().FindByUsername(ctx, tt.args.account.Username)
+			if err != nil {
+				t.Logf("find by username fail")
+			} else if ac == nil {
+				t.Errorf("the account was not created")
 			}
 		})
 	}

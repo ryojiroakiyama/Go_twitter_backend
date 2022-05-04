@@ -32,9 +32,9 @@ func NewDB(t *testing.T) {
 	INSERT
 		INTO account
 		(username, password_hash) VALUES (?, ?)`
-	_, err = db.ExecContext(ctx, query, "rakiyama", "rrr")
+	_, err = db.ExecContext(ctx, query, "rsudo", "rrr")
 	if err != nil {
-		t.Fatal("failt to insert")
+		t.Fatal("failt to insert", err)
 	}
 
 	account := new(object.Account)
@@ -47,7 +47,7 @@ func NewDB(t *testing.T) {
 		if errors.Is(err, sql.ErrNoRows) {
 			t.Fatal("no rows")
 		}
-		t.Fatal("fail to query")
+		t.Fatal("fail to query", err)
 	}
 	fmt.Println("------->", account.Username)
 }

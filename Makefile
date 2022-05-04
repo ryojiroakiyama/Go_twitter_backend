@@ -1,4 +1,7 @@
 BINARY := yatter-backend-go
+
+# MAKEFILE_LIST: makeがパースするファイルリスト
+# lastword: この時点ではincludeしてないので'Makefile'
 MAKEFILE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 PATH := $(PATH):${MAKEFILE_DIR}bin
@@ -7,10 +10,13 @@ SHELL := env PATH="$(PATH)" /bin/bash
 export CGO_ENABLED = 0
 GOARCH = amd64
 
+# HEADが指すオブジェクトのハッシュ値
 COMMIT=$(shell git rev-parse HEAD)
+# HEADが指すオブジェクトのブランチ名
 BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GIT_URL=local-git://
 
+# go tool link に渡すフラグ, リンク時に指定パッケージ内の指定変数書き換え
 LDFLAGS := -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 build: build-linux
@@ -30,6 +36,7 @@ test:
 	go test $(shell go list ${MAKEFILE_DIR}/...)
 
 uptest:
+	docker-compose up -d
 	docker-compose exec web make test
 
 lint:

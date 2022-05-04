@@ -19,35 +19,43 @@ GIT_URL=local-git://
 # go tool link に渡すフラグ, リンク時に指定パッケージ内の指定変数書き換え
 LDFLAGS := -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
+.PHONY: build
 build: build-linux
 
+.PHONY: build-default
 build-default:
 	go build ${LDFLAGS} -o build/${BINARY}
 
+.PHONY: build-linux
 build-linux:
 	GOOS=linux GOARCH=${GOARCH} go build ${LDFLAGS} -o build/${BINARY}-linux-${GOARCH} .
 
+.PHONY: prepare
 prepare: mod
 
+.PHONY: mod
 mod:
 	go mod download
 
+.PHONY: test
 test:
 	go test $(shell go list ${MAKEFILE_DIR}/...)
 
+.PHONY: uptest
 uptest:
 	docker-compose exec web make test
 
+.PHONY: lint
 lint:
 	if ! [ -x $(GOPATH)/bin/golangci-lint ]; then \
 		curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOPATH)/bin v1.38.0 ; \
 	fi
 	golangci-lint run --concurrency 2
 
+.PHONY: vet
 vet:
 	go vet ./...
 
+.PHONY:	clean
 clean:
 	git clean -f -X app bin build
-
-.PHONY:	test clean

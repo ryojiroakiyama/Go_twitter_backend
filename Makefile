@@ -41,6 +41,7 @@ mod:
 .PHONY: test
 test:
 	go test $(filter-out %/dao, $(shell go list ${MAKEFILE_DIR}/...))
+	@echo exclude dao package
 
 .PHONY: alltest
 alltest:

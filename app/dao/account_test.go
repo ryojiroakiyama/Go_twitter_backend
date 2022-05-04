@@ -41,6 +41,15 @@ func TestAccountFindByUsername(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "no account",
+			args: args{
+				ctx:      ctx,
+				username: "no such account",
+			},
+			want:    nil,
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -50,8 +59,10 @@ func TestAccountFindByUsername(t *testing.T) {
 				t.Errorf("account.FindByUsername() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got.Username != tt.want.Username {
-				t.Errorf("account.FindByUsername() = %v, want %v", got, tt.want)
+			if tt.want != nil {
+				if got.Username != tt.want.Username {
+					t.Errorf("account.FindByUsername() = %v, want %v", got, tt.want)
+				}
 			}
 		})
 	}

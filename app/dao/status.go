@@ -23,12 +23,11 @@ func NewStatus(db *sqlx.DB) repository.Status {
 	return &status{db: db}
 }
 
-// FindByID : アカウントIDから投稿をとってくる
+// FindByID : 指定IDのステータスの取得
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	status := new(object.Status)
-	// *object.Status内のaccountをscanの格納先として指示するために"account.~"
 	query := `
-	SELECT
+	SELECTgolan
 		s.id,
 		s.content,
 		s.create_at,
@@ -88,7 +87,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 	return nil
 }
 
-// GetAll : ステータス情報を全て取得
+// AllStatuses : ステータス情報を全て取得
 func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	query := `

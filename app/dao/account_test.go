@@ -247,6 +247,22 @@ func TestAccountFollowers(t *testing.T) {
 			},
 			wantErr: false,
 		},
+		{
+			name: "simple",
+			args: args{
+				ctx:      ctx,
+				username: testUsername3,
+				since_id: 0,
+				max_id:   1,
+				limit:    10,
+			},
+			want: []object.Account{
+				{
+					Username: testUsername1,
+				},
+			},
+			wantErr: false,
+		},
 	}
 	for _, tt := range tests {
 		tt := tt

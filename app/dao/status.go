@@ -163,15 +163,14 @@ func (r *status) FollowingStatuses(ctx context.Context, username string, since_i
 				relationship AS r
 			ON ma.id = r.follow_id
 			WHERE
-				r.user_id = (SELECT id FROM account WHERE username = ?)
-				OR ma.username = ?)
+				r.user_id = (SELECT id FROM account WHERE username = ?))
 		AS ma
 		ON s.account_id = ma.id
 	WHERE
 			? <= s.id
 		AND s.id <= ?
 	LIMIT ?`
-	err := r.db.SelectContext(ctx, &statuses, query, username, username, since_id, max_id, limit)
+	err := r.db.SelectContext(ctx, &statuses, query, username, since_id, max_id, limit)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

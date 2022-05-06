@@ -27,7 +27,7 @@ func NewStatus(db *sqlx.DB) repository.Status {
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	status := new(object.Status)
 	query := `
-	SELECTgolan
+	SELECT
 		s.id,
 		s.content,
 		s.create_at,

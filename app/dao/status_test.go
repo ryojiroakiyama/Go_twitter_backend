@@ -14,19 +14,14 @@ func TestStatus_Fetch_Delete(t *testing.T) {
 	ctx := context.Background()
 	CreateBaseTable(t, dao)
 
-	if r, err := dao.Relationship().Fetch(ctx, 1, 2); err != nil {
+	if s, err := dao.Status().FindByID(ctx, 1); err != nil {
 		t.Fatalf("Fetch %v", err)
-	} else if !(r.Following && !r.FllowedBy) {
-		t.Errorf("Fetch returned: %v", r)
+	} else if s.Account.Username != testUsername1 {
+		t.Errorf("Fetch returned: %v", s)
 	}
 
-	if err := dao.Relationship().Delete(ctx, 1, 2); err != nil {
-		t.Fatalf("Delete %v", err)
-	}
+	//if err := dao.Relationship().Delete(ctx, 1, 2); err != nil {
+	//	t.Fatalf("Delete %v", err)
+	//}
 
-	if r, err := dao.Relationship().Fetch(ctx, 1, 2); err != nil {
-		t.Fatalf("Fetch %v", err)
-	} else if !(!r.Following && !r.FllowedBy) {
-		t.Errorf("Fetch returned: %v", r)
-	}
 }

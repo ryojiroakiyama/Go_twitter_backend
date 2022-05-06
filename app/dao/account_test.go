@@ -8,12 +8,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const (
-	testUsername1 = "benben"
-	testUsername2 = "sonson"
-	testUsername3 = "jonjon"
-)
-
 func TestAccountFindByUsername(t *testing.T) {
 	// set up
 	dao := NewDao(t)
@@ -138,13 +132,7 @@ func TestAccountFollowing(t *testing.T) {
 	dao := NewDao(t)
 	defer dao.InitAll()
 	ctx := context.Background()
-	account1 := object.Account{Username: testUsername1}
-	account2 := object.Account{Username: testUsername2}
-	account3 := object.Account{Username: testUsername3}
-	account1.ID, _ = dao.Account().Create(ctx, &account1)
-	account2.ID, _ = dao.Account().Create(ctx, &account2)
-	account3.ID, _ = dao.Account().Create(ctx, &account3)
-	dao.Relationship().Create(ctx, account1.ID, account2.ID)
+	CreateBaseTable(t, dao)
 
 	type args struct {
 		ctx      context.Context
@@ -163,6 +151,23 @@ func TestAccountFollowing(t *testing.T) {
 				ctx:      ctx,
 				username: testUsername1,
 				limit:    10,
+			},
+			want: []object.Account{
+				{
+					Username: testUsername2,
+				},
+				{
+					Username: testUsername3,
+				},
+			},
+			wantErr: false,
+		},
+		{
+			name: "limit",
+			args: args{
+				ctx:      ctx,
+				username: testUsername1,
+				limit:    1,
 			},
 			want: []object.Account{
 				{

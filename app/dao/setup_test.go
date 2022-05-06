@@ -12,9 +12,12 @@ import (
 )
 
 const (
-	testUsername1 = "benben"
-	testUsername2 = "jonjon"
-	testUsername3 = "sonson"
+	testUsername1      = "benben"
+	testUsername2      = "jonjon"
+	testUsername3      = "sonson"
+	testStatusContent1 = "status of account1"
+	testStatusContent2 = "status of account2"
+	testStatusContent3 = "status of account3"
 )
 
 func NewDao(t *testing.T) dao.Dao {
@@ -52,9 +55,9 @@ func CreateBaseTable(t *testing.T, dao dao.Dao) {
 	account1.ID = mustAccountCreate(t, dao, ctx, &account1)
 	account2.ID = mustAccountCreate(t, dao, ctx, &account2)
 	account3.ID = mustAccountCreate(t, dao, ctx, &account3)
-	status1 := object.Status{Content: "status of account1", Account: &account1}
-	status2 := object.Status{Content: "status of account2", Account: &account2}
-	status3 := object.Status{Content: "status of account3", Account: &account3}
+	status1 := object.Status{Content: testStatusContent1, Account: &account1}
+	status2 := object.Status{Content: testStatusContent2, Account: &account2}
+	status3 := object.Status{Content: testStatusContent3, Account: &account3}
 	mustStatusCreate(t, dao, ctx, &status1)
 	mustStatusCreate(t, dao, ctx, &status2)
 	mustStatusCreate(t, dao, ctx, &status3)

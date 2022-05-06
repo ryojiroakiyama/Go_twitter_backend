@@ -52,6 +52,12 @@ func CreateBaseTable(t *testing.T, dao dao.Dao) {
 	account1.ID = mustAccountCreate(t, dao, ctx, &account1)
 	account2.ID = mustAccountCreate(t, dao, ctx, &account2)
 	account3.ID = mustAccountCreate(t, dao, ctx, &account3)
+	status1 := object.Status{Content: "status of account1", Account: &account1}
+	status2 := object.Status{Content: "status of account2", Account: &account2}
+	status3 := object.Status{Content: "status of account3", Account: &account3}
+	mustStatusCreate(t, dao, ctx, &status1)
+	mustStatusCreate(t, dao, ctx, &status2)
+	mustStatusCreate(t, dao, ctx, &status3)
 	mustRelationshipCreate(t, dao, ctx, account1.ID, account2.ID)
 	mustRelationshipCreate(t, dao, ctx, account1.ID, account3.ID)
 	mustRelationshipCreate(t, dao, ctx, account2.ID, account3.ID)
@@ -60,6 +66,15 @@ func CreateBaseTable(t *testing.T, dao dao.Dao) {
 func mustAccountCreate(t *testing.T, dao dao.Dao, ctx context.Context, ac *object.Account) int64 {
 	t.Helper()
 	id, err := dao.Account().Create(ctx, ac)
+	if err != nil {
+		t.Fatalf("BasaTable: %v", err)
+	}
+	return id
+}
+
+func mustStatusCreate(t *testing.T, dao dao.Dao, ctx context.Context, st *object.Status) int64 {
+	t.Helper()
+	id, err := dao.Status().Create(ctx, st)
 	if err != nil {
 		t.Fatalf("BasaTable: %v", err)
 	}

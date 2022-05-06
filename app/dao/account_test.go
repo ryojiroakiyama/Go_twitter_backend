@@ -163,28 +163,15 @@ func TestAccountFollowing(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "limit",
+			name: "no account",
 			args: args{
 				ctx:      ctx,
-				username: testUsername1,
-				limit:    1,
+				username: testUsername3,
+				limit:    10,
 			},
-			want: []object.Account{
-				{
-					Username: testUsername2,
-				},
-			},
+			want:    nil,
 			wantErr: false,
 		},
-		//{
-		//	name: "no account",
-		//	args: args{
-		//		ctx:      ctx,
-		//		username: "no such account",
-		//	},
-		//	want:    nil,
-		//	wantErr: false,
-		//},
 	}
 	for _, tt := range tests {
 		tt := tt
@@ -194,11 +181,9 @@ func TestAccountFollowing(t *testing.T) {
 				t.Errorf("account.Following() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if tt.want != nil {
-				for i, v := range got {
-					if v.Username != tt.want[i].Username {
-						t.Errorf("account.Following() = %v, want %v", got, tt.want)
-					}
+			for i, v := range got {
+				if v.Username != tt.want[i].Username {
+					t.Errorf("account.Following() = %v, want %v", got, tt.want)
 				}
 			}
 		})

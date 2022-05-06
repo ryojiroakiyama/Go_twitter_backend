@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func TestStatus_Fetch_Delete(t *testing.T) {
+func TestStatus_FindByID_Delete(t *testing.T) {
 	// set up
 	dao := NewDao(t)
 	defer dao.InitAll()
@@ -15,13 +15,18 @@ func TestStatus_Fetch_Delete(t *testing.T) {
 	CreateBaseTable(t, dao)
 
 	if s, err := dao.Status().FindByID(ctx, 1); err != nil {
-		t.Fatalf("Fetch %v", err)
+		t.Fatalf("FindByID %v", err)
 	} else if s.Account.Username != testUsername1 {
-		t.Errorf("Fetch returned: %v", s)
+		t.Errorf("FindByID returned: %v", s)
 	}
 
-	//if err := dao.Relationship().Delete(ctx, 1, 2); err != nil {
-	//	t.Fatalf("Delete %v", err)
-	//}
+	if err := dao.Status().Delete(ctx, 1, 1); err != nil {
+		t.Fatalf("Delete %v", err)
+	}
 
+	if s, err := dao.Status().FindByID(ctx, 1); err != nil {
+		t.Fatalf("FindByID %v", err)
+	} else if s != nil {
+		t.Errorf("FindByID returned: %v", s)
+	}
 }

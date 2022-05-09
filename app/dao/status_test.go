@@ -141,6 +141,9 @@ func TestStatusFollowingStatuses(t *testing.T) {
 			},
 			want: []object.Status{
 				{
+					Content: testStatusContent1,
+				},
+				{
 					Content: testStatusContent2,
 				},
 				{
@@ -157,7 +160,11 @@ func TestStatusFollowingStatuses(t *testing.T) {
 				max_id:   10,
 				limit:    10,
 			},
-			want: nil,
+			want: []object.Status{
+				{
+					Content: testStatusContent3,
+				},
+			},
 		},
 	}
 	for _, tt := range tests {

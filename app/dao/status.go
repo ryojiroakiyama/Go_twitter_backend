@@ -124,6 +124,7 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 	return statuses, nil
 }
 
+// TODO: username -> id でやる
 func (r *status) FollowingStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
@@ -159,18 +160,21 @@ func (r *status) FollowingStatuses(ctx context.Context, username string, since_i
 				ma.followers_count
 			FROM
 				meta_account AS ma
-				INNER JOIN
+				LEFT OUTER JOIN
 				relationship AS r
 			ON ma.id = r.follow_id
 			WHERE
-				r.user_id = (SELECT id FROM account WHERE username = ?))
+				r.user_id = (SELECT id FROM account WHERE username = ?)
+				OR ma.id = (SELECT id FROM account WHERE username = ?)
+			GROUP BY
+				ma.id)
 		AS ma
 		ON s.account_id = ma.id
 	WHERE
 			? <= s.id
 		AND s.id <= ?
 	LIMIT ?`
-	err := r.db.SelectContext(ctx, &statuses, query, username, since_id, max_id, limit)
+	err := r.db.SelectContext(ctx, &statuses, query, username, username, since_id, max_id, limit)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

@@ -125,7 +125,7 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 }
 
 // TODO: username -> id でやる
-func (r *status) FollowingStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
+func (r *status) RelationStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
 	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル

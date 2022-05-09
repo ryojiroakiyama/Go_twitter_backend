@@ -110,7 +110,7 @@ func TestStatusAllStatuses(t *testing.T) {
 	}
 }
 
-func TestStatusFollowingStatuses(t *testing.T) {
+func TestStatusRelationStatuses(t *testing.T) {
 	// set up
 	dao := NewDao(t)
 	defer dao.InitAll()
@@ -170,19 +170,19 @@ func TestStatusFollowingStatuses(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := dao.Status().FollowingStatuses(tt.args.ctx, tt.args.username, tt.args.since_id, tt.args.max_id, tt.args.limit)
+			got, err := dao.Status().RelationStatuses(tt.args.ctx, tt.args.username, tt.args.since_id, tt.args.max_id, tt.args.limit)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("FollowingStatuses() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("RelationStatuses() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if len(got) == len(tt.want) {
 				for i, v := range got {
 					if v.Content != tt.want[i].Content {
-						t.Errorf("FollowingStatuses() = %v, want %v", got, tt.want)
+						t.Errorf("RelationStatuses() = %v, want %v", got, tt.want)
 					}
 				}
 			} else {
-				t.Errorf("FollowingStatuses() = %v, want %v", got, tt.want)
+				t.Errorf("RelationStatuses() = %v, want %v", got, tt.want)
 			}
 		})
 	}

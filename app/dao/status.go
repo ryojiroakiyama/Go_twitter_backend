@@ -127,7 +127,9 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
-	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル, 現状:複数からフォローされている場合にダブるのでGROUP BYしてる..
+	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル
+	//              現状: 複数からフォローされている場合にダブるのでGROUP BYしてる..
+	//              前回: INNER JOIN していたらuserが誰にもフォローされていない場合拾えない
 	query := `
 	SELECT
 		s.id, 

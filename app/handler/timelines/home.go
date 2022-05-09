@@ -24,7 +24,7 @@ func (h *handler) Home(w http.ResponseWriter, r *http.Request) {
 		httperror.LostAccount(w)
 		return
 	}
-	statuses, err := h.app.Dao.Status().RelationStatuses(ctx, account.Username, since_id, max_id, limit)
+	statuses, err := h.app.Dao.Status().RelationStatuses(ctx, account.ID, since_id, max_id, limit)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

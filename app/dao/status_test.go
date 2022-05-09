@@ -119,7 +119,7 @@ func TestStatusRelationStatuses(t *testing.T) {
 
 	type args struct {
 		ctx      context.Context
-		username string
+		id       object.AccountID
 		since_id int64
 		max_id   int64
 		limit    int64
@@ -134,7 +134,7 @@ func TestStatusRelationStatuses(t *testing.T) {
 			name: "simple",
 			args: args{
 				ctx:      ctx,
-				username: testUsername1,
+				id:       1,
 				since_id: 0,
 				max_id:   10,
 				limit:    10,
@@ -155,7 +155,7 @@ func TestStatusRelationStatuses(t *testing.T) {
 			name: "no following",
 			args: args{
 				ctx:      ctx,
-				username: testUsername3,
+				id:       3,
 				since_id: 0,
 				max_id:   10,
 				limit:    10,
@@ -170,7 +170,7 @@ func TestStatusRelationStatuses(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := dao.Status().RelationStatuses(tt.args.ctx, tt.args.username, tt.args.since_id, tt.args.max_id, tt.args.limit)
+			got, err := dao.Status().RelationStatuses(tt.args.ctx, tt.args.id, tt.args.since_id, tt.args.max_id, tt.args.limit)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("RelationStatuses() error = %v, wantErr %v", err, tt.wantErr)
 				return

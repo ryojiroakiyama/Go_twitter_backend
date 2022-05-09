@@ -124,8 +124,7 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 	return statuses, nil
 }
 
-// TODO: username -> id でやる
-func (r *status) RelationStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
+func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
 	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル
@@ -164,8 +163,8 @@ func (r *status) RelationStatuses(ctx context.Context, username string, since_id
 				relationship AS r
 			ON ma.id = r.follow_id
 			WHERE
-				r.user_id = (SELECT id FROM account WHERE username = ?)
-				OR ma.id = (SELECT id FROM account WHERE username = ?)
+				r.user_id = ?
+				OR ma.id = ?
 			GROUP BY
 				ma.id)
 		AS ma
@@ -174,7 +173,7 @@ func (r *status) RelationStatuses(ctx context.Context, username string, since_id
 			? <= s.id
 		AND s.id <= ?
 	LIMIT ?`
-	err := r.db.SelectContext(ctx, &statuses, query, username, username, since_id, max_id, limit)
+	err := r.db.SelectContext(ctx, &statuses, query, user_id, user_id, since_id, max_id, limit)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

@@ -118,7 +118,7 @@ func (r *statusMock) AllStatuses(ctx context.Context, since_id int64, max_id int
 }
 
 // 今からこれ再現するのはコスト高いので保留
-func (r *statusMock) RelationStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
+func (r *statusMock) RelationStatuses(ctx context.Context, user_id object.AccountID, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	return []object.Status{}, nil
 }
 

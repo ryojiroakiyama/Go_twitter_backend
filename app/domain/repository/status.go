@@ -20,5 +20,5 @@ type Status interface {
 	AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error)
 
 	// Fetch following account's statuses
-	RelationStatuses(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Status, error)
+	RelationStatuses(ctx context.Context, user_id object.AccountID, since_id int64, max_id int64, limit int64) ([]object.Status, error)
 }

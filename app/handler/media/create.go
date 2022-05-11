@@ -19,3 +19,16 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	w.Write(content)
 }
+
+/* 以下のbodyの中のmultipart/form-dataを分割できるようなgoの機能を探す
+
+------WebKitFormBoundaryWYmEcsXGLxLb50oE
+Content-Disposition: form-data; name="file"; filename="Untitled.txt"
+Content-Type: text/plain
+
+akiyama content
+------WebKitFormBoundaryWYmEcsXGLxLb50oE
+Content-Disposition: form-data; name="description"
+
+------WebKitFormBoundaryWYmEcsXGLxLb50oE--
+*/

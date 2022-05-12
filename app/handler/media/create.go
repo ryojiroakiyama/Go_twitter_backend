@@ -54,7 +54,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 				httperror.InternalServerError(w, err)
 				return
 			}
-			content = content + fmt.Sprintf("[Part1: %q] [Part2: %q] %q\n", p.Header.Get("Content-Disposition"), p.Header.Get("Content-Type"), slurp)
+			content = content + fmt.Sprintf("[Content-Disposition: %q] [Content-Type: %q] %q\n", p.Header.Get("Content-Disposition"), p.Header.Get("Content-Type"), slurp)
 		}
 	}
 	w.Write([]byte(content))

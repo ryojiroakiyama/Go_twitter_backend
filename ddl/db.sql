@@ -31,3 +31,11 @@ CREATE TABLE `relationship` (
   CONSTRAINT `fk_relationship_user_id` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`),
   CONSTRAINT `fk_relationship_follow_id` FOREIGN KEY (`follow_id`) REFERENCES `account` (`id`)
 );
+
+CREATE TABLE `media` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) NOT NULL,
+  `url` varchar(255) NOT NULL,
+  `description` varchar(255),
+  PRIMARY KEY (`id`)
+);

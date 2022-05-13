@@ -8,7 +8,7 @@ type (
 		ID AttachmentID `json:"id" db:"id"`
 
 		// The content_type of the attachment
-		Type string `json:"type,omitempty" db:"type"`
+		Type string `json:"type" db:"type"`
 
 		// Url(path) of the attachment
 		Url string `json:"url,omitempty" db:"url"`

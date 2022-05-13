@@ -24,6 +24,8 @@ Content-Disposition: form-data; name="description"
 ------WebKitFormBoundaryWYmEcsXGLxLb50oE--
 */
 
+// TODO: リクエストをattachment objectにしてcreateする
+// TODO: パースはr.FormFileで行けるかも
 // Handle request for `POST /media`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	_ = r.Context()

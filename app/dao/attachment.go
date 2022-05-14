@@ -12,39 +12,39 @@ import (
 )
 
 type (
-	// Implementation for repository.Attachment
-	attachment struct {
+	// Implementation for repository.Media
+	media struct {
 		db *sqlx.DB
 	}
 )
 
 // Create accout repository
-func NewAttachment(db *sqlx.DB) repository.Attachment {
-	return &attachment{db: db}
+func NewMedia(db *sqlx.DB) repository.Media {
+	return &media{db: db}
 }
 
 // FindByID : 指定IDのステータスの取得
-func (r *attachment) FindByID(ctx context.Context, id object.AttachmentID) (*object.Attachment, error) {
-	attachment := new(object.Attachment)
+func (r *media) FindByID(ctx context.Context, id object.MediaID) (*object.Media, error) {
+	media := new(object.Media)
 	query := `
 	SELECT *
 	FROM media
 	WHERE id = ?`
-	err := r.db.QueryRowxContext(ctx, query, id).StructScan(attachment)
+	err := r.db.QueryRowxContext(ctx, query, id).StructScan(media)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	return attachment, nil
+	return media, nil
 }
 
 // Create: ステータス作成
-func (r *attachment) Create(ctx context.Context, entity *object.Attachment) (object.AccountID, error) {
+func (r *media) Create(ctx context.Context, entity *object.Media) (object.AccountID, error) {
 	query := `
 	INSERT
-		INTO attachment
+		INTO media
 		(type, url, description) VALUES (?, ?, ?)`
 	result, err := r.db.ExecContext(ctx, query, entity.Type, entity.Url, entity.Description)
 	if err != nil {
@@ -58,12 +58,12 @@ func (r *attachment) Create(ctx context.Context, entity *object.Attachment) (obj
 }
 
 //// Delete: ステータス削除
-//func (r *attachment) Delete(ctx context.Context, attachment_id object.AttachmentID, account_id object.AccountID) error {
+//func (r *media) Delete(ctx context.Context, media_id object.MediaID, account_id object.AccountID) error {
 //	query := `
 //	DELETE
-//	FROM attachment
+//	FROM media
 //	WHERE id=? AND account_id=?`
-//	_, err := r.db.ExecContext(ctx, query, attachment_id, account_id)
+//	_, err := r.db.ExecContext(ctx, query, media_id, account_id)
 //	if err != nil {
 //		return fmt.Errorf("%w", err)
 //	}

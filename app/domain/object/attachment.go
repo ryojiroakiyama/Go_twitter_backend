@@ -1,19 +1,19 @@
 package object
 
 type (
-	AttachmentID = int64
+	MediaID = int64
 
-	Attachment struct {
-		// The ID of the attachment
-		ID AttachmentID `json:"id" db:"id"`
+	Media struct {
+		// The ID of the media
+		ID MediaID `json:"id" db:"id"`
 
-		// The content_type of the attachment
+		// The content_type of the media
 		Type string `json:"type" db:"type"`
 
-		// Url(path) of the attachment
+		// Url(path) of the media
 		Url string `json:"url,omitempty" db:"url"`
 
-		// The time the attachment was created
+		// The time the media was created
 		Description *string `json:"description,omitempty" db:"description"`
 	}
 )

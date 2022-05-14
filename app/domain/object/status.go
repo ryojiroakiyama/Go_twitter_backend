@@ -16,6 +16,6 @@ type (
 		// The time the status was created
 		CreateAt DateTime `json:"create_at,omitempty" db:"create_at"`
 
-		//MediaAttachment
+		//MediaMedia
 	}
 )

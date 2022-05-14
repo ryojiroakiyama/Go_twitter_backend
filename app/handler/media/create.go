@@ -9,8 +9,6 @@ import (
 	"yatter-backend-go/app/handler/httperror"
 )
 
-// TODO: リクエストをmedia objectにしてcreateする
-// TODO: パースはr.FormFileで行けるかも
 // Handle request for `POST /media`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	_ = r.Context()
@@ -52,10 +50,6 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	//	httperror.InternalServerError(w, err)
 	//	return
 	//}
-	//w.Write([]byte(mediaType))
-	//w.Write([]byte("\n"))
-	//w.Write([]byte(params["boundary"]))
-	//w.Write([]byte("\n"))
 	//var content string
 	//if strings.HasPrefix(mediaType, "multipart/") {
 	//	mr := multipart.NewReader(r.Body, params["boundary"])
@@ -66,7 +60,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	//		}
 	//		if err != nil {
 	//			httperror.InternalServerError(w, err)
-	//			return
+	//			returnf
 	//		}
 	//		slurp, err := io.ReadAll(p)
 	//		if err != nil {

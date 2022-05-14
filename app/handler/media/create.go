@@ -1,18 +1,11 @@
 package media
 
 import (
-	//"fmt"
 	"fmt"
 	"io"
-	"os"
-
-	//"mime"
-	//"mime/multipart"
 	"net/http"
-	"strconv"
-
-	//"strings"
-
+	"os"
+	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/httperror"
 )
 
@@ -22,30 +15,36 @@ import (
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	_ = r.Context()
 
-	//body, err := io.ReadAll(r.Body)
-	//if err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//}
-	//w.Write(body)
-	//w.Write([]byte("\n\n"))
-
+	media := new(object.Media)
 	file, header, err := r.FormFile("file")
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return
 	}
-	path, err := GenTmpFile(file, "./.data/media")
-	w.Write([]byte(path))
+	media.Url, err = GenTmpFile("./.data/media", file)
+	media.Type = header.Header.Get("Content-Type")
 	w.Write([]byte("\n"))
-	w.Write([]byte("~~~header~~~\n"))
-	w.Write([]byte("filename: " + header.Filename))
+	w.Write([]byte("type: " + media.Type))
 	w.Write([]byte("\n"))
-	w.Write([]byte("size: " + strconv.FormatInt(header.Size, 10)))
+	w.Write([]byte("url: " + media.Url))
 	w.Write([]byte("\n"))
-	w.Write([]byte("Content-Disposition: " + header.Header.Get("Content-Disposition")))
-	w.Write([]byte("\n"))
-	w.Write([]byte("Content-Type: " + header.Header.Get("Content-Type")))
+
+	// ここでそんなのないって返ってくる, これを初めにしてもそうなる
+	file, header, err = r.FormFile("description")
+	if err != nil {
+		w.Write([]byte("~~~~~~~~"))
+		httperror.InternalServerError(w, err)
+		return
+	}
+	content, err := io.ReadAll(file)
+	if err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
+	if description := string(content); description != "" {
+		media.Description = &description
+	}
+	w.Write([]byte("description: " + *media.Description))
 	w.Write([]byte("\n"))
 
 	//mediaType, params, err := mime.ParseMediaType(r.Header.Get("Content-Type"))
@@ -84,7 +83,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 //If successful, GenTmpFile returns a string
 //which is the name of the created file and nil error.
 //Else if faulse, GenTmpFile returns a empty string and any error encountered.
-func GenTmpFile(src io.Reader, dir string) (filePath string, err error) {
+func GenTmpFile(dir string, src io.Reader) (filePath string, err error) {
 	err = os.MkdirAll(dir, 0750)
 	if err != nil && !os.IsExist(err) {
 		return "", fmt.Errorf("ToTmpFile: %v", err)

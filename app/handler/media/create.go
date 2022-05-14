@@ -2,11 +2,15 @@ package media
 
 import (
 	//"fmt"
+	"fmt"
 	"io"
+	"os"
+
 	//"mime"
 	//"mime/multipart"
 	"net/http"
 	"strconv"
+
 	//"strings"
 
 	"yatter-backend-go/app/handler/httperror"
@@ -31,13 +35,8 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		httperror.InternalServerError(w, err)
 		return
 	}
-	b, err := io.ReadAll(file)
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-	w.Write([]byte("file: "))
-	w.Write(b)
+	path, err := GenTmpFile(file, "./.data/media")
+	w.Write([]byte(path))
 	w.Write([]byte("\n"))
 	w.Write([]byte("~~~header~~~\n"))
 	w.Write([]byte("filename: " + header.Filename))
@@ -79,4 +78,34 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	//	}
 	//}
 	//w.Write([]byte(content))
+}
+
+//GenTmpFile creates a tmpprary file and write contents to the file.
+//If successful, GenTmpFile returns a string
+//which is the name of the created file and nil error.
+//Else if faulse, GenTmpFile returns a empty string and any error encountered.
+func GenTmpFile(src io.Reader, dir string) (filePath string, err error) {
+	err = os.MkdirAll(dir, 0750)
+	if err != nil && !os.IsExist(err) {
+		return "", fmt.Errorf("ToTmpFile: %v", err)
+	}
+	tmpfile, err := os.CreateTemp(dir, "")
+	if err != nil {
+		return "", fmt.Errorf("ToTmpFile: %v", err)
+	}
+	filePath = tmpfile.Name()
+	defer func() {
+		if cerr := tmpfile.Close(); cerr != nil {
+			err = fmt.Errorf("ToTmpFile: %v", cerr)
+		}
+		if err != nil && filePath != "" {
+			os.Remove(filePath)
+		}
+	}()
+	_, err = io.Copy(tmpfile, src)
+	if err != nil {
+		return "", fmt.Errorf("ToTmpFile: %v", err)
+	}
+	err = tmpfile.Sync()
+	return
 }

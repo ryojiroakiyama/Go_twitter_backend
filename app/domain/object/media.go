@@ -1,5 +1,7 @@
 package object
 
+var MediaType = [...]string{"image", "video", "gifv", "unknown"}
+
 type (
 	MediaID = int64
 
@@ -7,7 +9,7 @@ type (
 		// The ID of the media
 		ID MediaID `json:"id" db:"id"`
 
-		// The content_type of the media
+		// The content_type of the media, ["image", "video", "gifv", "unknown"]
 		Type string `json:"type" db:"type"`
 
 		// Url(path) of the media

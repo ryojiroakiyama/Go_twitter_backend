@@ -24,6 +24,10 @@ func (d *DaoMock) Relationship() repository.Relationship {
 	return newRelationShipMock(d.db)
 }
 
+func (d *DaoMock) Media() repository.Media {
+	return nil
+}
+
 func (d *DaoMock) InitAll() error {
 	d.db = nil
 	return nil

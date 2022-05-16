@@ -20,6 +20,9 @@ type (
 		// Get relationship repository
 		Relationship() repository.Relationship
 
+		// Get media repository
+		Media() repository.Media
+
 		// Clear all data in DB
 		InitAll() error
 	}
@@ -50,6 +53,10 @@ func (d *dao) Status() repository.Status {
 
 func (d *dao) Relationship() repository.Relationship {
 	return NewRelationship(d.db)
+}
+
+func (d *dao) Media() repository.Media {
+	return NewMedia(d.db)
 }
 
 func (d *dao) InitAll() error {

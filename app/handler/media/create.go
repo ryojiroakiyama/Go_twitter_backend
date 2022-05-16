@@ -1,6 +1,7 @@
 package media
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -12,7 +13,7 @@ import (
 
 // Handle request for `POST /media`
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
-	_ = r.Context()
+	ctx := r.Context()
 
 	media := new(object.Media)
 	file, header, err := r.FormFile("file")
@@ -33,6 +34,25 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Write([]byte("description: " + *media.Description))
 	w.Write([]byte("\n"))
+	id, err := h.app.Dao.Media().Create(ctx, media)
+	if err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
+	media, err = h.app.Dao.Media().FindByID(ctx, id)
+	if err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	} else if media == nil {
+		httperror.LostAccount(w)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(media); err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
 }
 
 //writeTmpFile creates a tmpprary file and write contents to the file.

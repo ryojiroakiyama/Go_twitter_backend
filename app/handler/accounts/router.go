@@ -23,6 +23,7 @@ func NewRouter(app *app.App) http.Handler {
 		r.Use(auth.Middleware(app))
 		r.Post("/{username}/follow", h.Follow)
 		r.Post("/{username}/unfollow", h.UnFollow)
+		r.Post("/update_credentials", h.Update)
 	})
 	r.Post("/", h.Create)
 	r.Get("/{username}", h.Fetch)

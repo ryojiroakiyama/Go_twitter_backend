@@ -63,23 +63,39 @@ func TestWriteToTmpFile(t *testing.T) {
 	tests := []struct {
 		name     string
 		contents []byte
+		dir      string
+		pattern  string
 		wantErr  bool
 	}{
 		{
 			name:     "simple",
 			contents: []byte("abc"),
+			dir:      "",
+			pattern:  "",
+			wantErr:  false,
+		},
+		{
+			name:     "simple",
+			contents: []byte("abc"),
+			dir:      "./tmp",
+			pattern:  "",
 			wantErr:  false,
 		},
 	}
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			gotfilePath, err := fileio.WriteToTmpFile(bytes.NewReader(tt.contents))
+			gotfilePath, err := fileio.WriteToTmpFile(bytes.NewReader(tt.contents), tt.dir, tt.pattern)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("WriteToTmpFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			defer os.Remove(gotfilePath)
+			defer func() {
+				os.Remove(gotfilePath)
+				if tt.dir != "" {
+					os.Remove(tt.dir)
+				}
+			}()
 			c, err := fileio.FileContents(gotfilePath)
 			if err != nil {
 				t.Errorf("FileContents error = %v", err)

@@ -20,10 +20,15 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	media.Url, err = fileio.WriteToTmpFile(file, "./.data/media", "")
+	if err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
 	media.Type = toMediaType(header.Header.Get("Content-Type"))
 	if description := r.FormValue("description"); description != "" {
 		media.Description = &description
 	}
+
 	id, err := h.app.Dao.Media().Create(ctx, media)
 	if err != nil {
 		httperror.InternalServerError(w, err)

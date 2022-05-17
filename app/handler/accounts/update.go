@@ -1,8 +1,10 @@
 package accounts
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+	"yatter-backend-go/app/domain/object"
 	"yatter-backend-go/app/handler/fileio"
 	"yatter-backend-go/app/handler/httperror"
 )
@@ -11,37 +13,44 @@ import (
 func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
 	_ = r.Context()
 
-	err := r.ParseMultipartForm(32 << 20)
-	if err != nil {
+	// TODO: ファイルの切り出し, mediaのcreateと共有できるかも
+	account := new(object.Account)
+	if dname := r.FormValue("display_name"); dname != "" {
+		account.DisplayName = &dname
+	}
+	if note := r.FormValue("note"); note != "" {
+		account.Note = &note
+	}
+	if file, _, err := r.FormFile("avatar"); err != nil {
+		if !errors.Is(err, http.ErrMissingFile) {
 		httperror.InternalServerError(w, err)
 		return
+		}
+	} else {
+		url, err := fileio.WriteToTmpFile(file, "./.data/avatar", "")
+		if err != nil {
+			httperror.InternalServerError(w, err)
+			return
+		}
+		account.Avatar = &url
 	}
-
-	displayName := r.MultipartForm.Value["display_name"][0]
-	note := r.MultipartForm.Value["note"][0]
-	avatar, err := r.MultipartForm.File["avatar"][0].Open()
-	if err != nil {
+	if file, _, err := r.FormFile("header"); err != nil {
+		if !errors.Is(err, http.ErrMissingFile) {
 		httperror.InternalServerError(w, err)
 		return
+		}
+	} else {
+		url, err := fileio.WriteToTmpFile(file, "./.data/header", "")
+		if err != nil {
+			httperror.InternalServerError(w, err)
+			return
+		}
+		account.Header = &url
 	}
-	header, err := r.MultipartForm.File["header"][0].Open()
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-	avatarURL, err := fileio.WriteToTmpFile(avatar, "./.data/media/avatar", "")
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-	headerURL, err := fileio.WriteToTmpFile(header, "./.data/media/header", "")
-	if err != nil {
-		httperror.InternalServerError(w, err)
-		return
-	}
-
-	fmt.Fprintf(w, "dname: %v, note: %v\n", displayName, note)
-	fmt.Fprintf(w, "aurl: %v\n hurl: %v\n", avatarURL, headerURL)
+	fmt.Fprintf(w, "DisplayName: %v\n", *account.DisplayName)
+	fmt.Fprintf(w, "Note: %v\n", *account.Note)
+	fmt.Fprintf(w, "Avatar: %v\n", *account.Avatar)
+	fmt.Fprintf(w, "Header: %v\n", *account.Header)
 
 	//var req requestSyntax
 	//if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

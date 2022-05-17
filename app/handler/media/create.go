@@ -23,17 +23,9 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 	media.Url, err = writeTmpFile("./.data/media", file)
 	media.Type = toMediaType(header.Header.Get("Content-Type"))
-	w.Write([]byte("\n"))
-	w.Write([]byte("type: " + media.Type))
-	w.Write([]byte("\n"))
-	w.Write([]byte("url: " + media.Url))
-	w.Write([]byte("\n"))
-
 	if description := r.FormValue("description"); description != "" {
 		media.Description = &description
 	}
-	w.Write([]byte("description: " + *media.Description))
-	w.Write([]byte("\n"))
 	id, err := h.app.Dao.Media().Create(ctx, media)
 	if err != nil {
 		httperror.InternalServerError(w, err)

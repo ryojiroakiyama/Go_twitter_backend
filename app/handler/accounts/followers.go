@@ -14,9 +14,9 @@ import (
 func (h *handler) Followers(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
-	since_id := params.FormValue(r, params.SinceID, 0, 0, math.MaxInt64)
-	max_id := params.FormValue(r, params.MaxID, math.MaxInt64, 0, math.MaxInt64)
-	limit := params.FormValue(r, params.Limit, 40, 0, 80)
+	since_id := params.FormValueLimiter(r, params.SinceID, 0, 0, math.MaxInt64)
+	max_id := params.FormValueLimiter(r, params.MaxID, math.MaxInt64, 0, math.MaxInt64)
+	limit := params.FormValueLimiter(r, params.Limit, 40, 0, 80)
 
 	username, err := request.UserNameOf(r)
 	if err != nil {

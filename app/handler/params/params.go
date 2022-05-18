@@ -14,7 +14,7 @@ const (
 	OnlyMedia = "only_media"
 )
 
-func FormValue(r *http.Request, key string, defaut int64, min int64, max int64) int64 {
+func FormValueLimiter(r *http.Request, key string, defaut int64, min int64, max int64) int64 {
 	if v := r.FormValue(key); v == "" {
 		return defaut
 	} else {

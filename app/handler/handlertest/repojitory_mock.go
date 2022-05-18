@@ -36,6 +36,11 @@ func (r *accountMock) Create(ctx context.Context, account *object.Account) (obje
 	return newID, nil
 }
 
+// TODO: test追加
+func (r *accountMock) Update(ctx context.Context, entity *object.Account) (error) {
+	return nil
+}
+
 func (r *accountMock) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account

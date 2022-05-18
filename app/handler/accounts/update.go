@@ -1,20 +1,21 @@
 package accounts
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
-	"yatter-backend-go/app/domain/object"
+	"os"
+	"yatter-backend-go/app/handler/auth"
 	"yatter-backend-go/app/handler/fileio"
 	"yatter-backend-go/app/handler/httperror"
 )
 
 // Handle request for `POST /v1/accounts/update_credentials`
 func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
-	_ = r.Context()
+	ctx := r.Context()
 
-	// TODO: ファイルの切り出し, mediaのcreateと共有できるかも
-	account := new(object.Account)
+	// TODO: 処理まとめる, 関数分ける
+	account := auth.AccountOf(r)
 	if dname := r.FormValue("display_name"); dname != "" {
 		account.DisplayName = &dname
 	}
@@ -32,6 +33,9 @@ func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
 			httperror.InternalServerError(w, err)
 			return
 		}
+		if account.Avatar != nil {
+			os.Remove(*account.Avatar)
+		}
 		account.Avatar = &url
 	}
 	if file, _, err := r.FormFile("header"); err != nil {
@@ -45,52 +49,22 @@ func (h *handler) Update(w http.ResponseWriter, r *http.Request) {
 			httperror.InternalServerError(w, err)
 			return
 		}
+		if account.Header != nil {
+			os.Remove(*account.Header)
+		}
 		account.Header = &url
 	}
-	fmt.Fprintf(w, "DisplayName: %v\n", *account.DisplayName)
-	fmt.Fprintf(w, "Note: %v\n", *account.Note)
-	fmt.Fprintf(w, "Avatar: %v\n", *account.Avatar)
-	fmt.Fprintf(w, "Header: %v\n", *account.Header)
 
-	//var req requestSyntax
-	//if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-	//	httperror.BadRequest(w, err)
-	//	return
-	//}
+	if err := h.app.Dao.Account().Update(ctx, account); err != nil {
+		if err != nil {
+			httperror.InternalServerError(w, err)
+			return
+		}
+	}
 
-	//account := new(object.Account)
-	//account.Username = req.Username
-	//if err := account.SetPassword(req.Password); err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//}
-
-	//if accountFound, err := h.app.Dao.Account().FindByUsername(ctx, account.Username); err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//} else if accountFound != nil {
-	//	httperror.Error(w, http.StatusConflict)
-	//	return
-	//}
-
-	//_, err := h.app.Dao.Account().Create(ctx, account)
-	//if err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//}
-
-	//account, err = h.app.Dao.Account().FindByUsername(ctx, account.Username)
-	//if err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//} else if account == nil {
-	//	httperror.LostAccount(w)
-	//	return
-	//}
-
-	//w.Header().Set("Content-Type", "application/json")
-	//if err := json.NewEncoder(w).Encode(account); err != nil {
-	//	httperror.InternalServerError(w, err)
-	//	return
-	//}
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(account); err != nil {
+		httperror.InternalServerError(w, err)
+		return
+	}
 }

@@ -57,6 +57,22 @@ func (r *account) Create(ctx context.Context, account *object.Account) (object.A
 	return id, nil
 }
 
+// Create: アカウント更新
+func (r *account) Update(ctx context.Context, account *object.Account) (error) {
+	query := `
+	UPDATE account
+	SET    display_name = ?,
+	       avatar = ?,
+	       header = ?,
+	       note = ?
+	WHERE  id = ?`
+	_, err := r.db.ExecContext(ctx, query, account.DisplayName, account.Avatar, account.Header, account.Note, account.ID)
+	if err != nil {
+		return fmt.Errorf("%w", err)
+	}
+	return nil
+}
+
 // Following: userがフォローしているアカウント集合を返す
 func (r *account) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	var accounts []object.Account

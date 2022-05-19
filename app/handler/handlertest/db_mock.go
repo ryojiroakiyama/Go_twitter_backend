@@ -25,3 +25,9 @@ type RelationShipData struct {
 	UserID   int64
 	TargetID int64
 }
+
+type MediaTableMock map[int64]MediaData
+type MediaData struct {
+	ID  int64
+	URL string
+}

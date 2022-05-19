@@ -14,6 +14,7 @@ CREATE TABLE `status` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `account_id` bigint(20) NOT NULL,
   `content` text NOT NULL,
+  `media_id` bigint(20),
   `create_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   INDEX `idx_account_id` (`account_id`),

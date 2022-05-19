@@ -36,8 +36,7 @@ func (r *accountMock) Create(ctx context.Context, account *object.Account) (obje
 	return newID, nil
 }
 
-// TODO: test追加
-func (r *accountMock) Update(ctx context.Context, entity *object.Account) (error) {
+func (r *accountMock) Update(ctx context.Context, entity *object.Account) error {
 	return nil
 }
 

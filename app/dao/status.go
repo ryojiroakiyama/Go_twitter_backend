@@ -59,6 +59,32 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 
 // Create: ステータス作成
 func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
+	if entity.Attachment != nil {
+		return r.create(ctx, entity)
+	} else {
+		return r.createNoAttachment(ctx, entity)
+	}
+}
+
+// Create: attachmentありのステータス作成
+func (r *status) create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
+	query := `
+		INSERT
+			INTO status
+			(account_id, content, media_id) VALUES (?, ?, ?)`
+	result, err := r.db.ExecContext(ctx, query, entity.Account.ID, entity.Content, entity.Attachment.ID)
+	if err != nil {
+		return 0, fmt.Errorf("%w", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, fmt.Errorf("%w", err)
+	}
+	return id, nil
+}
+
+// Create: attachmentありのステータス作成
+func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 	INSERT
 		INTO status

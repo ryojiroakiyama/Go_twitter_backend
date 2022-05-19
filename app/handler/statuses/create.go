@@ -41,10 +41,6 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 			httperror.LostAccount(w)
 			return
 		}
-		if attachment != nil {
-			httperror.Error(w, http.StatusNotFound)
-			return
-		}
 		status.Attachment = attachment
 	}
 

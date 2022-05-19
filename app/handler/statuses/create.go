@@ -16,6 +16,7 @@ type AddRequest struct {
 }
 
 // Handle request for `POST /v1/statuses`
+// TODO: multiple attachments
 func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
@@ -34,6 +35,18 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	status := new(object.Status)
 	status.Content = req.Status
 	status.Account = account
+	if len(req.Media_ids) != 0 {
+		attachment, err := h.app.Dao.Media().FindByID(ctx, req.Media_ids[0])
+		if err != nil {
+			httperror.LostAccount(w)
+			return
+		}
+		if attachment != nil {
+			httperror.Error(w, http.StatusNotFound)
+			return
+		}
+		status.Attachment = attachment
+	}
 
 	id, err := h.app.Dao.Status().Create(ctx, status)
 	if err != nil {

@@ -17,5 +17,6 @@ type (
 		CreateAt DateTime `json:"create_at,omitempty" db:"create_at"`
 
 		// Media attachment
+		Attachment *Media `json:"media,omitempty" db:"media"`
 	}
 )

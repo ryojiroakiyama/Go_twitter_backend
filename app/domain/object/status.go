@@ -20,6 +20,6 @@ type (
 		Media_ID *MediaID `json:"-" db:"media_id"`
 
 		// Media attachment
-		Attachment *Media `json:"media,omitempty" db:"media"`
+		Attachment *Media `json:"media_attachments,omitempty" db:"media_attachments"`
 	}
 )

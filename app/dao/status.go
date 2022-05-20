@@ -152,8 +152,8 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	for _, s := range statuses {
-		r.insertMedia(ctx, &s)
+	for i := 0; i < len(statuses); i++ {
+		r.insertMedia(ctx, &statuses[i])
 	}
 	return statuses, nil
 }
@@ -217,8 +217,8 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
-	for _, s := range statuses {
-		r.insertMedia(ctx, &s)
+	for i := 0; i < len(statuses); i++ {
+		r.insertMedia(ctx, &statuses[i])
 	}
 	return statuses, nil
 }

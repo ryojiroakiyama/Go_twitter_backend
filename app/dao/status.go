@@ -31,6 +31,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 		s.id,
 		s.content,
 		s.create_at,
+		s.media_id,
 		ma.id AS "account.id",
 		ma.username AS "account.username",
 		ma.password_hash AS "account.password_hash",
@@ -118,9 +119,10 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 	var statuses []object.Status
 	query := `
 	SELECT
-		s.id, 
-		s.content, 
-		s.create_at, 
+		s.id,
+		s.content,
+		s.create_at,
+		s.media_id,
 		ma.id AS "account.id",
 		ma.username AS "account.username",
 		ma.password_hash AS "account.password_hash",
@@ -160,7 +162,8 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 	SELECT
 		s.id, 
 		s.content, 
-		s.create_at, 
+		s.create_at,
+		s.media_id,
 		ma.id AS "account.id",
 		ma.username AS "account.username",
 		ma.password_hash AS "account.password_hash",
@@ -189,7 +192,7 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 				meta_account AS ma
 				LEFT OUTER JOIN
 				relationship AS r
-			ON ma.id = r.follow_id
+				ON ma.id = r.follow_id
 			WHERE
 				r.user_id = ?
 				OR ma.id = ?

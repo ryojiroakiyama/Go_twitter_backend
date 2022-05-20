@@ -16,6 +16,9 @@ type (
 		// The time the status was created
 		CreateAt DateTime `json:"create_at,omitempty" db:"create_at"`
 
+		// Attachment's media id
+		Media_ID *MediaID `json:"-" db:"media_id"`
+
 		// Media attachment
 		Attachment *Media `json:"media,omitempty" db:"media"`
 	}

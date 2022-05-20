@@ -55,6 +55,9 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
+	if err = r.insertMedia(ctx, status); err != nil {
+		return nil, err
+	}
 	return status, nil
 }
 
@@ -149,6 +152,9 @@ func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, 
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
+	for _, s := range statuses {
+		r.insertMedia(ctx, &s)
+	}
 	return statuses, nil
 }
 
@@ -211,5 +217,30 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 		}
 		return nil, fmt.Errorf("%w", err)
 	}
+	for _, s := range statuses {
+		r.insertMedia(ctx, &s)
+	}
 	return statuses, nil
+}
+
+//insertMedia inserts media into status.Attachment if status.Media_ID != nil
+// クエリ一発でattachmentありorなし含めて取ってくるのが思いつかなかったので,
+// statusを取ってきた後にmediaを取ってくるために用意
+func (r *status) insertMedia(ctx context.Context, statuse *object.Status) error {
+	if statuse.Media_ID != nil {
+		media := new(object.Media)
+		query := `
+			SELECT *
+			FROM media
+			WHERE id = ?`
+		err := r.db.QueryRowxContext(ctx, query, statuse.Media_ID).StructScan(media)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				return fmt.Errorf("status has media that doesn't exist")
+			}
+			return fmt.Errorf("%w", err)
+		}
+		statuse.Attachment = media
+	}
+	return nil
 }

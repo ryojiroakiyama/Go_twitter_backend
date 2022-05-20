@@ -87,7 +87,7 @@ func (r *status) create(ctx context.Context, entity *object.Status) (object.Stat
 	return id, nil
 }
 
-// Create: attachmentありのステータス作成
+// Create: attachmentなしのステータス作成
 func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 	INSERT
@@ -224,8 +224,8 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 }
 
 //insertMedia inserts media into status.Attachment if status.Media_ID != nil
-// クエリ一発でattachmentありorなし含めて取ってくるのが思いつかなかったので,
-// statusを取ってきた後にmediaを取ってくるために用意
+// クエリ一発でattachmentありorなし含めてstatus情報を取ってくるのが思いつかなかったので,
+// status情報を取ってきた後にこの関数でmediaを取ってくる
 func (r *status) insertMedia(ctx context.Context, statuse *object.Status) error {
 	if statuse.Media_ID != nil {
 		media := new(object.Media)

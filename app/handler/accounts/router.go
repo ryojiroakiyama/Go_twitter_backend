@@ -10,6 +10,8 @@ import (
 )
 
 // Implementation of handler
+// http handlerで引数以外の情報を共有するには,
+// struct・method形式にしてレシーバーを利用するとscopeはっきりしてわかりやすいし簡単
 type handler struct {
 	app *app.App
 }

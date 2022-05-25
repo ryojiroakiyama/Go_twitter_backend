@@ -2,6 +2,7 @@ package accounts
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"yatter-backend-go/app/domain/object"
@@ -26,6 +27,10 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 
 	account := new(object.Account)
 	account.Username = req.Username
+	if account.Username == "" {
+		httperror.InternalServerError(w, fmt.Errorf("empty username is not allowed"))
+		return
+	}
 	if err := account.SetPassword(req.Password); err != nil {
 		httperror.InternalServerError(w, err)
 		return

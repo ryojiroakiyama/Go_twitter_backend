@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:5.7 # for m1 mac
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-time-zone='+9:00'"
     ports:
       - "3306:3306"

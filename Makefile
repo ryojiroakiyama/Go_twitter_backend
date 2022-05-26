@@ -37,7 +37,7 @@ prepare: mod
 mod:
 	go mod download
 
-# daoパッケージはコンテナ内で実行するので除く
+# daoパッケージのテストはコンテナ内で実行するので除く
 .PHONY: test
 test:
 	go test $(filter-out %/dao, $(shell go list ${MAKEFILE_DIR}/...))

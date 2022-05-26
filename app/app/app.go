@@ -6,6 +6,7 @@ import (
 )
 
 // Dependency manager for whole application
+// 今回は簡素なものだからかあまり必要性がわかってない
 type App struct {
 	Dao dao.Dao
 }

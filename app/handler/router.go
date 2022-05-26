@@ -40,6 +40,7 @@ func NewRouter(app *app.App) http.Handler {
 	return r
 }
 
+// 別サーバからのアクセスに関する設定
 func newCORS() *cors.Cors {
 	return cors.New(cors.Options{
 		AllowedOrigins: []string{"*"},

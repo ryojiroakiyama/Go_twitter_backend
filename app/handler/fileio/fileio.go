@@ -11,15 +11,15 @@ import (
 //WriteToFile creates a filePath file and writes contents to the file.
 //If successful, WriteToFile returns nil error.
 //Else if faulse, WriteToFile returns any error encountered.
-//Maybe same as os.WriteFile(filePath, contents, 066).
+// Maybe same as os.WriteFile(filePath, contents, 066).
 func WriteToFile(filePath string, contents []byte) (err error) {
 	dstFile, err := os.Create(filePath)
 	if err != nil {
-		return fmt.Errorf("ToFile: %v", err)
+		return fmt.Errorf("WriteToFile: %v", err)
 	}
 	defer func() {
 		if cerr := dstFile.Close(); cerr != nil {
-			err = fmt.Errorf("ToFile: %v", cerr)
+			err = fmt.Errorf("WriteToFile: %v", cerr)
 		}
 		if err != nil && dstFile != nil {
 			os.Remove(dstFile.Name())
@@ -27,7 +27,7 @@ func WriteToFile(filePath string, contents []byte) (err error) {
 	}()
 	_, werr := dstFile.Write(contents)
 	if werr != nil {
-		return fmt.Errorf("ToFile: %v", werr)
+		return fmt.Errorf("WriteToFile: %v", werr)
 	}
 	err = dstFile.Sync()
 	return
@@ -68,12 +68,12 @@ func WriteToTmpFile(src io.Reader, dir string, pattern string) (filePath string,
 func FileContents(filePath string) ([]byte, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
-		return nil, fmt.Errorf("FileBytes: %v", err)
+		return nil, fmt.Errorf("FileContents: %v", err)
 	}
 	defer file.Close()
 	srcBytes, err := ioutil.ReadAll(file)
 	if err != nil {
-		return nil, fmt.Errorf("FileBytes: %v", err)
+		return nil, fmt.Errorf("FileContents: %v", err)
 	}
 	return srcBytes, nil
 }

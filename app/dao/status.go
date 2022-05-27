@@ -18,12 +18,12 @@ type (
 	}
 )
 
-// Create accout repository
+//NewStatus: Create accout repository
 func NewStatus(db *sqlx.DB) repository.Status {
 	return &status{db: db}
 }
 
-// FindByID : 指定IDのステータスの取得
+//FindByID : 指定IDのステータスの取得
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	status := new(object.Status)
 	query := `
@@ -61,7 +61,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	return status, nil
 }
 
-// Create: ステータス作成
+//Create: ステータス作成
 func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	if entity.Attachment != nil {
 		return r.create(ctx, entity)
@@ -70,7 +70,7 @@ func (r *status) Create(ctx context.Context, entity *object.Status) (object.Stat
 	}
 }
 
-// Create: attachmentありのステータス作成
+//Create: attachmentありのステータス作成
 func (r *status) create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 		INSERT
@@ -87,7 +87,7 @@ func (r *status) create(ctx context.Context, entity *object.Status) (object.Stat
 	return id, nil
 }
 
-// Create: attachmentなしのステータス作成
+//Create: attachmentなしのステータス作成
 func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 	INSERT
@@ -104,7 +104,7 @@ func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) 
 	return id, nil
 }
 
-// Delete: ステータス削除
+//Delete: ステータス削除
 func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
 	query := `
 	DELETE
@@ -117,7 +117,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 	return nil
 }
 
-// AllStatuses : ステータス情報を全て取得
+//AllStatuses : ステータス情報を全て取得
 func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	query := `
@@ -162,8 +162,8 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 	var statuses []object.Status
 	// メインクエリ	: サブクエリテーブルとstatusテーブルをJOIN
 	// サブクエリ	: userがフォローしているアカウントとuser自身のアカウントのみで構成されたmeta_accountテーブル
-	//              現状: 複数からフォローされている場合にダブるのでGROUP BYしてる..
-	//              前回: INNER JOIN していたらuserが誰にもフォローされていない場合拾えない
+	//              現状: userが複数からフォローされている場合に複数同じuserの行を拾ってしまうのでGROUP BYしてる
+	//              別案: OUTERでなくINNERでJOINしていたらuserが誰にもフォローされていない場合そのuserの行を拾えなかった
 	query := `
 	SELECT
 		s.id, 

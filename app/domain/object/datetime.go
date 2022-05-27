@@ -6,8 +6,9 @@ import (
 )
 
 // Wrapper of time.Time to implement custom method for JSON/DB interface
-// DateTimeとtime.Timeで同じメソッド名を持ち, DateTimeインスタンスが使用する場合は
-// DateTime(親側)が優先されるためオーバーロードできる
+// DateTimeとtime.Timeで同じメソッド名を持ち, DateTimeインスタンスからアクセスした場合は
+// DateTime(親側)が優先されるため
+// timeの表示をtimeFormatに沿ったものにオーバーロードできる
 type DateTime struct{ time.Time }
 
 const timeFormat = "2006-01-02T15:04:05Z07:00"

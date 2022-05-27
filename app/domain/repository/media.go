@@ -13,6 +13,5 @@ type Media interface {
 	// Create Media
 	Create(ctx context.Context, entity *object.Media) (object.AccountID, error)
 
-	//// Delete Media
-	//Delete(ctx context.Context, status_id object.StatusID, account_id object.Media) error
+	// Delete Media
 }

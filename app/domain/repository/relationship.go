@@ -6,7 +6,7 @@ import (
 	"yatter-backend-go/app/domain/object"
 )
 
-// Relationship inplements db operation abount follow relationships
+//Relationship inplements db operation abount follow relationships
 type Relationship interface {
 	// Return whether the user is currently following the target
 	IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error)

@@ -18,12 +18,12 @@ type (
 	}
 )
 
-// Create accout repository
+//NewMedia: Create media repository
 func NewMedia(db *sqlx.DB) repository.Media {
 	return &media{db: db}
 }
 
-// FindByID : 指定IDのステータスの取得
+//FindByID : 指定IDのmediaの取得
 func (r *media) FindByID(ctx context.Context, id object.MediaID) (*object.Media, error) {
 	media := new(object.Media)
 	query := `
@@ -40,7 +40,7 @@ func (r *media) FindByID(ctx context.Context, id object.MediaID) (*object.Media,
 	return media, nil
 }
 
-// Create: ステータス作成
+//Create: media作成
 func (r *media) Create(ctx context.Context, entity *object.Media) (object.AccountID, error) {
 	query := `
 	INSERT
@@ -57,15 +57,4 @@ func (r *media) Create(ctx context.Context, entity *object.Media) (object.Accoun
 	return id, nil
 }
 
-//// Delete: ステータス削除
-//func (r *media) Delete(ctx context.Context, media_id object.MediaID, account_id object.AccountID) error {
-//	query := `
-//	DELETE
-//	FROM media
-//	WHERE id=? AND account_id=?`
-//	_, err := r.db.ExecContext(ctx, query, media_id, account_id)
-//	if err != nil {
-//		return fmt.Errorf("%w", err)
-//	}
-//	return nil
-//}
+//Delete: media削除

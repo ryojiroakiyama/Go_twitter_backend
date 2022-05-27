@@ -71,7 +71,7 @@ func (d *dao) InitAll() error {
 		}
 	}()
 
-	for _, table := range []string{"relationship", "status", "account"} {
+	for _, table := range []string{"relationship", "status", "account", "media"} {
 		if err := d.exec("TRUNCATE TABLE " + table); err != nil {
 			return fmt.Errorf("Can't truncate table "+table+": %w", err)
 		}

@@ -17,12 +17,12 @@ type (
 	}
 )
 
-// Create accout repository
+//NewRelationship: Create relationship repository
 func NewRelationship(db *sqlx.DB) repository.Relationship {
 	return &relationship{db: db}
 }
 
-// IsFollowing: userがtargertをfollowしているかを取得する
+//IsFollowing: userがtargertをfollowしているかを取得する
 func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID, targetID object.AccountID) (bool, error) {
 	query := `
 	SELECT id
@@ -38,7 +38,7 @@ func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID,
 	return true, nil
 }
 
-// Relationship: userとtargetのフォロー関係を取得する
+//Relationship: userとtargetのフォロー関係を取得する
 // TODO: sliceで複数対応
 func (r *relationship) Fetch(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
 	isFollowing, err := r.IsFollowing(ctx, userID, targetID)
@@ -56,7 +56,7 @@ func (r *relationship) Fetch(ctx context.Context, userID object.AccountID, targe
 	}, nil
 }
 
-// Create: userがtargetをフォローする関係を登録
+//Create: userがtargetをフォローする関係を登録
 func (r *relationship) Create(ctx context.Context, userID object.AccountID, targetID object.AccountID) (object.RelationshipID, error) {
 	query := `
 	INSERT
@@ -73,7 +73,7 @@ func (r *relationship) Create(ctx context.Context, userID object.AccountID, targ
 	return id, nil
 }
 
-// Delete: userがtargetをフォローする関係を削除
+//Delete: userがtargetをフォローする関係を削除
 // followしてないアカウントを指定してもエラーにならない(UI部分ではそもそも表示されないこと想定)
 func (r *relationship) Delete(ctx context.Context, userID object.AccountID, targetID object.AccountID) error {
 	query := `

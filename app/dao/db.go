@@ -24,9 +24,8 @@ func initDb(config DBConfig) (*sqlx.DB, error) {
 		return nil, fmt.Errorf("sqlx.Ping failed: %w", err)
 	}
 
-	//defer pool.Close()
-
-	//pool.SetConnMaxLifetime(0)
+	// 必要に応じて以下の設定
+	//db.SetConnMaxLifetime(0)
 	//pool.SetMaxIdleConns(3)
 	//pool.SetMaxOpenConns(3)
 

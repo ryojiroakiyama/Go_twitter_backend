@@ -18,12 +18,12 @@ type (
 	}
 )
 
-// Create accout repository
+//NewAccount: Create accout repository
 func NewAccount(db *sqlx.DB) repository.Account {
 	return &account{db: db}
 }
 
-// FindByUsername : ユーザ名からユーザを取得
+//FindByUsername: ユーザ名からユーザを取得
 func (r *account) FindByUsername(ctx context.Context, username string) (*object.Account, error) {
 	account := new(object.Account)
 	query := `
@@ -40,7 +40,7 @@ func (r *account) FindByUsername(ctx context.Context, username string) (*object.
 	return account, nil
 }
 
-// Create: アカウント作成
+//Create: アカウント作成
 func (r *account) Create(ctx context.Context, account *object.Account) (object.AccountID, error) {
 	query := `
 	INSERT
@@ -57,8 +57,8 @@ func (r *account) Create(ctx context.Context, account *object.Account) (object.A
 	return id, nil
 }
 
-// Create: アカウント更新
-func (r *account) Update(ctx context.Context, account *object.Account) (error) {
+//Update: アカウント情報更新
+func (r *account) Update(ctx context.Context, account *object.Account) error {
 	query := `
 	UPDATE account
 	SET    display_name = ?,
@@ -73,7 +73,7 @@ func (r *account) Update(ctx context.Context, account *object.Account) (error) {
 	return nil
 }
 
-// Following: userがフォローしているアカウント集合を返す
+//Following: userがフォローしているアカウント集合を返す
 func (r *account) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
@@ -105,7 +105,7 @@ func (r *account) Following(ctx context.Context, username string, limit int64) (
 	return accounts, nil
 }
 
-// Followers: userをフォロワーのアカウント集合を返す
+//Followers: userのフォロワーのアカウント集合を返す
 func (r *account) Followers(ctx context.Context, username string, since_id int64, max_id int64, limit int64) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `

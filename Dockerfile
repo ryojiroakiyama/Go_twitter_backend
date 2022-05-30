@@ -1,3 +1,8 @@
+# multi-stageというビルド方法
+# 各FROM命令は異なるベースから新しいビルドを始める
+# 各ステージでの成果物は別ステージで選択してコピーできる(COPY --from=hoge ...)
+# わかりやすい上に, 最終的に必要なもののみで構成されたイメージが出来上がる
+
 # dev, builder
 FROM golang:1.16 AS golang
 WORKDIR /work/yatter-backend-go

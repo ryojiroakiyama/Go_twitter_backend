@@ -16,8 +16,7 @@ import (
 	"yatter-backend-go/app/app"
 )
 
-// 引数が多く機能にまとまりもないので, 使い勝手が良くない
-// そもそもC structがいるのか, 使うならもっと活用できそう
+// TODO: 機能の整理
 func Setup(t *testing.T, db *DBMock, newRouter func(app *app.App) http.Handler) *C {
 	db = fillDB(db)
 	app := &app.App{Dao: &DaoMock{db: db}}

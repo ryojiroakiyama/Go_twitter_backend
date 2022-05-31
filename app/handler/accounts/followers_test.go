@@ -11,7 +11,6 @@ import (
 	"yatter-backend-go/app/handler/handlertest"
 )
 
-// TODO: parameterに関するテスト
 func TestFollowers(t *testing.T) {
 	john := handlertest.AccountData{
 		ID:       1,

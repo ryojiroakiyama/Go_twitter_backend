@@ -3,6 +3,7 @@ package params
 import (
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 // Example key name of parameter
@@ -31,4 +32,8 @@ func FormValueLimiter(r *http.Request, key string, defaut int64, min int64, max 
 			}
 		}
 	}
+}
+
+func FromValueSplit(r *http.Request, key string, sep string) []string {
+	return strings.Split(r.FormValue(key), sep)
 }

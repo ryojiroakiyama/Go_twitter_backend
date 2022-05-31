@@ -39,7 +39,6 @@ func (r *relationship) IsFollowing(ctx context.Context, userID object.AccountID,
 }
 
 //Relationship: userとtargetのフォロー関係を取得する
-// TODO: sliceで複数対応
 func (r *relationship) Fetch(ctx context.Context, userID object.AccountID, targetID object.AccountID) (*object.Relationship, error) {
 	isFollowing, err := r.IsFollowing(ctx, userID, targetID)
 	if err != nil {

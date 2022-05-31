@@ -10,7 +10,7 @@ import (
 )
 
 // Handle request for `GET /v1/accounts/{username}/following`
-func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
+func (h *handler) Followings(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	limit := params.FormValueLimiter(r, params.Limit, 40, 0, 80)
@@ -21,7 +21,7 @@ func (h *handler) Following(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	accounts, err := h.app.Dao.Account().Following(ctx, username, limit)
+	accounts, err := h.app.Dao.Account().Followings(ctx, username, limit)
 	if err != nil {
 		httperror.InternalServerError(w, err)
 		return

@@ -74,7 +74,7 @@ func (r *account) Update(ctx context.Context, account *object.Account) error {
 }
 
 //Following: userがフォローしているアカウント集合を返す
-func (r *account) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
+func (r *account) Followings(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	var accounts []object.Account
 	query := `
 	SELECT

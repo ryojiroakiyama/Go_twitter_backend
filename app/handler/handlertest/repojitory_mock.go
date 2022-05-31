@@ -40,7 +40,7 @@ func (r *accountMock) Update(ctx context.Context, entity *object.Account) error 
 	return nil
 }
 
-func (r *accountMock) Following(ctx context.Context, username string, limit int64) ([]object.Account, error) {
+func (r *accountMock) Followings(ctx context.Context, username string, limit int64) ([]object.Account, error) {
 	a, _ := r.FindByUsername(ctx, username)
 	var res []object.Account
 	for _, v := range r.db.RelationShip {

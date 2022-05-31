@@ -190,19 +190,19 @@ func TestAccountFollowing(t *testing.T) {
 	for _, tt := range tests {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := dao.Account().Following(tt.args.ctx, tt.args.username, tt.args.limit)
+			got, err := dao.Account().Followings(tt.args.ctx, tt.args.username, tt.args.limit)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("account.Following() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("account.Followings() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if len(got) == len(tt.want) {
 				for i, v := range got {
 					if v.Username != tt.want[i].Username {
-						t.Errorf("account.Following() = %v, want %v", got, tt.want)
+						t.Errorf("account.Followings() = %v, want %v", got, tt.want)
 					}
 				}
 			} else {
-				t.Errorf("account.Following() = %v, want %v", got, tt.want)
+				t.Errorf("account.Followings() = %v, want %v", got, tt.want)
 			}
 		})
 	}

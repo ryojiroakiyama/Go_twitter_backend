@@ -18,3 +18,18 @@ access http://localhost:8081/ on Web browser
 #terminal
 $ docker-compose down
 ```
+# Initialize
+```bash
+#terminal
+docker-compose down
+rm -rfd .data/mysql
+docker-compose up -d
+```
+# Log
+```
+#terminal
+docker-compose logs
+docker-compose logs -f
+docker-compose logs web
+docker-compose logs -f web
+```

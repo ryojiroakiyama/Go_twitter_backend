@@ -19,10 +19,11 @@ func initDb(config DBConfig) (*sqlx.DB, error) {
 		return nil, fmt.Errorf("sqlx.Open failed: %w", err)
 	}
 
-	err = db.Ping()
-	if err != nil {
-		return nil, fmt.Errorf("sqlx.Ping failed: %w", err)
-	}
+	// 以下, mysqlのサーバが立ち上がる前に接続確認をしてしまうためコメントアウト
+	// err = db.Ping()
+	// if err != nil {
+	// 	return nil, fmt.Errorf("sqlx.Ping failed: %w", err)
+	// }
 
 	// 必要に応じて以下の設定
 	//db.SetConnMaxLifetime(0)

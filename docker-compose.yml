@@ -1,7 +1,8 @@
-version: '3.7'
+version: "3.7"
 services:
   mysql:
     image: mysql:5.7 # for m1 mac
+    platform: linux/amd64 # for m1 mac
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-time-zone='+9:00'"
     ports:
       - "3306:3306"
@@ -13,7 +14,7 @@ services:
     volumes:
       - "./.data/mysql:/var/lib/mysql"
       - "./ddl:/docker-entrypoint-initdb.d"
-      # docより'コンテナ初回起動時に実行'とあったが, 
+      # docより'コンテナ初回起動時に実行'とあったが,
       # 実際にはdbデータを消すと毎起動で実行されることを確認
       # 逆にdbデータが残ったままでimageを消してから再起動したり, no-cacheでビルドしても実行されずに元のデータのみだった
     restart: on-failure
@@ -68,7 +69,8 @@ services:
       SWAGGER_JSON: /data/openapi.yml
 
   testmysql:
-    image: mysql:5.7
+    image: mysql:5.7 # for m1 mac
+    platform: linux/amd64 # for m1 mac
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin --default-time-zone='+9:00'"
     ports:
       - "3307:3306"

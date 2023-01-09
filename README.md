@@ -2,9 +2,10 @@
 
 Sns (like twitter) web app backend program.
 
-language: Go  
+Language: Go  
 DB: MySQL  
-behavior check: OpenAPI
+API check: OpenAPI  
+Environment: Docker
 
 # Getting Started 🦎
 

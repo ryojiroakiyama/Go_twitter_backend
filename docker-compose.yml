@@ -21,6 +21,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
+    platform: linux/amd64 # for m1 mac
     depends_on:
       - mysql
     environment:
@@ -61,6 +62,7 @@ services:
 
   swagger-ui:
     image: swaggerapi/swagger-ui
+    platform: linux/amd64 # for m1 mac
     ports:
       - "8081:8080"
     volumes:
@@ -86,6 +88,7 @@ services:
 
   testphpmyadmin:
     image: phpmyadmin/phpmyadmin
+    platform: linux/amd64 # for m1 mac
     depends_on:
       - testmysql
     environment:

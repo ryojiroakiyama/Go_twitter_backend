@@ -1,7 +1,8 @@
 BINARY := yatter-backend-go
 
-# MAKEFILE_LIST: makeがパースするファイルリスト
-# lastword: この時点ではincludeしてないので'Makefile'
+# 現在のMakefileの絶対パスを取得
+# MAKEFILE_LIST: makeがパースするMakefileのリスト（他のMakefileをincludeしていればそれらも含む）
+# lastword: 現在のMakefileを取得するために使用（現時点ではincludeしてないので不要）
 MAKEFILE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 PATH := $(PATH):${MAKEFILE_DIR}bin
@@ -17,6 +18,7 @@ BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 GIT_URL=local-git://
 
 # go tool link に渡すフラグ, リンク時に指定パッケージ内の指定変数書き換え
+# つまり、mainパッケージ内でVERSION, COMMIT, BRANCH変数を定義すると実行ファイルのバージョン情報が取得できる
 LDFLAGS := -ldflags "-X main.VERSION=${VERSION} -X main.COMMIT=${COMMIT} -X main.BRANCH=${BRANCH}"
 
 .PHONY: build

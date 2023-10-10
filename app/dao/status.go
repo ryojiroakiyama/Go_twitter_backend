@@ -18,12 +18,12 @@ type (
 	}
 )
 
-//NewStatus: Create accout repository
+// NewStatus: Create accout repository
 func NewStatus(db *sqlx.DB) repository.Status {
 	return &status{db: db}
 }
 
-//FindByID : 指定IDのステータスの取得
+// FindByID : 指定IDのステータスの取得
 func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Status, error) {
 	status := new(object.Status)
 	query := `
@@ -61,7 +61,7 @@ func (r *status) FindByID(ctx context.Context, id object.StatusID) (*object.Stat
 	return status, nil
 }
 
-//Create: ステータス作成
+// Create: ステータス作成
 func (r *status) Create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	if entity.Attachment != nil {
 		return r.create(ctx, entity)
@@ -70,7 +70,7 @@ func (r *status) Create(ctx context.Context, entity *object.Status) (object.Stat
 	}
 }
 
-//Create: attachmentありのステータス作成
+// Create: attachmentありのステータス作成
 func (r *status) create(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 		INSERT
@@ -87,7 +87,7 @@ func (r *status) create(ctx context.Context, entity *object.Status) (object.Stat
 	return id, nil
 }
 
-//Create: attachmentなしのステータス作成
+// Create: attachmentなしのステータス作成
 func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) (object.StatusID, error) {
 	query := `
 	INSERT
@@ -104,7 +104,7 @@ func (r *status) createNoAttachment(ctx context.Context, entity *object.Status) 
 	return id, nil
 }
 
-//Delete: ステータス削除
+// Delete: ステータス削除
 func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_id object.AccountID) error {
 	query := `
 	DELETE
@@ -117,7 +117,7 @@ func (r *status) Delete(ctx context.Context, status_id object.StatusID, account_
 	return nil
 }
 
-//AllStatuses : ステータス情報を全て取得
+// AllStatuses : ステータス情報を全て取得
 func (r *status) AllStatuses(ctx context.Context, since_id int64, max_id int64, limit int64) ([]object.Status, error) {
 	var statuses []object.Status
 	query := `
@@ -223,24 +223,26 @@ func (r *status) RelationStatuses(ctx context.Context, user_id object.AccountID,
 	return statuses, nil
 }
 
-//insertMedia inserts media into status.Attachment if status.Media_ID != nil
+// insertMedia inserts media into status.Attachment if status.Media_ID != nil
 // クエリ一発でattachmentありorなし含めてstatus情報を取ってくるのが思いつかなかったので,
 // status情報を取ってきた後にこの関数でmediaを取ってくる
-func (r *status) insertMedia(ctx context.Context, statuse *object.Status) error {
-	if statuse.Media_ID != nil {
+// TODO: この関数はN+1問題の根源なので、クエリ一発でstatusとmediaを取得するか、mediaについて事前に取得したオブジェクトに対してループ処理でアタッチするようにする
+// TODO: statusを介して呼び出し元の関数と内部結合しているので、引数のstatusを編集するのでなく値を返却するようにする
+func (r *status) insertMedia(ctx context.Context, status *object.Status) error {
+	if status.Media_ID != nil {
 		media := new(object.Media)
 		query := `
 			SELECT *
 			FROM media
 			WHERE id = ?`
-		err := r.db.QueryRowxContext(ctx, query, statuse.Media_ID).StructScan(media)
+		err := r.db.QueryRowxContext(ctx, query, status.Media_ID).StructScan(media)
 		if err != nil {
 			if errors.Is(err, sql.ErrNoRows) {
 				return fmt.Errorf("status has media that doesn't exist")
 			}
 			return fmt.Errorf("%w", err)
 		}
-		statuse.Attachment = media
+		status.Attachment = media
 	}
 	return nil
 }

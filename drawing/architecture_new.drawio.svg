@@ -1,0 +1,772 @@
+<svg host="65bd71144e" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="2935px" height="2400px" viewBox="-0.5 -0.5 2935 2400" content="&lt;mxfile&gt;&lt;diagram id=&quot;5NDQA8FCfU3ySAwWwgME&quot; name=&quot;Page-1&quot;&gt;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&lt;/diagram&gt;&lt;/mxfile&gt;">
+    <defs>
+        <clipPath id="mx-clip-2084-515-342-70-0">
+            <rect x="2084" y="515" width="342" height="70"/>
+        </clipPath>
+        <clipPath id="mx-clip-2084-585-342-40-0">
+            <rect x="2084" y="585" width="342" height="40"/>
+        </clipPath>
+        <clipPath id="mx-clip-2084-625-342-40-0">
+            <rect x="2084" y="625" width="342" height="40"/>
+        </clipPath>
+        <clipPath id="mx-clip-1614-510-362-60-0">
+            <rect x="1614" y="510" width="362" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-1614-570-362-50-0">
+            <rect x="1614" y="570" width="362" height="50"/>
+        </clipPath>
+        <clipPath id="mx-clip-1614-620-362-50-0">
+            <rect x="1614" y="620" width="362" height="50"/>
+        </clipPath>
+        <clipPath id="mx-clip-1054-560-412-80-0">
+            <rect x="1054" y="560" width="412" height="80"/>
+        </clipPath>
+        <clipPath id="mx-clip-1054-640-412-60-0">
+            <rect x="1054" y="640" width="412" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-2544-410-385-60-0">
+            <rect x="2544" y="410" width="385" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-2149-60-212-50-0">
+            <rect x="2149" y="60" width="212" height="50"/>
+        </clipPath>
+        <clipPath id="mx-clip-2149-140-212-50-0">
+            <rect x="2149" y="140" width="212" height="50"/>
+        </clipPath>
+        <clipPath id="mx-clip-1624-956-212-60-0">
+            <rect x="1624" y="956" width="212" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-1924-941-242-90-0">
+            <rect x="1924" y="941" width="242" height="90"/>
+        </clipPath>
+        <clipPath id="mx-clip-2149-1090-212-60-0">
+            <rect x="2149" y="1090" width="212" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-2149-1150-212-60-0">
+            <rect x="2149" y="1150" width="212" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-1604-1176-322-70-0">
+            <rect x="1604" y="1176" width="322" height="70"/>
+        </clipPath>
+        <clipPath id="mx-clip-1604-720-342-60-0">
+            <rect x="1604" y="720" width="342" height="60"/>
+        </clipPath>
+        <clipPath id="mx-clip-1604-240-432-100-0">
+            <rect x="1604" y="240" width="432" height="100"/>
+        </clipPath>
+    </defs>
+    <g>
+        <ellipse cx="1128" cy="1989" rx="409.75000000000006" ry="409.75000000000006" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+        <rect x="1600" y="860" width="800" height="386" fill="none" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+        <rect x="1600" y="0" width="790" height="340" fill="none" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+        <rect x="1600" y="420" width="850" height="360" fill="none" stroke="rgb(0, 0, 0)" pointer-events="all"/>
+        <path d="M 2430 575 L 2643.63 575" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="stroke"/>
+        <path d="M 2648.88 575 L 2641.88 578.5 L 2643.63 575 L 2641.88 571.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="all"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 577px; margin-left: 2566px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 11px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; background-color: rgb(255, 255, 255); white-space: nowrap;">
+                                DB
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="2566" y="580" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="11px" text-anchor="middle">
+                    DB
+                </text>
+            </switch>
+        </g>
+        <path d="M 2080 515 L 2080 485 L 2430 485 L 2430 515" fill="#ffe6cc" stroke="#d79b00" stroke-miterlimit="10" pointer-events="all"/>
+        <path d="M 2080 515 L 2080 665 L 2430 665 L 2430 515" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2080 515 L 2430 515" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2254.5" y="504.5">
+                app/domain/repository
+            </text>
+        </g>
+        <rect x="2080" y="515" width="350" height="70" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2084-515-342-70-0)" font-size="12px">
+            <text x="2085.5" y="540.5">
+                domain/objectで扱うEntityの永続化に関する処理を抽象化し、
+            </text>
+            <text x="2085.5" y="554.5">
+                インターフェースとして定義するパッケージです。
+            </text>
+            <text x="2085.5" y="568.5">
+                具体的な実装はdaoパッケージで行います。
+            </text>
+        </g>
+        <rect x="2080" y="585" width="350" height="40" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2084-585-342-40-0)" font-size="12px">
+            <text x="2085.5" y="609.5">
+                type Account interface {...}
+            </text>
+        </g>
+        <rect x="2080" y="625" width="350" height="40" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2084-625-342-40-0)" font-size="12px">
+            <text x="2085.5" y="649.5">
+                type Status interface {...}
+            </text>
+        </g>
+        <path d="M 1610 510 L 1610 480 L 1980 480 L 1980 510" fill="#ffe6cc" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1610 510 L 1610 670 L 1980 670 L 1980 510" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1610 510 L 1980 510" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1794.5" y="499.5">
+                app/domain/domain/object
+            </text>
+        </g>
+        <rect x="1610" y="510" width="370" height="60" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1614-510-362-60-0)" font-size="12px">
+            <text x="1615.5" y="530.5">
+                ドメインに登場するデータ・モノの表現や
+            </text>
+            <text x="1615.5" y="544.5">
+                その振る舞いを記述するパッケージです。
+            </text>
+            <text x="1615.5" y="558.5">
+                今回は簡単のためDTO(data transfer object)の役割も兼ねています。
+            </text>
+        </g>
+        <rect x="1610" y="570" width="370" height="50" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1614-570-362-50-0)" font-size="12px">
+            <text x="1615.5" y="599.5">
+                Account struct {...}
+            </text>
+        </g>
+        <rect x="1610" y="620" width="370" height="50" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1614-620-362-50-0)" font-size="12px">
+            <text x="1615.5" y="649.5">
+                Status struct {...}
+            </text>
+        </g>
+        <path d="M 1050 560 L 1050 530 L 1470 530 L 1470 560" fill="#e1d5e7" stroke="#9673a6" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1050 560 L 1050 700 L 1470 700 L 1470 560" fill="none" stroke="#9673a6" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1050 560 L 1470 560" fill="none" stroke="#9673a6" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1259.5" y="549.5">
+                app(app/app)
+            </text>
+        </g>
+        <rect x="1050" y="560" width="420" height="80" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1054-560-412-80-0)" font-size="12px">
+            <text x="1055.5" y="576.5">
+                モジュールの依存関係を整理するパッケージで、
+            </text>
+            <text x="1055.5" y="590.5">
+                DIコンテナ(実際にオブジェクトを注入して依存関係を管理する)を扱います。
+            </text>
+            <text x="1055.5" y="604.5">
+                今回は簡素なものになっていて、
+            </text>
+            <text x="1055.5" y="618.5">
+                DAOの組み立てとhandlerのDAO(が提供するdomain/repository) への
+            </text>
+            <text x="1055.5" y="632.5">
+                依存の管理のみ行っています。
+            </text>
+        </g>
+        <rect x="1050" y="640" width="420" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1054-640-412-60-0)" font-size="12px">
+            <text x="1055.5" y="660.5">
+                type App struct {
+            </text>
+            <text x="1055.5" y="674.5">
+                Dao dao.Dao
+            </text>
+            <text x="1055.5" y="688.5">
+                }
+            </text>
+        </g>
+        <path d="M 2540 410 L 2540 380 L 2933 380 L 2933 410" fill="#f8cecc" stroke="#b85450" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2540 410 L 2540 470 L 2933 470 L 2933 410" fill="none" stroke="#b85450" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2540 410 L 2933 410" fill="none" stroke="#b85450" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2736" y="399.5">
+                config(app/config)
+            </text>
+        </g>
+        <rect x="2540" y="410" width="393" height="60" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2544-410-385-60-0)" font-size="12px">
+            <text x="2545.5" y="437.5">
+                サーバーの設定をまとめたパッケージです。
+            </text>
+            <text x="2545.5" y="451.5">
+                DBやlistenするポートなどの設定を取得 するAPIがまとめてあります。
+            </text>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 228px; height: 1px; padding-top: 35px; margin-left: 1601px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                <span style="font-size: 27px">
+                                    handler/usecase
+                                    <br/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1715" y="39" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    handler/usecase
+                </text>
+            </switch>
+        </g>
+        <path d="M 1890 110 L 2138.63 110" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2143.88 110 L 2136.88 113.5 L 2138.63 110 L 2136.88 106.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1610 100 L 1610 70 L 1890 70 L 1890 100" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1610 100 L 1610 150 L 1890 150 L 1890 100" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1610 100 L 1890 100" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1749.5" y="89.5">
+                app/handler
+            </text>
+        </g>
+        <path d="M 2255 190 L 2255 478.63" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2255 483.88 L 2251.5 476.88 L 2255 478.63 L 2258.5 476.88 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 60 L 2145 30 L 2365 30 L 2365 60" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 60 L 2145 190 L 2365 190 L 2365 60" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 60 L 2365 60" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2254.5" y="49.5">
+                app/handler/accounts
+            </text>
+        </g>
+        <rect x="2145" y="60" width="220" height="50" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2149-60-212-50-0)" font-size="12px">
+            <text x="2150.5" y="75.5">
+                type handler struct {
+            </text>
+            <text x="2150.5" y="89.5">
+                app *app.App
+            </text>
+            <text x="2150.5" y="103.5">
+                }
+            </text>
+        </g>
+        <path d="M 2145 140 L 2145 110 L 2365 110 L 2365 140" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 140 L 2145 190 L 2365 190 L 2365 140" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 140 L 2365 140" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2254.5" y="129.5">
+                app/handler/statuses
+            </text>
+        </g>
+        <rect x="2145" y="140" width="220" height="50" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2149-140-212-50-0)" font-size="12px">
+            <text x="2150.5" y="155.5">
+                type handler struct {
+            </text>
+            <text x="2150.5" y="169.5">
+                app *app.App
+            </text>
+            <text x="2150.5" y="183.5">
+                }
+            </text>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 95px; margin-left: 1901px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                use
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1930" y="99" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    use
+                </text>
+            </switch>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 385px; margin-left: 2251px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                use
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="2280" y="389" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    use
+                </text>
+            </switch>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 128px; height: 1px; padding-top: 450px; margin-left: 1601px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                <font style="font-size: 27px">
+                                    domain
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1665" y="454" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    domain
+                </text>
+            </switch>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 128px; height: 1px; padding-top: 890px; margin-left: 1601px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                <font style="font-size: 27px">
+                                    infra
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1665" y="894" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    infra
+                </text>
+            </switch>
+        </g>
+        <path d="M 1840 971 L 1913.63 971" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" stroke-dasharray="3 3" pointer-events="none"/>
+        <path d="M 1918.88 971 L 1911.88 974.5 L 1913.63 971 L 1911.88 967.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1730 1016 L 1730 1120 L 2138.63 1120" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2143.88 1120 L 2136.88 1123.5 L 2138.63 1120 L 2136.88 1116.5 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1620 956 L 1620 926 L 1840 926 L 1840 956" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1620 956 L 1620 1016 L 1840 1016 L 1840 956" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1620 956 L 1840 956" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1729.5" y="945.5">
+                app/dao
+            </text>
+        </g>
+        <rect x="1620" y="956" width="220" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1624-956-212-60-0)" font-size="12px">
+            <text x="1625.5" y="976.5">
+                type dao struct {
+            </text>
+            <text x="1625.5" y="990.5">
+                db *sqlx.DB
+            </text>
+            <text x="1625.5" y="1004.5">
+                }
+            </text>
+        </g>
+        <path d="M 1920 941 L 1920 911 L 2170 911 L 2170 941" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1920 941 L 1920 1031 L 2170 1031 L 2170 941" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1920 941 L 2170 941" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2044.5" y="930.5">
+                app/dao
+            </text>
+        </g>
+        <rect x="1920" y="941" width="250" height="90" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1924-941-242-90-0)" font-size="12px">
+            <text x="1925.5" y="962.5">
+                type Dao interface {
+            </text>
+            <text x="1925.5" y="976.5">
+                Account() repository.Account
+            </text>
+            <text x="1925.5" y="990.5">
+                Status() repository.Status
+            </text>
+            <text x="1925.5" y="1004.5">
+                InitAll() error
+            </text>
+            <text x="1925.5" y="1018.5">
+                }
+            </text>
+        </g>
+        <path d="M 2255 1060 L 2255 671.37" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" stroke-dasharray="3 3" pointer-events="none"/>
+        <path d="M 2255 666.12 L 2258.5 673.12 L 2255 671.37 L 2251.5 673.12 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 1090 L 2145 1060 L 2365 1060 L 2365 1090" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 1090 L 2145 1210 L 2365 1210 L 2365 1090" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 2145 1090 L 2365 1090" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="2254.5" y="1079.5">
+                app/dao
+            </text>
+        </g>
+        <rect x="2145" y="1090" width="220" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2149-1090-212-60-0)" font-size="12px">
+            <text x="2150.5" y="1110.5">
+                type account struct {
+            </text>
+            <text x="2150.5" y="1124.5">
+                db *sqlx.DB
+            </text>
+            <text x="2150.5" y="1138.5">
+                }
+            </text>
+        </g>
+        <rect x="2145" y="1150" width="220" height="60" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-2149-1150-212-60-0)" font-size="12px">
+            <text x="2150.5" y="1170.5">
+                type status struct {
+            </text>
+            <text x="2150.5" y="1184.5">
+                db *sqlx.DB
+            </text>
+            <text x="2150.5" y="1198.5">
+                }
+            </text>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 825px; margin-left: 2261px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                implement
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="2290" y="829" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    implement
+                </text>
+            </switch>
+        </g>
+        <path d="M 1600 1176 L 1600 1146 L 1930 1146 L 1930 1176" fill="#d5e8d4" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 1176 L 1600 1246 L 1930 1246 L 1930 1176" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 1176 L 1930 1176" fill="none" stroke="#82b366" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1764.5" y="1165.5">
+                dao
+            </text>
+        </g>
+        <rect x="1600" y="1176" width="330" height="70" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1604-1176-322-70-0)" font-size="12px">
+            <text x="1605.5" y="1188.5">
+                data access object
+            </text>
+            <text x="1605.5" y="1202.5">
+                domain/repositoryに対する実装を提供するパッケージです。
+            </text>
+            <text x="1605.5" y="1216.5">
+                DBなど外部モジュール へアクセスし、
+            </text>
+            <text x="1605.5" y="1230.5">
+                データの保存・取得・更新などの処理を実装します。
+            </text>
+        </g>
+        <path d="M 1600 720 L 1600 690 L 1950 690 L 1950 720" fill="#ffe6cc" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 720 L 1600 780 L 1950 780 L 1950 720" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 720 L 1950 720" fill="none" stroke="#d79b00" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1774.5" y="709.5">
+                domain
+            </text>
+        </g>
+        <rect x="1600" y="720" width="350" height="60" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1604-720-342-60-0)" font-size="12px">
+            <text x="1605.5" y="754.5">
+                アプリケーションのモデルを扱うdomain層のパッケージです。
+            </text>
+        </g>
+        <path d="M 1600 240 L 1600 210 L 2040 210 L 2040 240" fill="#dae8fc" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 240 L 1600 340 L 2040 340 L 2040 240" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1600 240 L 2040 240" fill="none" stroke="#6c8ebf" stroke-miterlimit="10" pointer-events="none"/>
+        <g fill="rgb(0, 0, 0)" font-family="Helvetica" pointer-events="none" text-anchor="middle" font-size="12px">
+            <text x="1819.5" y="229.5">
+                handler
+            </text>
+        </g>
+        <rect x="1600" y="240" width="440" height="100" fill="#f5f5f5" stroke="#666666" pointer-events="none"/>
+        <g fill="#333333" font-family="Helvetica" pointer-events="none" clip-path="url(#mx-clip-1604-240-432-100-0)" font-size="12px">
+            <text x="1605.5" y="259.5">
+                HTTPリクエストのハンドラを実装するパッケージです。
+            </text>
+            <text x="1605.5" y="273.5">
+                リクエストからパラメータを読み取り、
+            </text>
+            <text x="1605.5" y="287.5">
+                エンドポイントに応じた処理を行ってレスポンスを返します。
+            </text>
+            <text x="1605.5" y="301.5">
+                機能の提供のために必要になる各種処理の実装は別のパッケージに切り分け、
+            </text>
+            <text x="1605.5" y="315.5">
+                handlerは 入出力に注力するケースも多いですが、
+            </text>
+            <text x="1605.5" y="329.5">
+                今回は簡単のため統合しています。
+            </text>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 955px; margin-left: 1851px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                implement
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1880" y="959" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    implement
+                </text>
+            </switch>
+        </g>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 58px; height: 1px; padding-top: 1095px; margin-left: 1911px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                create
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1940" y="1099" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    create
+                </text>
+            </switch>
+        </g>
+        <rect x="2650" y="555" width="80" height="40" rx="6" ry="6" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 78px; height: 1px; padding-top: 575px; margin-left: 2651px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: normal; overflow-wrap: normal;">
+                                DB
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="2690" y="579" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    DB
+                </text>
+            </switch>
+        </g>
+        <ellipse cx="1128" cy="1993.5" rx="237" ry="237" fill="rgb(255, 255, 255)" stroke="rgb(0, 0, 0)" pointer-events="none"/>
+        <rect x="988" y="1921" width="69" height="26" fill="#ffe6cc" stroke="#d79b00" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 1934px; margin-left: 1023px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                <span style="">
+                                    domain層
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1023" y="1938" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    domain層
+                </text>
+            </switch>
+        </g>
+        <rect x="944" y="1947" width="393" height="84" fill="rgb(255, 255, 255)" stroke="none" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 1989px; margin-left: 1141px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                <div style="border-color: var(--border-color); text-align: left;">
+                                    <span style="border-color: var(--border-color); background-color: initial;">
+                                        domainパッケージ
+                                    </span>
+                                </div>
+                                <div style="border-color: var(--border-color); text-align: left;">
+                                    <span style="border-color: var(--border-color); background-color: initial;">
+                                        object: ドメインのデータ・モノを表現するオブジェクト。
+                                    </span>
+                                </div>
+                                <div style="border-color: var(--border-color); text-align: left;">
+                                    <span style="border-color: var(--border-color); background-color: initial;">
+                                        今回は簡単のため、DBに保存する際のDTO
+                                    </span>
+                                </div>
+                                <div style="border-color: var(--border-color); text-align: left;">
+                                    <span style="border-color: var(--border-color); background-color: initial;">
+                                        (Data Transfer Object)の役目も兼ねている。
+                                    </span>
+                                </div>
+                                <font style="border-color: var(--border-color);">
+                                    <div style="border-color: var(--border-color); text-align: left;">
+                                        <span style="border-color: var(--border-color); background-color: initial;">
+                                            repository: Entityの永続化処理を抽象化して定義したインタフェース。
+                                        </span>
+                                    </div>
+                                </font>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1141" y="1993" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    domainパッケージ...
+                </text>
+            </switch>
+        </g>
+        <path d="M 1420 1990.07 L 1343.37 1989.78" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1338.12 1989.76 L 1345.13 1986.28 L 1343.37 1989.78 L 1345.1 1993.28 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1481.73 1739 L 1202.96 1943.24" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1198.73 1946.34 L 1202.31 1939.38 L 1202.96 1943.24 L 1206.44 1945.03 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <rect x="1076" y="1669" width="907" height="70" fill="rgb(255, 255, 255)" stroke="none" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-start; width: 1px; height: 1px; padding-top: 1704px; margin-left: 1078px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                appパッケージ
+                                <br/>
+                                Daoの組み立てと
+                                <span style="background-color: initial;">
+                                    handler/usecase層とinfra層の橋渡し（
+                                </span>
+                                Daoを介して、handler/usecase層にrepositoryを実装したオブジェクトを提供する）
+                                <span style="background-color: initial;">
+                                    の役目を持つ。
+                                </span>
+                                <br/>
+                                <div style="">
+                                    この要素はクリーンアーキテクチャには登場しないが、シングルトンの管理やDB初期化処理などを一箇所にまとめた便利オブジェクトとして用いられることがある。
+                                </div>
+                                <div style="">
+                                    Dao: repositoryを実装したオブジェクトを返却するDIコンテナ。
+                                    <br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1078" y="1708" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px">
+                    appパッケージ...
+                </text>
+            </switch>
+        </g>
+        <path d="M 490.83 1966 L 1068.38 1707.03" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 1073.17 1704.88 L 1068.21 1710.94 L 1068.38 1707.03 L 1065.35 1704.55 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 859 1990.78 L 937.63 1990.28" fill="none" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <path d="M 942.88 1990.25 L 935.9 1993.79 L 937.63 1990.28 L 935.86 1986.8 Z" fill="rgb(0, 0, 0)" stroke="rgb(0, 0, 0)" stroke-miterlimit="10" pointer-events="none"/>
+        <rect x="0" y="1966" width="859" height="55" fill="rgb(255, 255, 255)" stroke="none" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-end; width: 1px; height: 1px; padding-top: 1994px; margin-left: 857px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: right;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                handlerパッケージ
+                                <br/>
+                                UI操作のリクエストを受け取る。データベースに関する操作は（appを返してrepositoryを実装したオブジェクトを取得し）repositoryのメソッドを呼び出す。
+                                <br/>
+                                domain層の呼び出し部分はusecase層に分けるのが一般的なクリーンアーキテクチャだが、今回は簡略化して一緒にしている。
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="857" y="1997" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="end">
+                    handlerパッケージ...
+                </text>
+            </switch>
+        </g>
+        <rect x="1420" y="1931" width="53" height="26" fill="#ffe6cc" stroke="#d79b00" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 1944px; margin-left: 1447px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                <span style="color: rgb(0, 0, 0); text-align: left;">
+                                    infra層
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1447" y="1948" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    infra層
+                </text>
+            </switch>
+        </g>
+        <rect x="1076" y="1641" width="114" height="26" fill="#dae8fc" stroke="#6c8ebf" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 1654px; margin-left: 1133px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                <div style="text-align: left;">
+                                    依存性マネージャ
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1133" y="1658" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    依存性マネージャ
+                </text>
+            </switch>
+        </g>
+        <rect x="737" y="1935" width="118" height="26" fill="#ffe6cc" stroke="#d79b00" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 1948px; margin-left: 796px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: center;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                <span style="color: rgb(0, 0, 0); text-align: right;">
+                                    handler/usecase層
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="796" y="1952" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px" text-anchor="middle">
+                    handler/usecase層
+                </text>
+            </switch>
+        </g>
+        <rect x="1420" y="1964" width="749" height="55" fill="rgb(255, 255, 255)" stroke="none" pointer-events="none"/>
+        <g transform="translate(-0.5 -0.5)">
+            <switch>
+                <foreignObject pointer-events="none" width="100%" height="100%" requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" style="overflow: visible; text-align: left;">
+                    <div xmlns="http://www.w3.org/1999/xhtml" style="display: flex; align-items: unsafe center; justify-content: unsafe flex-start; width: 1px; height: 1px; padding-top: 1992px; margin-left: 1422px;">
+                        <div data-drawio-colors="color: rgb(0, 0, 0); " style="box-sizing: border-box; font-size: 0px; text-align: left;">
+                            <div style="display: inline-block; font-size: 12px; font-family: Helvetica; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: none; white-space: nowrap;">
+                                daoパッケージ（data access object。daoはデータベースの操作に限定されたもので[infra]という言葉はさらに広い領域を表すらしい。）
+                                <br/>
+                                repositoryインタフェースを実装している。
+                                <br/>
+                                <span style="color: rgb(51, 51, 51); background-color: rgb(251, 251, 251);">
+                                    DBなど外部モジュール へアクセスし、
+                                </span>
+                                <span style="color: rgb(51, 51, 51); background-color: rgb(251, 251, 251);">
+                                    データの保存・取得・更新などの処理を行う。
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </foreignObject>
+                <text x="1422" y="1995" fill="rgb(0, 0, 0)" font-family="Helvetica" font-size="12px">
+                    daoパッケージ（data access object。daoはデータベースの操作に限定されたもので[infra]という言葉はさらに広い領域を表すらしい。）...
+                </text>
+            </switch>
+        </g>
+    </g>
+    <switch>
+        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"/>
+        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems" target="_blank">
+            <text text-anchor="middle" font-size="10px" x="50%" y="100%">
+                Text is not SVG - cannot display
+            </text>
+        </a>
+    </switch>
+</svg>

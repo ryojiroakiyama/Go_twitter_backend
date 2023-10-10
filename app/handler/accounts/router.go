@@ -20,7 +20,7 @@ type handler struct {
 func NewRouter(app *app.App) http.Handler {
 	r := chi.NewRouter()
 
-	h := &handler{app: app}
+	h := &handler{app: app} // ここでhandlerにappを渡しているのは依存性注入ではなく、ハンドラ関数へappを経由するため
 	r.Group(func(r chi.Router) {
 		r.Use(auth.Middleware(app))
 		r.Post("/{username}/follow", h.Follow)

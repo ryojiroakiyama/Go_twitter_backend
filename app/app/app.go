@@ -7,7 +7,7 @@ import (
 
 // Dependency manager for whole application
 type App struct {
-	Dao dao.Dao
+	Dao dao.Dao // DIコンテナ
 }
 
 // Create dependency manager

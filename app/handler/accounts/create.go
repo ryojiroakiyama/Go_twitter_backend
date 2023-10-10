@@ -36,6 +36,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// h.app.Dao.Account()でDIコンテナからrepositoryを実装したオブジェクトを取得している
 	if accountFound, err := h.app.Dao.Account().FindByUsername(ctx, account.Username); err != nil {
 		httperror.InternalServerError(w, err)
 		return
